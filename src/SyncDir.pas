@@ -56,6 +56,16 @@ implementation
 
 { TSyncDirForm }
 
+function FormatMockLogMessage: string;
+begin
+  result := Format('Simulated Synchronization #%d.', [SyncDirLogForm.MemoLog.Lines.Count]);
+end;
+
+procedure AppendLogMessage(message: string);
+begin
+  SyncDirLogForm.MemoLog.Lines.Add(message);
+end;
+
 procedure TSyncDirForm.ButtonExitClick(Sender: TObject);
 begin
   Halt(1);
@@ -68,7 +78,9 @@ end;
 
 procedure TSyncDirForm.ButtonSynchronizeClick(Sender: TObject);
 begin
-  { TODO : Simulate activity by writing to SyncDirLog TMemo. }
+  { TODO : Remove simulated activity of writing to SyncDirLog TMemo. }
+  AppendLogMessage(FormatMockLogMessage);
+
   { TODO : Validate source and target directory selections. }
   { TODO : Perform file synchronization. }
 end;

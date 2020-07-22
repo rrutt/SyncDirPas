@@ -40,8 +40,8 @@ end;
 
 procedure TSyncDirLog.ButtonCopyTextClick(Sender: TObject);
 begin
-  { TODO : Copy log text to Windows clipboard. }
   Clipboard.AsText := MemoLog.Text;
+  ShowMessage('The log text has been copied to the clipboard.');
 end;
 
 end.

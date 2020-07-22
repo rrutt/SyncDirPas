@@ -59,9 +59,7 @@ object SyncDirLog: TSyncDirLog
     Font.Quality = fqDraft
     Font.Style = [fsBold]
     Lines.Strings = (
-      'This is the synchronization log.'
-      'This will show files copied.'
-      'It may also show error or warning messages.'
+      'Directory Synchronization Log'
     )
     ParentFont = False
     TabOrder = 2
