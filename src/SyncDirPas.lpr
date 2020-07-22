@@ -17,7 +17,7 @@ begin
   Application.Scaled:=True;
   Application.Initialize;
   Application.CreateForm(TSyncDirForm, SyncDirForm);
-  Application.CreateForm(TSyncDirLog, SyncDirLog);
+  Application.CreateForm(TSyncDirLog, SyncDirLogForm);
   Application.Run;
 end.
 

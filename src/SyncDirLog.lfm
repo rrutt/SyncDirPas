@@ -13,6 +13,7 @@ object SyncDirLog: TSyncDirLog
     Height = 25
     Top = 512
     Width = 107
+    Anchors = [akLeft, akBottom]
     Caption = 'Copy Text'
     Font.CharSet = ANSI_CHARSET
     Font.Color = clBlack
@@ -21,6 +22,7 @@ object SyncDirLog: TSyncDirLog
     Font.Pitch = fpVariable
     Font.Quality = fqDraft
     Font.Style = [fsBold]
+    OnClick = ButtonCopyTextClick
     ParentFont = False
     TabOrder = 0
   end
@@ -29,6 +31,7 @@ object SyncDirLog: TSyncDirLog
     Height = 25
     Top = 512
     Width = 91
+    Anchors = [akRight, akBottom]
     Caption = 'Close'
     Font.CharSet = ANSI_CHARSET
     Font.Color = clBlack
@@ -37,6 +40,7 @@ object SyncDirLog: TSyncDirLog
     Font.Pitch = fpVariable
     Font.Quality = fqDraft
     Font.Style = [fsBold]
+    OnClick = ButtonCloseClick
     ParentFont = False
     TabOrder = 1
   end
@@ -46,11 +50,20 @@ object SyncDirLog: TSyncDirLog
     Top = 10
     Width = 715
     Anchors = [akTop, akLeft, akRight, akBottom]
-    Color = 15461355
     Enabled = False
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clBlack
+    Font.Height = -15
+    Font.Name = 'Lucida Sans Unicode'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsBold]
     Lines.Strings = (
-      'MemoLog'
+      'This is the synchronization log.'
+      'This will show files copied.'
+      'It may also show error or warning messages.'
     )
+    ParentFont = False
     TabOrder = 2
     TabStop = False
   end

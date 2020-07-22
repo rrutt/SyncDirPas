@@ -243,8 +243,8 @@ object SyncDirForm: TSyncDirForm
     Left = 27
     Height = 24
     Top = 200
-    Width = 162
-    Caption = 'Process hidden files'
+    Width = 282
+    Caption = 'Process hidden files (and directories)'
     Font.CharSet = ANSI_CHARSET
     Font.Color = clBlack
     Font.Height = -15
@@ -252,6 +252,7 @@ object SyncDirForm: TSyncDirForm
     Font.Pitch = fpVariable
     Font.Quality = fqDraft
     Font.Style = [fsBold]
+    OnChange = CheckBoxProcessHiddenFilesChange
     ParentFont = False
     TabOrder = 6
   end
@@ -415,7 +416,7 @@ object SyncDirForm: TSyncDirForm
     Left = 424
     Height = 25
     Top = 328
-    Width = 136
+    Width = 120
     Caption = 'Synchronize'
     Font.CharSet = ANSI_CHARSET
     Font.Color = clBlack
@@ -424,14 +425,15 @@ object SyncDirForm: TSyncDirForm
     Font.Pitch = fpVariable
     Font.Quality = fqDraft
     Font.Style = [fsBold]
+    OnClick = ButtonSynchronizeClick
     ParentFont = False
     TabOrder = 14
   end
   object ButtonExit: TButton
-    Left = 680
+    Left = 688
     Height = 25
     Top = 328
-    Width = 75
+    Width = 67
     Caption = 'Exit'
     Font.CharSet = ANSI_CHARSET
     Font.Color = clBlack
@@ -441,6 +443,23 @@ object SyncDirForm: TSyncDirForm
     Font.Quality = fqDraft
     Font.Style = [fsBold]
     OnClick = ButtonExitClick
+    ParentFont = False
+    TabOrder = 16
+  end
+  object ButtonShowLog: TButton
+    Left = 568
+    Height = 25
+    Top = 328
+    Width = 96
+    Caption = 'Show Log'
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clBlack
+    Font.Height = -15
+    Font.Name = 'Segoe UI'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsBold]
+    OnClick = ButtonShowLogClick
     ParentFont = False
     TabOrder = 15
   end
