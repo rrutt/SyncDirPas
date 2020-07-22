@@ -12,10 +12,28 @@ type
   { TSyncDirForm }
 
   TSyncDirForm = class(TForm)
+    ButtonExit: TButton;
+    ButtonSynchronize: TButton;
+    CheckBoxSkipReadOnlyTargetFiles: TCheckBox;
+    CheckBoxDeleteExtraFiles: TCheckBox;
+    CheckBoxDeleteExtraDirectories: TCheckBox;
+    CheckBoxSkipMissingDirectories: TCheckBox;
+    CheckBoxIncludeSubdirectories: TCheckBox;
+    CheckBoxMinimizeLogMessages: TCheckBox;
+    CheckBoxShowErrorMessages: TCheckBox;
+    CheckBoxSynchronizeBothWays: TCheckBox;
+    CheckBoxProcessHiddenFiles: TCheckBox;
+    CheckBoxCopyOlderFiles: TCheckBox;
     DirectoryEditTarget: TDirectoryEdit;
     DirectoryEditSource: TDirectoryEdit;
-    LabelTargetFolder: TLabel;
-    LabelSourceFolder: TLabel;
+    EditOnlyProcessFileTypes: TEdit;
+    EditIgnoreFileTypes: TEdit;
+    LabelInitializationFileSectionValue: TLabel;
+    LabelInitializationFileSection: TLabel;
+    LabelOnlyProcessFileTypes: TLabel;
+    LabelIgnoreFileTypes: TLabel;
+    LabelTargetDirectory: TLabel;
+    LabelSourceDirectory: TLabel;
     procedure DirectoryEditSourceChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
