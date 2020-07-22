@@ -25,3 +25,11 @@ This program may be used for the following purposes:
 - **Dual Computer File Coordination**: Use an external USB drive (or diskette) as a transport mechanism to move data files, in both directions, between an office computer and a home computer. (_Note_: You cannot target a newly formatted diskette. At least one file or empty directory must be present on the diskette.)
 
 The user may also design variations and combinations of these techniques.
+
+## Source Code Compilation Note
+
+Using the debugger in the Lazarus IDE on Windows 10 requires the following configuration adjustment:
+
+**[Lazarus - Windows - Debugger crashing on OpenDialog](https://www.tweaking4all.com/forum/delphi-lazarus-free-pascal/lazarus-windows-debugger-crashing-on-opendialog/)**
+
+

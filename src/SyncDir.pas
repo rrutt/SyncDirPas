@@ -17,6 +17,7 @@ type
     LabelTargetFolder: TLabel;
     LabelSourceFolder: TLabel;
     procedure DirectoryEditSourceChange(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
 
   public
@@ -33,6 +34,11 @@ implementation
 { TSyncDirForm }
 
 procedure TSyncDirForm.DirectoryEditSourceChange(Sender: TObject);
+begin
+
+end;
+
+procedure TSyncDirForm.FormCreate(Sender: TObject);
 begin
 
 end;

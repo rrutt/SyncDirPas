@@ -1,7 +1,7 @@
 object SyncDirForm: TSyncDirForm
-  Left = 20
+  Left = 277
   Height = 513
-  Top = 63
+  Top = 167
   Width = 737
   Caption = 'Synchronize Directories'
   ClientHeight = 513
@@ -111,7 +111,8 @@ object SyncDirForm: TSyncDirForm
     FE0383FFFE0387FFFF07C7FFFF07CFFFFF8FCFFFFF9FFFFFFFFFFFFFFFFFFFFF
     FFFF
   }
-  LCLVersion = '2.0.0.4'
+  OnCreate = FormCreate
+  LCLVersion = '2.0.10.0'
   object DirectoryEditSource: TDirectoryEdit
     Left = 24
     Height = 28
