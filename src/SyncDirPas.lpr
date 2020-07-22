@@ -7,7 +7,7 @@ uses
   cthreads,
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, SyncDir
+  Forms, SyncDir, SyncDirLog
   { you can add units after this };
 
 {$R *.res}
@@ -17,6 +17,7 @@ begin
   Application.Scaled:=True;
   Application.Initialize;
   Application.CreateForm(TSyncDirForm, SyncDirForm);
+  Application.CreateForm(TSyncDirLog, SyncDirLog);
   Application.Run;
 end.
 

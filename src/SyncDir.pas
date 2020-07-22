@@ -34,7 +34,7 @@ type
     LabelIgnoreFileTypes: TLabel;
     LabelTargetDirectory: TLabel;
     LabelSourceDirectory: TLabel;
-    procedure DirectoryEditSourceChange(Sender: TObject);
+    procedure ButtonExitClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
 
@@ -51,9 +51,9 @@ implementation
 
 { TSyncDirForm }
 
-procedure TSyncDirForm.DirectoryEditSourceChange(Sender: TObject);
+procedure TSyncDirForm.ButtonExitClick(Sender: TObject);
 begin
-
+  { TODO : Close application. }
 end;
 
 procedure TSyncDirForm.FormCreate(Sender: TObject);

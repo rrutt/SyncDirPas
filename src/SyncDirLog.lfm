@@ -1,0 +1,57 @@
+object SyncDirLog: TSyncDirLog
+  Left = 119
+  Height = 550
+  Top = 173
+  Width = 750
+  BorderWidth = 1
+  Caption = 'Directory Synchronization Log'
+  ClientHeight = 550
+  ClientWidth = 750
+  LCLVersion = '2.0.10.0'
+  object ButtonCopyText: TButton
+    Left = 16
+    Height = 25
+    Top = 512
+    Width = 107
+    Caption = 'Copy Text'
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clBlack
+    Font.Height = -15
+    Font.Name = 'Segoe UI'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabOrder = 0
+  end
+  object ButtonClose: TButton
+    Left = 640
+    Height = 25
+    Top = 512
+    Width = 91
+    Caption = 'Close'
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clBlack
+    Font.Height = -15
+    Font.Name = 'Segoe UI'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabOrder = 1
+  end
+  object MemoLog: TMemo
+    Left = 16
+    Height = 494
+    Top = 10
+    Width = 715
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    Color = 15461355
+    Enabled = False
+    Lines.Strings = (
+      'MemoLog'
+    )
+    TabOrder = 2
+    TabStop = False
+  end
+end
