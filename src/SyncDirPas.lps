@@ -8,9 +8,9 @@
       <Unit0>
         <Filename Value="SyncDirPas.lpr"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <UsageCount Value="20"/>
+        <CursorPos X="53" Y="18"/>
+        <UsageCount Value="21"/>
         <Loaded Value="True"/>
       </Unit0>
       <Unit1>
@@ -19,12 +19,31 @@
         <ComponentName Value="SyncDirForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UsageCount Value="20"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="9"/>
+        <CursorPos X="3" Y="37"/>
+        <UsageCount Value="21"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit1>
     </Units>
-    <JumpHistory HistoryIndex="-1"/>
+    <JumpHistory Count="4" HistoryIndex="3">
+      <Position1>
+        <Filename Value="SyncDir.pas"/>
+      </Position1>
+      <Position2>
+        <Filename Value="SyncDir.pas"/>
+        <Caret Line="34" Column="3" TopLine="9"/>
+      </Position2>
+      <Position3>
+        <Filename Value="SyncDir.pas"/>
+        <Caret Line="35" Column="3" TopLine="9"/>
+      </Position3>
+      <Position4>
+        <Filename Value="SyncDir.pas"/>
+        <Caret Line="36" Column="3" TopLine="9"/>
+      </Position4>
+    </JumpHistory>
     <RunParams>
       <FormatVersion Value="2"/>
       <Modes Count="0" ActiveMode=""/>

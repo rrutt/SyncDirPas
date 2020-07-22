@@ -5,10 +5,18 @@ unit SyncDir;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs;
+  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, EditBtn, StdCtrls;
 
 type
+
+  { TSyncDirForm }
+
   TSyncDirForm = class(TForm)
+    DirectoryEditTarget: TDirectoryEdit;
+    DirectoryEditSource: TDirectoryEdit;
+    LabelTargetFolder: TLabel;
+    LabelSourceFolder: TLabel;
+    procedure DirectoryEditSourceChange(Sender: TObject);
   private
 
   public
@@ -21,6 +29,13 @@ var
 implementation
 
 {$R *.lfm}
+
+{ TSyncDirForm }
+
+procedure TSyncDirForm.DirectoryEditSourceChange(Sender: TObject);
+begin
+
+end;
 
 end.
 
