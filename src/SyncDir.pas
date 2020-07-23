@@ -30,8 +30,12 @@ type
     DirectoryEditSource: TDirectoryEdit;
     EditOnlyProcessFileTypes: TEdit;
     EditIgnoreFileTypes: TEdit;
-    LabelInitializationFileSectionValue: TLabel;
-    LabelInitializationFileSection: TLabel;
+    LabelNextSectionValue: TLabel;
+    LabelNextSection: TLabel;
+    LabelInitializationFileValue: TLabel;
+    LabelInitializationFile: TLabel;
+    LabelInitializationSectionValue: TLabel;
+    LabelInitializationSection: TLabel;
     LabelOnlyProcessFileTypes: TLabel;
     LabelIgnoreFileTypes: TLabel;
     LabelTargetDirectory: TLabel;
@@ -83,6 +87,7 @@ begin
 
   { TODO : Validate source and target directory selections. }
   { TODO : Perform file synchronization. }
+  SyncDirLogForm.Show;
 end;
 
 procedure TSyncDirForm.CheckBoxProcessHiddenFilesChange(Sender: TObject);
@@ -93,7 +98,12 @@ end;
 
 procedure TSyncDirForm.FormCreate(Sender: TObject);
 begin
+  { TODO : Process command-line arguments. }
+  { TODO : Load initialization file sections and parameters into memory collections. }
 
+  LabelNextSection.Visible := false;
+  LabelNextSectionValue.Caption := '';
+  { TODO : Update user-interface options based on initialization file primary section. }
 end;
 
 end.

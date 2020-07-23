@@ -53,12 +53,11 @@
         <ResourceBaseClass Value="Form"/>
       </Unit1>
       <Unit2>
-        <Filename Value="syncdirlog.pas"/>
+        <Filename Value="SyncDirLog.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="SyncDirLog"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="SyncDirLog"/>
       </Unit2>
     </Units>
   </ProjectOptions>

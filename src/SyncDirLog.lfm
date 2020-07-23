@@ -42,7 +42,7 @@ object SyncDirLog: TSyncDirLog
     Font.Style = [fsBold]
     OnClick = ButtonCloseClick
     ParentFont = False
-    TabOrder = 1
+    TabOrder = 2
   end
   object MemoLog: TMemo
     Left = 16
@@ -62,7 +62,24 @@ object SyncDirLog: TSyncDirLog
       'Directory Synchronization Log'
     )
     ParentFont = False
-    TabOrder = 2
+    TabOrder = 3
     TabStop = False
+  end
+  object ButtonClearLog: TButton
+    Left = 168
+    Height = 25
+    Top = 512
+    Width = 96
+    Caption = 'Clear Log'
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clBlack
+    Font.Height = -15
+    Font.Name = 'Segoe UI'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsBold]
+    OnClick = ButtonClearLogClick
+    ParentFont = False
+    TabOrder = 1
   end
 end

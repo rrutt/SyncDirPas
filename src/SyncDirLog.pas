@@ -13,9 +13,11 @@ type
   { TSyncDirLog }
 
   TSyncDirLog = class(TForm)
+    ButtonClearLog: TButton;
     ButtonClose: TButton;
     ButtonCopyText: TButton;
     MemoLog: TMemo;
+    procedure ButtonClearLogClick(Sender: TObject);
     procedure ButtonCloseClick(Sender: TObject);
     procedure ButtonCopyTextClick(Sender: TObject);
   private
@@ -36,6 +38,11 @@ implementation
 procedure TSyncDirLog.ButtonCloseClick(Sender: TObject);
 begin
   SyncDirLogForm.Close;
+end;
+
+procedure TSyncDirLog.ButtonClearLogClick(Sender: TObject);
+begin
+  MemoLog.Lines.Clear;
 end;
 
 procedure TSyncDirLog.ButtonCopyTextClick(Sender: TObject);

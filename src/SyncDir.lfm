@@ -1,10 +1,10 @@
 object SyncDirForm: TSyncDirForm
   Left = 100
-  Height = 375
+  Height = 395
   Top = 100
   Width = 783
   Caption = 'Synchronize Directories'
-  ClientHeight = 375
+  ClientHeight = 395
   ClientWidth = 783
   Icon.Data = {
     BE0C00000000010001002020000001001800A80C000016000000280000002000
@@ -308,12 +308,12 @@ object SyncDirForm: TSyncDirForm
     State = cbChecked
     TabOrder = 12
   end
-  object LabelInitializationFileSection: TLabel
-    Left = 40
+  object LabelInitializationSection: TLabel
+    Left = 424
     Height = 20
     Top = 328
-    Width = 175
-    Caption = ' Initialization file section:'
+    Width = 145
+    Caption = 'Initialization section:'
     Font.CharSet = ANSI_CHARSET
     Font.Color = clBlack
     Font.Height = -15
@@ -324,8 +324,8 @@ object SyncDirForm: TSyncDirForm
     ParentColor = False
     ParentFont = False
   end
-  object LabelInitializationFileSectionValue: TLabel
-    Left = 224
+  object LabelInitializationSectionValue: TLabel
+    Left = 584
     Height = 20
     Top = 328
     Width = 60
@@ -413,9 +413,9 @@ object SyncDirForm: TSyncDirForm
     TabOrder = 13
   end
   object ButtonSynchronize: TButton
-    Left = 424
+    Left = 40
     Height = 25
-    Top = 328
+    Top = 360
     Width = 120
     Caption = 'Synchronize'
     Font.CharSet = ANSI_CHARSET
@@ -430,9 +430,9 @@ object SyncDirForm: TSyncDirForm
     TabOrder = 14
   end
   object ButtonExit: TButton
-    Left = 688
+    Left = 328
     Height = 25
-    Top = 328
+    Top = 360
     Width = 67
     Caption = 'Exit'
     Font.CharSet = ANSI_CHARSET
@@ -447,9 +447,9 @@ object SyncDirForm: TSyncDirForm
     TabOrder = 16
   end
   object ButtonShowLog: TButton
-    Left = 568
+    Left = 192
     Height = 25
-    Top = 328
+    Top = 360
     Width = 96
     Caption = 'Show Log'
     Font.CharSet = ANSI_CHARSET
@@ -462,5 +462,53 @@ object SyncDirForm: TSyncDirForm
     OnClick = ButtonShowLogClick
     ParentFont = False
     TabOrder = 15
+  end
+  object LabelInitializationFile: TLabel
+    Left = 40
+    Height = 20
+    Top = 328
+    Width = 121
+    Caption = ' Initialization file:'
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clBlack
+    Font.Height = -15
+    Font.Name = 'Segoe UI'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+  object LabelInitializationFileValue: TLabel
+    Left = 168
+    Height = 20
+    Top = 328
+    Width = 69
+    Caption = 'SyncDir.ini'
+    ParentColor = False
+  end
+  object LabelNextSection: TLabel
+    Left = 424
+    Height = 20
+    Top = 360
+    Width = 92
+    Caption = 'Next section:'
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clBlack
+    Font.Height = -15
+    Font.Name = 'Segoe UI'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+  object LabelNextSectionValue: TLabel
+    Left = 584
+    Height = 20
+    Top = 360
+    Width = 162
+    Caption = '(LabelNextSectionValue)'
+    ParentColor = False
   end
 end
