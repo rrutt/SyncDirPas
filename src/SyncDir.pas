@@ -86,8 +86,14 @@ begin
   AppendLogMessage(FormatMockLogMessage);
 
   { TODO : Validate source and target directory selections. }
-  { TODO : Perform file synchronization. }
+
+  { TODO : Should we show log form while synchronizing, or only when done? }
   SyncDirLogForm.Show;
+
+  { TODO : Perform file synchronization. }
+  { TODO : If NextSection has value,
+           iterate file synchronization thru successive section(s).
+           (Set user-interface options on main form as each section is processed.) }
 end;
 
 procedure TSyncDirForm.CheckBoxProcessHiddenFilesChange(Sender: TObject);
@@ -103,7 +109,13 @@ begin
 
   LabelNextSection.Visible := false;
   LabelNextSectionValue.Caption := '';
-  { TODO : Update user-interface options based on initialization file primary section. }
+  { TODO : Initialize user-interface options based on initialization file primary section. }
+  { TODO : If Automatic option is selected in initialization settings,
+           hide forms and start processing primary section,
+           unless NotifyUser option is set.
+           Halt application when done processing. }
+  { TODO : Make LabelNextSection visible if a NextSection is active.
+           Make invisible again when last section is being processed. }
 end;
 
 end.
