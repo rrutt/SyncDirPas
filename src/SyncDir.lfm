@@ -413,10 +413,10 @@ object SyncDirForm: TSyncDirForm
     TabOrder = 13
   end
   object ButtonSynchronize: TButton
-    Left = 40
+    Left = 24
     Height = 25
     Top = 360
-    Width = 120
+    Width = 112
     Caption = 'Synchronize'
     Font.CharSet = ANSI_CHARSET
     Font.Color = clBlack
@@ -444,10 +444,10 @@ object SyncDirForm: TSyncDirForm
     Font.Style = [fsBold]
     OnClick = ButtonExitClick
     ParentFont = False
-    TabOrder = 16
+    TabOrder = 17
   end
   object ButtonShowLog: TButton
-    Left = 192
+    Left = 144
     Height = 25
     Top = 360
     Width = 96
@@ -510,5 +510,22 @@ object SyncDirForm: TSyncDirForm
     Width = 162
     Caption = '(LabelNextSectionValue)'
     ParentColor = False
+  end
+  object ButtonHelp: TButton
+    Left = 248
+    Height = 25
+    Top = 360
+    Width = 72
+    Caption = 'Help'
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clBlack
+    Font.Height = -15
+    Font.Name = 'Segoe UI'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsBold]
+    OnClick = ButtonHelpClick
+    ParentFont = False
+    TabOrder = 16
   end
 end

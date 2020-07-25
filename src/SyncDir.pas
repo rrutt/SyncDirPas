@@ -6,6 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, EditBtn, StdCtrls,
+  LCLIntf,
   SyncDirLog;
 
 type
@@ -13,6 +14,7 @@ type
   { TSyncDirForm }
 
   TSyncDirForm = class(TForm)
+    ButtonHelp: TButton;
     ButtonShowLog: TButton;
     ButtonExit: TButton;
     ButtonSynchronize: TButton;
@@ -41,6 +43,7 @@ type
     LabelTargetDirectory: TLabel;
     LabelSourceDirectory: TLabel;
     procedure ButtonExitClick(Sender: TObject);
+    procedure ButtonHelpClick(Sender: TObject);
     procedure ButtonShowLogClick(Sender: TObject);
     procedure ButtonSynchronizeClick(Sender: TObject);
     procedure CheckBoxProcessHiddenFilesChange(Sender: TObject);
@@ -73,6 +76,15 @@ end;
 procedure TSyncDirForm.ButtonExitClick(Sender: TObject);
 begin
   Halt(1);
+end;
+
+procedure TSyncDirForm.ButtonHelpClick(Sender: TObject);
+var
+  helpFileURL: string;
+begin
+  helpFileURL := ExtractFilePath(Application.ExeName) + 'SyncDir.html';
+  //ShowMessage('Help File URL = ' + helpFileURL);
+  OpenURL(helpFileURL);
 end;
 
 procedure TSyncDirForm.ButtonShowLogClick(Sender: TObject);
@@ -109,7 +121,7 @@ var
   initSection: String;
 begin
   currentWorkingDirectory := GetCurrentDir;
-  ShowMessage('Current Working Directory = ' + currentWorkingDirectory);
+  //ShowMessage('Current Working Directory = ' + currentWorkingDirectory);
 
   initFileName := paramStr(1);
   if (initFileName = '') then begin
@@ -144,11 +156,6 @@ https://www.freepascal.org/docs-html/fcl/inifiles/tcustominifile.boolfalsestring
            Halt application when done processing. }
   { TODO : Make LabelNextSection visible if a NextSection is active.
            Make invisible again when last section is being processed. }
-
-  { TODO : Add a Help button and show HTML help file from EXE path via:
-           https://wiki.freepascal.org/Webbrowser }
-  //ShowMessage('Current EXE file = ' + Application.ExeName);
-  //ShowMessage('Help File Name = ' + ExtractFilePath(Application.ExeName) + 'SyncDir.html');
 end;
 
 end.
