@@ -1,10 +1,10 @@
 object SyncDirForm: TSyncDirForm
   Left = 100
-  Height = 395
+  Height = 432
   Top = 100
   Width = 783
   Caption = 'Synchronize Directories'
-  ClientHeight = 395
+  ClientHeight = 432
   ClientWidth = 783
   Icon.Data = {
     BE0C00000000010001002020000001001800A80C000016000000280000002000
@@ -309,11 +309,11 @@ object SyncDirForm: TSyncDirForm
     TabOrder = 12
   end
   object LabelInitializationSection: TLabel
-    Left = 424
+    Left = 40
     Height = 20
-    Top = 328
-    Width = 145
-    Caption = 'Initialization section:'
+    Top = 360
+    Width = 149
+    Caption = ' Initialization section:'
     Font.CharSet = ANSI_CHARSET
     Font.Color = clBlack
     Font.Height = -15
@@ -325,9 +325,9 @@ object SyncDirForm: TSyncDirForm
     ParentFont = False
   end
   object LabelInitializationSectionValue: TLabel
-    Left = 584
+    Left = 192
     Height = 20
-    Top = 328
+    Top = 360
     Width = 80
     Caption = '(initSection)'
     ParentColor = False
@@ -413,9 +413,9 @@ object SyncDirForm: TSyncDirForm
     TabOrder = 13
   end
   object ButtonSynchronize: TButton
-    Left = 24
+    Left = 40
     Height = 25
-    Top = 360
+    Top = 392
     Width = 112
     Caption = 'Synchronize'
     Font.CharSet = ANSI_CHARSET
@@ -430,9 +430,9 @@ object SyncDirForm: TSyncDirForm
     TabOrder = 14
   end
   object ButtonExit: TButton
-    Left = 328
+    Left = 696
     Height = 25
-    Top = 360
+    Top = 392
     Width = 67
     Caption = 'Exit'
     Font.CharSet = ANSI_CHARSET
@@ -447,9 +447,9 @@ object SyncDirForm: TSyncDirForm
     TabOrder = 17
   end
   object ButtonShowLog: TButton
-    Left = 144
+    Left = 192
     Height = 25
-    Top = 360
+    Top = 392
     Width = 96
     Caption = 'Show Log'
     Font.CharSet = ANSI_CHARSET
@@ -504,7 +504,7 @@ object SyncDirForm: TSyncDirForm
     ParentFont = False
   end
   object LabelNextSectionValue: TLabel
-    Left = 584
+    Left = 520
     Height = 20
     Top = 360
     Width = 162
@@ -512,9 +512,9 @@ object SyncDirForm: TSyncDirForm
     ParentColor = False
   end
   object ButtonHelp: TButton
-    Left = 248
+    Left = 584
     Height = 25
-    Top = 360
+    Top = 392
     Width = 72
     Caption = 'Help'
     Font.CharSet = ANSI_CHARSET
