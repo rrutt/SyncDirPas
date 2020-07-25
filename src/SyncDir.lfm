@@ -328,8 +328,8 @@ object SyncDirForm: TSyncDirForm
     Left = 584
     Height = 20
     Top = 328
-    Width = 60
-    Caption = '[SyncDir]'
+    Width = 80
+    Caption = '(initSection)'
     ParentColor = False
   end
   object CheckBoxIncludeSubdirectories: TCheckBox
@@ -483,8 +483,8 @@ object SyncDirForm: TSyncDirForm
     Left = 168
     Height = 20
     Top = 328
-    Width = 69
-    Caption = 'SyncDir.ini'
+    Width = 94
+    Caption = '(initFileName)'
     ParentColor = False
   end
   object LabelNextSection: TLabel

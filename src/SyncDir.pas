@@ -60,12 +60,12 @@ implementation
 
 { TSyncDirForm }
 
-function FormatMockLogMessage: string;
+function FormatMockLogMessage: String;
 begin
   result := Format('Simulated Synchronization #%d.', [SyncDirLogForm.MemoLog.Lines.Count]);
 end;
 
-procedure AppendLogMessage(message: string);
+procedure AppendLogMessage(message: String);
 begin
   SyncDirLogForm.MemoLog.Lines.Add(message);
 end;
@@ -103,9 +103,37 @@ begin
 end;
 
 procedure TSyncDirForm.FormCreate(Sender: TObject);
+var
+  currentWorkingDirectory: String = '';
+  initFileName: String;
+  initSection: String;
 begin
-  { TODO : Process command-line arguments. }
-  { TODO : Load initialization file sections and parameters into memory collections. }
+  currentWorkingDirectory := GetCurrentDir;
+  ShowMessage('Current Working Directory = ' + currentWorkingDirectory);
+
+  initFileName := paramStr(1);
+  if (initFileName = '') then begin
+    initFileName := 'SyncDir.ini';
+  end;
+  if (ExtractFilePath(initFileName) = '') then begin
+    initFileName := currentWorkingDirectory + DirectorySeparator  + initFileName;
+  end;
+  LabelInitializationFileValue.Caption := initFileName;
+
+  initSection := paramStr(2);
+  if (initSection = '') then begin
+    initSection := 'SyncDir';
+  end;
+  LabelInitializationSectionValue.Caption := '[' + initSection + ']';
+
+  { TODO : Load initialization file sections and parameters into memory collections via
+           https://wiki.freepascal.org/Using_INI_Files
+           https://www.freepascal.org/docs-html/fcl/inifiles/tinifile.html
+           https://www.freepascal.org/docs-html/fcl/inifiles/tinifile-3.html}
+  { TODO : Set interpretation of True and False ini file strings via:
+https://www.freepascal.org/docs-html/fcl/inifiles/tcustominifile.booltruestrings.html
+           and
+https://www.freepascal.org/docs-html/fcl/inifiles/tcustominifile.boolfalsestrings.html}
 
   LabelNextSection.Visible := false;
   LabelNextSectionValue.Caption := '';
@@ -116,6 +144,11 @@ begin
            Halt application when done processing. }
   { TODO : Make LabelNextSection visible if a NextSection is active.
            Make invisible again when last section is being processed. }
+
+  { TODO : Add a Help button and show HTML help file from EXE path via:
+           https://wiki.freepascal.org/Webbrowser }
+  //ShowMessage('Current EXE file = ' + Application.ExeName);
+  //ShowMessage('Help File Name = ' + ExtractFilePath(Application.ExeName) + 'SyncDir.html');
 end;
 
 end.

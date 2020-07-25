@@ -21,7 +21,7 @@
       <UseVersionInfo Value="True"/>
       <AutoIncrementBuild Value="True"/>
       <MajorVersionNr Value="3"/>
-      <BuildNr Value="2"/>
+      <BuildNr Value="11"/>
       <StringTable CompanyName="Rick Rutt" FileDescription="Directory Synchronization Utility" InternalName="SyncDirPas" LegalCopyright="Copyright 2020 Rick Rutt" ProductName="SyncDirPas" ProductVersion="3.0.0"/>
     </VersionInfo>
     <BuildModes Count="1">
