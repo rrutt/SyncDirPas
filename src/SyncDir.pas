@@ -121,6 +121,22 @@ begin
     end;
   end;
 
+  if (isValid and CheckBoxIncludeSubdirectories.Checked) then begin
+    if (Pos(AnsiLowerCase(sourceDirectory), AnsiLowerCase(targetDirectory)) > 0) then begin
+      isValid := false;
+      AppendLogMessage('Error: Target Directory cannot be a sub-directory of Source Directory when "Include subdirectories" is checked');
+      AppendLogMessage(Format('  Expanded Source Directory = %s', [sourceDirectory]));
+      AppendLogMessage(Format('  Expanded Target Directory = %s', [targetDirectory]));
+    end;
+
+    if (Pos(AnsiLowerCase(targetDirectory), AnsiLowerCase(sourceDirectory)) > 0) then begin
+      isValid := false;
+      AppendLogMessage('Error: Source Directory cannot be a sub-directory of Target Directory when "Include subdirectories" is checked');
+      AppendLogMessage(Format('  Expanded Source Directory = %s', [sourceDirectory]));
+      AppendLogMessage(Format('  Expanded Target Directory = %s', [targetDirectory]));
+    end;
+  end;
+
   result := isValid;
 end;
 
