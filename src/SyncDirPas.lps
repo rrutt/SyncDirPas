@@ -20,8 +20,8 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="109"/>
-        <CursorPos Y="124"/>
+        <TopLine Value="162"/>
+        <CursorPos X="14" Y="183"/>
         <UsageCount Value="262"/>
         <Loaded Value="True"/>
       </Unit1>

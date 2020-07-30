@@ -1,5 +1,7 @@
 unit SyncDir;
 
+{ TODO : Check default form dimensions on Acer netbook. }
+
 {$mode objfpc}{$H+}
 
 interface
@@ -176,6 +178,9 @@ begin
     AppendLogMessage(FormatMockLogMessage);
 
     { TODO : Perform file synchronization. }
+    { TODO : If MinimizeLogMessages options is false,
+             write detailed option settings to Log.
+             Also show each sub-directory as being processed. }
     { TODO : Function to copy a file:
              https://wiki.freepascal.org/CopyFile }
     { TODO : If NextSection has value,
@@ -233,6 +238,10 @@ https://www.freepascal.org/docs-html/fcl/inifiles/tcustominifile.boolfalsestring
            hide forms and start processing primary section,
            unless NotifyUser option is set.
            Halt application when done processing. }
+  { TODO : If Automatic option is enabled,
+           write log to SyncDir.log in current directory when complete.
+           Add an initialization option for this?
+           If so, write file based on that option rather than the Automatic option. }
   { TODO : Make LabelNextSection visible if a NextSection is active.
            Make invisible again when last section is being processed. }
 end;
