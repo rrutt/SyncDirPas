@@ -50,7 +50,6 @@ object SyncDirLog: TSyncDirLog
     Top = 10
     Width = 715
     Anchors = [akTop, akLeft, akRight, akBottom]
-    Enabled = False
     Font.CharSet = ANSI_CHARSET
     Font.Color = clBlack
     Font.Height = -15
@@ -62,6 +61,8 @@ object SyncDirLog: TSyncDirLog
       'Directory Synchronization Log'
     )
     ParentFont = False
+    ReadOnly = True
+    ScrollBars = ssVertical
     TabOrder = 3
     TabStop = False
   end
