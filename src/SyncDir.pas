@@ -59,6 +59,8 @@ type
 
 var
   SyncDirForm: TSyncDirForm;
+  gSourceDirectory: String;
+  gTargetDirectory: String;
 
 implementation
 
@@ -79,12 +81,32 @@ end;
 
 function FormatMockLogMessage: String;
 begin
-  result := Format('Simulated Synchronization #%d.', [SyncDirLogForm.MemoLog.Lines.Count]);
+  result := Format(
+      'Simulated Synchronization #%d.' + LineEnding +
+      'Source Directory: %s' + LineEnding +
+      'Target Directory: %s',
+      [SyncDirLogForm.MemoLog.Lines.Count, gSourceDirectory, gTargetDirectory]);
 end;
 
 procedure AppendLogMessage(message: String);
 begin
   SyncDirLogForm.MemoLog.Lines.Add(message);
+end;
+
+function SynchronizeSourceToTarget: Boolean;
+var isSuccessful: Boolean;
+begin
+  { TODO : Perform file synchronization. }
+  AppendLogMessage('(Synchronization not yet implemented.)');
+  isSuccessful := false;
+
+  { TODO : If MinimizeLogMessages options is false,
+           write detailed option settings to Log.
+           Also show each sub-directory as being processed. }
+  { TODO : Function to copy a file:
+           https://wiki.freepascal.org/CopyFile }
+
+  result := isSuccessful;
 end;
 
 function TSyncDirForm.ValidateSourceAndTargetDirectories: Boolean;
@@ -139,6 +161,11 @@ begin
     end;
   end;
 
+  if (isValid) then begin
+    gSourceDirectory := sourceDirectory;
+    gTargetDirectory := targetDirectory;
+  end;
+
   result := isValid;
 end;
 
@@ -164,6 +191,7 @@ end;
 procedure TSyncDirForm.ButtonSynchronizeClick(Sender: TObject);
 var
   optionsAreValid: Boolean = true;
+  synchronizationSucceeded: Boolean;
 begin
   if (optionsAreValid) then begin
     optionsAreValid := ValidateSourceAndTargetDirectories();
@@ -178,11 +206,11 @@ begin
     AppendLogMessage(FormatMockLogMessage);
 
     { TODO : Perform file synchronization. }
-    { TODO : If MinimizeLogMessages options is false,
-             write detailed option settings to Log.
-             Also show each sub-directory as being processed. }
-    { TODO : Function to copy a file:
-             https://wiki.freepascal.org/CopyFile }
+    synchronizationSucceeded := SynchronizeSourceToTarget;
+    if (not synchronizationSucceeded) then begin
+      AppendLogMessage('Synchronization failed!');
+    end;
+
     { TODO : If NextSection has value,
              iterate file synchronization thru successive section(s).
              (Set user-interface options on main form as each section is processed.) }
