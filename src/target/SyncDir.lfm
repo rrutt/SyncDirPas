@@ -1,0 +1,531 @@
+object SyncDirForm: TSyncDirForm
+  Left = 100
+  Height = 432
+  Top = 100
+  Width = 783
+  Caption = 'Synchronize Directories'
+  ClientHeight = 432
+  ClientWidth = 783
+  Icon.Data = {
+    BE0C00000000010001002020000001001800A80C000016000000280000002000
+    0000400000000100180000000000000C00006400000064000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    000000000000000000000000C0C0C0FFFFFF0000008080808080800000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    000000000000C0C0C0FFFFFF000000C0C0C0FFFFFF0000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    C0C0C0FFFFFF000000C0C0C0FFFFFF000000C0C0C0000000C0C0C0C0C0C08080
+    8080808000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000FFFFFFFFFFFF
+    000000C0C0C0FFFFFF000000C0C0C0FFFFFF000000C0C0C0FFFFFF0000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000FFFFFF
+    FFFFFF000000C0C0C0FFFFFF000000000000C0C0C0FFFFFFFFFFFFFFFFFFC0C0
+    C0C0C0C080808080808000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000FFFFFF000000
+    000000C0C0C0000000000000C0C0C0FFFFFFFFFFFFFFFFFFFFFFFFC0C0C00000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000FFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC0C0C0000000C0C0
+    C0C0C0C0C0C0C0C0C0C000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000C0C0C0FFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFC0C0C0000000000000000000C0C0C0C0C0C0000000C0C0C0FFFF
+    FFFFFFFFFFFFFFC0C0C080808000000000000000000000000000000000000000
+    0000000000000000000000000000808000000000C0C0C0FFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFF000000FFFFFFFFFFFFC0C0C0000000000000C0C0C0FFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFC0C0C080808000000080808000000000000000000000
+    0000000000000000000000808000808000000000C0C0C0C0C0C0FFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFF000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFF000000C0C0C0C0C0C000000080808000000000
+    0000000000000000000000FFFF00808000808000000000C0C0C0C0C0C0FFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFF000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFF00000000FFFF00FFFF00000080808080808080808000
+    0000000000808000000000FFFF00808000808000808000000000C0C0C0C0C0C0
+    0000000000000000000000000000000000000000000000000000000000000000
+    00808080FFFFFF00000000FFFF00FFFF000000808080C0C0C080808080808080
+    8080808000808000808000000000FFFF00808000808000808000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000FFFF00FFFF000000808080C0C0C0808080C0C0C080808080
+    8080808000808000808000808000000000FFFF00808000808000808000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000FFFF00FFFF000000C0C0C0C0C0C0808080C0C0C0808080C0C0C080
+    8080808000808000808000808000808000000000FFFF00FFFF00000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    00808080000000000000FFFFFFC0C0C0C0C0C0C0C0C0808080C0C0C0808080C0
+    C0C0808000808000808000808000808000808000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    00000000808080FFFFFFC0C0C0FFFFFFC0C0C0C0C0C0C0C0C0808080C0C0C000
+    0000808000808000808000808000808000808000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    00000000000000C0C0C0FFFFFFC0C0C0FFFFFFC0C0C0C0C0C0C0C0C080808000
+    0000808000808000808000808000808000808000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    00000000000000FFFFFFC0C0C0FFFFFFC0C0C0FFFFFFC0C0C0C0C0C0C0C0C000
+    0000000000808000808000808000808000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    00000000000000000000FFFFFFC0C0C0FFFFFFC0C0C0FFFFFFC0C0C000000000
+    0000000000808000808000808000808000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    00000000000000000000C0C0C0FFFFFFC0C0C0FFFFFFC0C0C0FFFFFF00000000
+    0000000000808000808000808000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    00000000000000000000000000C0C0C0FFFFFFC0C0C0FFFFFF00000000000000
+    0000000000000000808000808000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    00000000000000000000000000FFFFFFC0C0C0FFFFFFC0C0C000000000000000
+    0000000000000000808000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    00000000000000000000000000000000FFFFFFC0C0C000000000000000000000
+    0000000000000000808000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    00000000000000000000000000000000C0C0C000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC1FFFFFF00FFFFFC003FFFF00
+    01FFFE0000FFFE00007FFE00007FFC00007FF000000FE0000003C00000018000
+    000000000000003FF800003FF800007FF80000FFF80101FFFC0101FFFC0183FF
+    FE0383FFFE0387FFFF07C7FFFF07CFFFFF8FCFFFFF9FFFFFFFFFFFFFFFFFFFFF
+    FFFF
+  }
+  OnCreate = FormCreate
+  LCLVersion = '2.0.10.0'
+  object DirectoryEditSource: TDirectoryEdit
+    Left = 24
+    Height = 28
+    Top = 40
+    Width = 350
+    DialogTitle = 'Select Source Folder'
+    ShowHidden = False
+    ButtonWidth = 23
+    NumGlyphs = 1
+    MaxLength = 0
+    TabOrder = 0
+  end
+  object DirectoryEditTarget: TDirectoryEdit
+    Left = 408
+    Height = 28
+    Top = 40
+    Width = 350
+    DialogTitle = 'Select Target Folder'
+    ShowHidden = False
+    ButtonWidth = 23
+    NumGlyphs = 1
+    MaxLength = 0
+    TabOrder = 1
+  end
+  object LabelSourceDirectory: TLabel
+    Left = 24
+    Height = 20
+    Top = 16
+    Width = 121
+    Caption = ' Source Directory'
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clBlack
+    Font.Height = -15
+    Font.Name = 'Segoe UI'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+  object LabelTargetDirectory: TLabel
+    Left = 408
+    Height = 20
+    Top = 16
+    Width = 119
+    Caption = ' Target Directory'
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clBlack
+    Font.Height = -15
+    Font.Name = 'Segoe UI'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+  object LabelIgnoreFileTypes: TLabel
+    Left = 24
+    Height = 20
+    Top = 88
+    Width = 122
+    Caption = 'Ignore File Types:'
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clBlack
+    Font.Height = -15
+    Font.Name = 'Segoe UI'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+  object LabelOnlyProcessFileTypes: TLabel
+    Left = 24
+    Height = 20
+    Top = 120
+    Width = 165
+    Caption = 'Only Process File Types:'
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clBlack
+    Font.Height = -15
+    Font.Name = 'Segoe UI'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+  object EditIgnoreFileTypes: TEdit
+    Left = 200
+    Height = 28
+    Top = 88
+    Width = 560
+    TabOrder = 2
+  end
+  object EditOnlyProcessFileTypes: TEdit
+    Left = 200
+    Height = 28
+    Top = 120
+    Width = 560
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clBlack
+    Font.Height = -15
+    Font.Name = 'Segoe UI'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabOrder = 3
+  end
+  object CheckBoxCopyOlderFiles: TCheckBox
+    Left = 27
+    Height = 24
+    Top = 168
+    Width = 132
+    Caption = 'Copy older files'
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clBlack
+    Font.Height = -15
+    Font.Name = 'Segoe UI'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabOrder = 4
+  end
+  object CheckBoxProcessHiddenFiles: TCheckBox
+    Left = 27
+    Height = 24
+    Top = 200
+    Width = 282
+    Caption = 'Process hidden files (and directories)'
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clBlack
+    Font.Height = -15
+    Font.Name = 'Segoe UI'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsBold]
+    OnChange = CheckBoxProcessHiddenFilesChange
+    ParentFont = False
+    TabOrder = 6
+  end
+  object CheckBoxSynchronizeBothWays: TCheckBox
+    Left = 27
+    Height = 24
+    Top = 232
+    Width = 184
+    Caption = 'Synchronize both ways'
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clBlack
+    Font.Height = -15
+    Font.Name = 'Segoe UI'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabOrder = 8
+  end
+  object CheckBoxShowErrorMessages: TCheckBox
+    Left = 27
+    Height = 24
+    Top = 264
+    Width = 173
+    Caption = 'Show error messages'
+    Checked = True
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clBlack
+    Font.Height = -15
+    Font.Name = 'Segoe UI'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsBold]
+    ParentFont = False
+    State = cbChecked
+    TabOrder = 10
+  end
+  object CheckBoxMinimizeLogMessages: TCheckBox
+    Left = 27
+    Height = 24
+    Top = 296
+    Width = 186
+    Caption = 'Minimize log messages'
+    Checked = True
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clBlack
+    Font.Height = -15
+    Font.Name = 'Segoe UI'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsBold]
+    ParentFont = False
+    State = cbChecked
+    TabOrder = 12
+  end
+  object LabelInitializationSection: TLabel
+    Left = 40
+    Height = 20
+    Top = 360
+    Width = 149
+    Caption = ' Initialization section:'
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clBlack
+    Font.Height = -15
+    Font.Name = 'Segoe UI'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+  object LabelInitializationSectionValue: TLabel
+    Left = 192
+    Height = 20
+    Top = 360
+    Width = 80
+    Caption = '(initSection)'
+    ParentColor = False
+  end
+  object CheckBoxIncludeSubdirectories: TCheckBox
+    Left = 408
+    Height = 24
+    Top = 168
+    Width = 178
+    Caption = 'Include subdirectories'
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clBlack
+    Font.Height = -15
+    Font.Name = 'Segoe UI'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabOrder = 5
+  end
+  object CheckBoxSkipMissingDirectories: TCheckBox
+    Left = 408
+    Height = 24
+    Top = 200
+    Width = 189
+    Caption = 'Skip missing directories'
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clBlack
+    Font.Height = -15
+    Font.Name = 'Segoe UI'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabOrder = 7
+  end
+  object CheckBoxDeleteExtraDirectories: TCheckBox
+    Left = 408
+    Height = 24
+    Top = 232
+    Width = 187
+    Caption = 'Delete extra directories'
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clBlack
+    Font.Height = -15
+    Font.Name = 'Segoe UI'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabOrder = 9
+  end
+  object CheckBoxDeleteExtraFiles: TCheckBox
+    Left = 408
+    Height = 24
+    Top = 264
+    Width = 142
+    Caption = 'Delete extra files'
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clBlack
+    Font.Height = -15
+    Font.Name = 'Segoe UI'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabOrder = 11
+  end
+  object CheckBoxSkipReadOnlyTargetFiles: TCheckBox
+    Left = 408
+    Height = 24
+    Top = 296
+    Width = 204
+    Caption = 'Skip read-only target files'
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clBlack
+    Font.Height = -15
+    Font.Name = 'Segoe UI'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabOrder = 13
+  end
+  object ButtonSynchronize: TButton
+    Left = 40
+    Height = 25
+    Top = 392
+    Width = 112
+    Caption = 'Synchronize'
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clBlack
+    Font.Height = -15
+    Font.Name = 'Segoe UI'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsBold]
+    OnClick = ButtonSynchronizeClick
+    ParentFont = False
+    TabOrder = 14
+  end
+  object ButtonExit: TButton
+    Left = 696
+    Height = 25
+    Top = 392
+    Width = 67
+    Caption = 'Exit'
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clBlack
+    Font.Height = -15
+    Font.Name = 'Segoe UI'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsBold]
+    OnClick = ButtonExitClick
+    ParentFont = False
+    TabOrder = 17
+  end
+  object ButtonShowLog: TButton
+    Left = 192
+    Height = 25
+    Top = 392
+    Width = 96
+    Caption = 'Show Log'
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clBlack
+    Font.Height = -15
+    Font.Name = 'Segoe UI'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsBold]
+    OnClick = ButtonShowLogClick
+    ParentFont = False
+    TabOrder = 15
+  end
+  object LabelInitializationFile: TLabel
+    Left = 40
+    Height = 20
+    Top = 328
+    Width = 121
+    Caption = ' Initialization file:'
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clBlack
+    Font.Height = -15
+    Font.Name = 'Segoe UI'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+  object LabelInitializationFileValue: TLabel
+    Left = 168
+    Height = 20
+    Top = 328
+    Width = 94
+    Caption = '(initFileName)'
+    ParentColor = False
+  end
+  object LabelNextSection: TLabel
+    Left = 424
+    Height = 20
+    Top = 360
+    Width = 92
+    Caption = 'Next section:'
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clBlack
+    Font.Height = -15
+    Font.Name = 'Segoe UI'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+  object LabelNextSectionValue: TLabel
+    Left = 520
+    Height = 20
+    Top = 360
+    Width = 162
+    Caption = '(LabelNextSectionValue)'
+    ParentColor = False
+  end
+  object ButtonHelp: TButton
+    Left = 584
+    Height = 25
+    Top = 392
+    Width = 72
+    Caption = 'Help'
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clBlack
+    Font.Height = -15
+    Font.Name = 'Segoe UI'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsBold]
+    OnClick = ButtonHelpClick
+    ParentFont = False
+    TabOrder = 16
+  end
+end
