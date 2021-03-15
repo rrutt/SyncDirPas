@@ -3,7 +3,7 @@ unit SyncDir;
 { TODO : Check default form dimensions on Acer netbook. }
 
 {$mode objfpc}{$H+}
-
+{$WARN 5044 off : Symbol "$1" is not portable}
 interface
 
 uses
@@ -94,17 +94,60 @@ begin
 end;
 
 function SynchronizeSourceToTarget: Boolean;
-var isSuccessful: Boolean;
+var
+  isSuccessful: Boolean;
+  searchInfo: TSearchRec;
+  searchAttr: LongInt;
+  dirCount: LongInt;
+  fileCount: LongInt;
+  filePrefix: String;
 begin
-  { TODO : Perform file synchronization. }
-  AppendLogMessage('(Synchronization not yet implemented.)');
-  isSuccessful := false;
-
   { TODO : If MinimizeLogMessages options is false,
            write detailed option settings to Log.
-           Also show each sub-directory as being processed. }
+           Also show each sub-directory as it is being processed. }
+
+  dirCount := 0;
+  fileCount := 0;
+
+  // https://www.freepascal.org/docs-html/rtl/sysutils/findfirst.html
+  // https://www.freepascal.org/docs-html/rtl/sysutils/findnext.html
+  searchAttr := faAnyFile;
+  //searchAttr := searchAttr and (not faHidden);
+  If FindFirst(EnsureDirectorySeparator(gSourceDirectory) + '*', searchAttr, searchInfo) = 0 then
+    begin
+    repeat
+      with searchInfo do begin
+        filePrefix := '';
+        if (Attr and faHidden) = faHidden then begin
+          filePrefix := filePrefix + 'Hidden ';
+        end;
+        if (Attr and faReadOnly) = faReadOnly then begin
+          filePrefix := filePrefix + 'ReadOnly ';
+        end;
+
+        if (Attr and faDirectory) = faDirectory then begin
+          if ((Name <> '.') and (Name <> '..')) then begin
+            inc(dirCount);
+            AppendLogMessage(Format('%sDirectory: %s  Size: %d', [filePrefix, Name, Size]));
+          end;
+        end else begin
+          inc(fileCount);
+          AppendLogMessage(Format('%sFile: %s  Size: %d', [filePrefix, Name, Size]));
+        end;
+      end;
+    until FindNext(searchInfo) <> 0;
+    FindClose(searchInfo);
+  end;
+
+  AppendLogMessage(Format('Finished search. Found %d directories and %d files.', [dirCount, fileCount]));
+
+  { TODO : Perform file synchronization. }
+
   { TODO : Function to copy a file:
            https://wiki.freepascal.org/CopyFile }
+
+   AppendLogMessage('(Synchronization not yet implemented.)');
+   isSuccessful := false;
 
   result := isSuccessful;
 end;
