@@ -1,11 +1,11 @@
 object SyncDirForm: TSyncDirForm
-  Left = 100
+  Left = 67
   Height = 432
-  Top = 100
-  Width = 783
+  Top = 104
+  Width = 780
   Caption = 'Synchronize Directories'
   ClientHeight = 432
-  ClientWidth = 783
+  ClientWidth = 780
   Icon.Data = {
     BE0C00000000010001002020000001001800A80C000016000000280000002000
     0000400000000100180000000000000C00006400000064000000000000000000

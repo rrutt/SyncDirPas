@@ -1,17 +1,17 @@
 object SyncDirLog: TSyncDirLog
-  Left = 119
-  Height = 550
-  Top = 173
-  Width = 750
+  Left = 231
+  Height = 570
+  Top = 141
+  Width = 780
   BorderWidth = 1
   Caption = 'Directory Synchronization Log'
-  ClientHeight = 550
-  ClientWidth = 750
+  ClientHeight = 570
+  ClientWidth = 780
   LCLVersion = '2.0.10.0'
   object ButtonCopyText: TButton
     Left = 16
     Height = 25
-    Top = 512
+    Top = 532
     Width = 107
     Anchors = [akLeft, akBottom]
     Caption = 'Copy Text'
@@ -27,9 +27,9 @@ object SyncDirLog: TSyncDirLog
     TabOrder = 0
   end
   object ButtonClose: TButton
-    Left = 640
+    Left = 670
     Height = 25
-    Top = 512
+    Top = 532
     Width = 91
     Anchors = [akRight, akBottom]
     Caption = 'Close'
@@ -46,9 +46,9 @@ object SyncDirLog: TSyncDirLog
   end
   object MemoLog: TMemo
     Left = 16
-    Height = 494
+    Height = 514
     Top = 10
-    Width = 715
+    Width = 745
     Anchors = [akTop, akLeft, akRight, akBottom]
     Font.CharSet = ANSI_CHARSET
     Font.Color = clBlack
@@ -67,10 +67,11 @@ object SyncDirLog: TSyncDirLog
     TabStop = False
   end
   object ButtonClearLog: TButton
-    Left = 168
+    Left = 152
     Height = 25
-    Top = 512
+    Top = 532
     Width = 96
+    Anchors = [akLeft, akBottom]
     Caption = 'Clear Log'
     Font.CharSet = ANSI_CHARSET
     Font.Color = clBlack

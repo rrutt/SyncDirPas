@@ -117,18 +117,27 @@ begin
 
   // https://wiki.freepascal.org/CopyFile
 
+  { TODO : If NotifyUser option is true, perform two-passes of synchronization.
+           One to obtain file and directory counts;
+           the second to actual synchronize if user agrees. }
+
   fileIndex := 0;
   while (fileIndex < fileList.Count) do begin
     sourceFileFullPath := EnsureDirectorySeparator(gSourceDirectory) + fileList.Strings[fileIndex];
     targetFileFullPath := EnsureDirectorySeparator(gTargetDirectory) + fileList.Strings[fileIndex];
 
     { TODO : Check file timestamps before copying. }
+    // https://www.freepascal.org/docs-html/rtl/sysutils/fileage.html
+
     { TODO : Check CopyOlderFiles and SkipReadOnlyTargetFiles options. }
+    // https://www.freepascal.org/docs-html/rtl/sysutils/filegetattr.html
+
     copySuccessful := CopyFile(sourceFileFullPath, targetFileFullPath, [cffOverwriteFile, cffCreateDestDirectory, cffPreserveTime]);
     if (copySuccessful) then begin
       AppendLogMessage(Format('Synchronized [%s] to [%s]', [sourceFileFullPath, targetFileFullPath]));
     end else begin
       isSuccessful := false;
+      { TODO : Determine impact of ShowErrorMessages option. }
       AppendLogMessage(Format('ERROR: Could not synchronize [%s] to [%s]', [sourceFileFullPath, targetFileFullPath]));
     end;
 
@@ -177,6 +186,8 @@ begin
         { TODO : If  MinimizeLogMessages is true, do NOT echo directory and file names. }
         if (Attr and faDirectory) = faDirectory then begin
           if ((Name <> '.') and (Name <> '..')) then begin
+            { TODO : If SkipMissingDirectories is true,
+                     check TargetDir for pre-existence of a matching directory. }
             AppendLogMessage(Format('%sDirectory: %s  Size: %d', [filePrefix, Name, Size]));
             dirList.Add(Name);
           end;
@@ -336,6 +347,7 @@ begin
   if (not optionsAreValid) then begin
     AppendLogMessage('Synchronization cancelled due to invalid options.');
   end else begin
+    { TODO : Copy form (INI file) options into a record or context class and pass to SynchronizeSourceToTarget procedure. }
     synchronizationSucceeded := SynchronizeSourceToTarget;
 
     { TODO : If NextSection has value,
