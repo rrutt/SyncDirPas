@@ -10,6 +10,7 @@ uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, EditBtn, StdCtrls,
   LCLIntf,
   fileutil,
+  inifiles,
   SyncDirLog;
 
 type
@@ -46,6 +47,7 @@ type
     LabelTargetDirectory: TLabel;
     LabelSourceDirectory: TLabel;
     function ValidateSourceAndTargetDirectories: Boolean;
+    procedure LoadInitializationFileSettings(iniFileFullPath: String; initSection: String);
     procedure ButtonExitClick(Sender: TObject);
     procedure ButtonHelpClick(Sender: TObject);
     procedure ButtonShowLogClick(Sender: TObject);
@@ -80,18 +82,27 @@ begin
   result := resultPath;
 end;
 
-function FormatMockLogMessage: String;
-begin
-  result := Format(
-      'Simulated Synchronization #%d.' + LineEnding +
-      'Source Directory: %s' + LineEnding +
-      'Target Directory: %s',
-      [SyncDirLogForm.MemoLog.Lines.Count, gSourceDirectory, gTargetDirectory]);
-end;
-
 procedure AppendLogMessage(message: String);
 begin
   SyncDirLogForm.MemoLog.Lines.Add(message);
+end;
+
+function LoadInitializationFileSettingString(iniFile: TINIFile; sectionName: String; settingName: String; defaultValue: String): String;
+var
+  settingValue: String;
+begin
+  settingValue := iniFile.ReadString(sectionName, settingName, defaultValue);
+  result := settingValue;
+end;
+
+function LoadInitializationFileSettingBoolean(iniFile: TINIFile; sectionName: String; settingName: String; defaultValue: Boolean): Boolean;
+var
+  settingValue: Boolean;
+begin
+  // https://www.freepascal.org/docs-html/fcl/inifiles/tcustominifile.booltruestrings.html
+  //https://www.freepascal.org/docs-html/fcl/inifiles/tcustominifile.boolfalsestrings.html}
+  settingValue := iniFile.ReadBool(sectionName, settingName, defaultValue);
+  result := settingValue;
 end;
 
 function SynchronizeSourceFilesToTargetDirectory(fileList: TStringList): Boolean;
@@ -111,7 +122,8 @@ begin
     sourceFileFullPath := EnsureDirectorySeparator(gSourceDirectory) + fileList.Strings[fileIndex];
     targetFileFullPath := EnsureDirectorySeparator(gTargetDirectory) + fileList.Strings[fileIndex];
 
-    AppendLogMessage(Format('Synchronizing [%s] to [%s]', [sourceFileFullPath, targetFileFullPath]));
+    { TODO : Check file timestamps before copying. }
+    { TODO : Check option to copy older files. }
     copySuccessful := CopyFile(sourceFileFullPath, targetFileFullPath, [cffOverwriteFile, cffCreateDestDirectory, cffPreserveTime]);
     if (copySuccessful) then begin
       AppendLogMessage(Format('Synchronized [%s] to [%s]', [sourceFileFullPath, targetFileFullPath]));
@@ -193,6 +205,36 @@ begin
   end;
 
   result := isSuccessful;
+end;
+
+procedure TSyncDirForm.LoadInitializationFileSettings(iniFileFullPath: String; initSection: String);
+var
+  iniFile: TINIFile;
+begin
+  // https://wiki.freepascal.org/Using_INI_Files
+  // https://www.freepascal.org/docs-html/fcl/inifiles/tinifile-3.html
+  // https://www.freepascal.org/docs-html/fcl/inifiles/tcustominifile.sectionexists.html
+  // https://www.freepascal.org/docs-html/fcl/inifiles/tcustominifile.booltruestrings.html
+  // https://www.freepascal.org/docs-html/fcl/inifiles/tcustominifile.boolfalsestrings.html}
+
+  iniFile := TINIFile.Create(iniFileFullPath);
+  try
+    // https://www.freepascal.org/docs-html/fcl/inifiles/tcustominifile.booltruestrings.html
+    // https://www.freepascal.org/docs-html/fcl/inifiles/tcustominifile.boolfalsestrings.html}
+    iniFile.BoolTrueStrings := ['true', 't', 'yes', 'y', '1'];
+    iniFile.BoolFalseStrings := ['false', 'f', 'no', 'n', '0'];
+
+    DirectoryEditSource.Text := LoadInitializationFileSettingString(iniFile, initSection, 'SourceDirectory', '.');
+    DirectoryEditTarget.Text := LoadInitializationFileSettingString(iniFile, initSection, 'TargetDirectory', '.');
+  finally
+    // After the INI file was used it must be freed to prevent memory leaks.
+    iniFile.Free;
+  end;
+
+  { TODO : Load initialization file sections and parameters into memory collections via
+           https://wiki.freepascal.org/Using_INI_Files
+           https://www.freepascal.org/docs-html/fcl/inifiles/tinifile.html
+           https://www.freepascal.org/docs-html/fcl/inifiles/tinifile-3.html}
 end;
 
 function TSyncDirForm.ValidateSourceAndTargetDirectories: Boolean;
@@ -288,10 +330,6 @@ begin
   if (not optionsAreValid) then begin
     AppendLogMessage('Synchronization cancelled due to invalid options.');
   end else begin
-    { TODO : Remove simulated activity of writing to SyncDirLog TMemo. }
-    AppendLogMessage(FormatMockLogMessage);
-
-    { TODO : Perform file synchronization. }
     synchronizationSucceeded := SynchronizeSourceToTarget;
 
     { TODO : If NextSection has value,
@@ -334,14 +372,7 @@ begin
   end;
   LabelInitializationSectionValue.Caption := '[' + initSection + ']';
 
-  { TODO : Load initialization file sections and parameters into memory collections via
-           https://wiki.freepascal.org/Using_INI_Files
-           https://www.freepascal.org/docs-html/fcl/inifiles/tinifile.html
-           https://www.freepascal.org/docs-html/fcl/inifiles/tinifile-3.html}
-  { TODO : Set interpretation of True and False ini file strings via:
-https://www.freepascal.org/docs-html/fcl/inifiles/tcustominifile.booltruestrings.html
-           and
-https://www.freepascal.org/docs-html/fcl/inifiles/tcustominifile.boolfalsestrings.html}
+  LoadInitializationFileSettings(initFileName, initSection);
 
   LabelNextSection.Visible := false;
   LabelNextSectionValue.Caption := '';
