@@ -123,7 +123,7 @@ begin
     targetFileFullPath := EnsureDirectorySeparator(gTargetDirectory) + fileList.Strings[fileIndex];
 
     { TODO : Check file timestamps before copying. }
-    { TODO : Check option to copy older files. }
+    { TODO : Check CopyOlderFiles and SkipReadOnlyTargetFiles options. }
     copySuccessful := CopyFile(sourceFileFullPath, targetFileFullPath, [cffOverwriteFile, cffCreateDestDirectory, cffPreserveTime]);
     if (copySuccessful) then begin
       AppendLogMessage(Format('Synchronized [%s] to [%s]', [sourceFileFullPath, targetFileFullPath]));
@@ -181,6 +181,7 @@ begin
             dirList.Add(Name);
           end;
         end else begin
+          { TODO : Filter file list based on IgnoreFileTypes, OnlyProcessFileTypes, SkipReadOnlyTargetFiles, and ProcessHiddenFiles options. }
           AppendLogMessage(Format('%sFile: %s  Size: %d', [filePrefix, Name, Size]));
           fileList.Add(Name);
         end;
@@ -193,7 +194,12 @@ begin
 
   isSuccessful := SynchronizeSourceFilesToTargetDirectory(fileList);
 
+  { TODO : Honor SynchronizeBothWays option. }
+
+  { TODO : Honor DeleteExtraFiles and DeleteExtraDirectories options. }
+
   { TODO : Perform sub-directory synchronization, if option set. }
+  { TODO : Honor SkipMissingDirectories option. }
 
   dirList.Free;
   fileList.Free;
@@ -389,5 +395,5 @@ begin
            Make invisible again when last section is being processed. }
 end;
 
-end.
+END.
 
