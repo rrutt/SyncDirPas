@@ -1,7 +1,7 @@
 object SyncDirForm: TSyncDirForm
-  Left = 67
+  Left = 30
   Height = 432
-  Top = 104
+  Top = 37
   Width = 780
   Caption = 'Synchronize Directories'
   ClientHeight = 432
