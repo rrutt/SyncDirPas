@@ -1,7 +1,5 @@
 unit SyncDir;
 
-{ TODO : Check default form dimensions on Acer netbook. }
-
 {$mode objfpc}{$H+}
 {$WARN 5044 off : Symbol "$1" is not portable}
 interface
@@ -128,6 +126,10 @@ begin
 
     { TODO : Check file timestamps before copying. }
     // https://www.freepascal.org/docs-html/rtl/sysutils/fileage.html
+    // https://www.freepascal.org/docs-html/rtl/sysutils/filedatetodatetime.html
+    // https://www.freepascal.org/docs-html/rtl/sysutils/datetimeroutines.html
+    // https://www.freepascal.org/docs-html/rtl/sysutils/formatdatetime.html
+    // https://www.freepascal.org/docs-html/rtl/sysutils/formatchars.html
 
     { TODO : Check CopyOlderFiles and SkipReadOnlyTargetFiles options. }
     // https://www.freepascal.org/docs-html/rtl/sysutils/filegetattr.html
@@ -186,6 +188,7 @@ begin
         { TODO : If  MinimizeLogMessages is true, do NOT echo directory and file names. }
         if (Attr and faDirectory) = faDirectory then begin
           if ((Name <> '.') and (Name <> '..')) then begin
+            { TODO : Filter directory list based on ProcessHiddenFiles options. }
             { TODO : If SkipMissingDirectories is true,
                      check TargetDir for pre-existence of a matching directory. }
             AppendLogMessage(Format('%sDirectory: %s  Size: %d', [filePrefix, Name, Size]));
@@ -208,6 +211,8 @@ begin
   { TODO : Honor SynchronizeBothWays option. }
 
   { TODO : Honor DeleteExtraFiles and DeleteExtraDirectories options. }
+  // https://www.freepascal.org/docs-html/rtl/sysutils/deletefile.html
+  // https://www.freepascal.org/docs-html/rtl/sysutils/removedir.html
 
   { TODO : Perform sub-directory synchronization, if option set. }
   { TODO : Honor SkipMissingDirectories option. }
