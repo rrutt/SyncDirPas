@@ -13,6 +13,11 @@ uses
 
 type
 
+  TOptions = record
+    SourceDirectory: String;
+    TargetDirectory: String;
+  end;
+
   { TSyncDirForm }
 
   TSyncDirForm = class(TForm)
@@ -44,14 +49,15 @@ type
     LabelIgnoreFileTypes: TLabel;
     LabelTargetDirectory: TLabel;
     LabelSourceDirectory: TLabel;
-    function ValidateSourceAndTargetDirectories: Boolean;
-    procedure LoadInitializationFileSettings(iniFileFullPath: String; initSection: String);
+    function ValidateSourceAndTargetDirectories(var options: TOptions): Boolean;
+    procedure LoadInitializationFileSettings(iniFileFullPath: String; initSection: String; var options: TOptions);
     procedure ButtonExitClick(Sender: TObject);
     procedure ButtonHelpClick(Sender: TObject);
     procedure ButtonShowLogClick(Sender: TObject);
     procedure ButtonSynchronizeClick(Sender: TObject);
     procedure CheckBoxProcessHiddenFilesChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+
   private
 
   public
@@ -60,8 +66,7 @@ type
 
 var
   SyncDirForm: TSyncDirForm;
-  gSourceDirectory: String;
-  gTargetDirectory: String;
+  gInitialOptions: TOptions;
 
 implementation
 
@@ -103,7 +108,7 @@ begin
   result := settingValue;
 end;
 
-function SynchronizeSourceFilesToTargetDirectory(fileList: TStringList): Boolean;
+function SynchronizeSourceFilesToTargetDirectory(fileList: TStringList; var options: TOptions): Boolean;
 var
   isSuccessful: Boolean;
   copySuccessful: Boolean;
@@ -121,8 +126,8 @@ begin
 
   fileIndex := 0;
   while (fileIndex < fileList.Count) do begin
-    sourceFileFullPath := EnsureDirectorySeparator(gSourceDirectory) + fileList.Strings[fileIndex];
-    targetFileFullPath := EnsureDirectorySeparator(gTargetDirectory) + fileList.Strings[fileIndex];
+    sourceFileFullPath := EnsureDirectorySeparator(options.SourceDirectory) + fileList.Strings[fileIndex];
+    targetFileFullPath := EnsureDirectorySeparator(options.TargetDirectory) + fileList.Strings[fileIndex];
 
     { TODO : Check file timestamps before copying. }
     // https://www.freepascal.org/docs-html/rtl/sysutils/fileage.html
@@ -136,11 +141,11 @@ begin
 
     copySuccessful := CopyFile(sourceFileFullPath, targetFileFullPath, [cffOverwriteFile, cffCreateDestDirectory, cffPreserveTime]);
     if (copySuccessful) then begin
-      AppendLogMessage(Format('Synchronized [%s] to [%s]', [sourceFileFullPath, targetFileFullPath]));
+      AppendLogMessage(Format('Synchronized [%s] into [%s]', [sourceFileFullPath, targetFileFullPath]));
     end else begin
       isSuccessful := false;
       { TODO : Determine impact of ShowErrorMessages option. }
-      AppendLogMessage(Format('ERROR: Could not synchronize [%s] to [%s]', [sourceFileFullPath, targetFileFullPath]));
+      AppendLogMessage(Format('ERROR: Could not synchronize [%s] into [%s]', [sourceFileFullPath, targetFileFullPath]));
     end;
 
     inc(fileIndex);
@@ -149,7 +154,7 @@ begin
   result := isSuccessful;
 end;
 
-function SynchronizeSourceToTarget: Boolean;
+function SynchronizeSourceToTarget(var options: TOptions): Boolean;
 var
   isSuccessful: Boolean;
   searchInfo: TSearchRec;
@@ -158,6 +163,8 @@ var
   fileList: TStringList;
   filePrefix: String;
 begin
+  AppendLogMessage(Format('Synchronizing [%s] into [%s] ...', [options.SourceDirectory, options.TargetDirectory]));
+
   { TODO : If MinimizeLogMessages options is false,
            write detailed option settings to Log.
            Also show each sub-directory as it is being processed. }
@@ -173,7 +180,7 @@ begin
   // https://www.freepascal.org/docs-html/rtl/sysutils/findnext.html
   searchAttr := faAnyFile;
   //searchAttr := searchAttr and (not faHidden);
-  If FindFirst(EnsureDirectorySeparator(gSourceDirectory) + '*', searchAttr, searchInfo) = 0 then
+  If FindFirst(EnsureDirectorySeparator(options.SourceDirectory) + '*', searchAttr, searchInfo) = 0 then
     begin
     repeat
       with searchInfo do begin
@@ -206,7 +213,7 @@ begin
 
   AppendLogMessage(Format('Finished search. Found %d directories and %d files.', [dirList.Count, fileList.Count]));
 
-  isSuccessful := SynchronizeSourceFilesToTargetDirectory(fileList);
+  isSuccessful := SynchronizeSourceFilesToTargetDirectory(fileList, options);
 
   { TODO : Honor SynchronizeBothWays option. }
 
@@ -221,15 +228,15 @@ begin
   fileList.Free;
 
   if (isSuccessful) then begin
-    AppendLogMessage('Synchronization complete.');
+    AppendLogMessage(Format('Synchronization of [%s] into [%s] completed.', [options.SourceDirectory, options.TargetDirectory]));
   end else begin
-    AppendLogMessage('Synchronization failed!');
+    AppendLogMessage(Format('Synchronization of [%s] into [%s] failed!', [options.SourceDirectory, options.TargetDirectory]));
   end;
 
   result := isSuccessful;
 end;
 
-procedure TSyncDirForm.LoadInitializationFileSettings(iniFileFullPath: String; initSection: String);
+procedure TSyncDirForm.LoadInitializationFileSettings(iniFileFullPath: String; initSection: String; var options: TOptions);
 var
   iniFile: TINIFile;
 begin
@@ -246,74 +253,60 @@ begin
     iniFile.BoolTrueStrings := ['true', 't', 'yes', 'y', '1'];
     iniFile.BoolFalseStrings := ['false', 'f', 'no', 'n', '0'];
 
-    DirectoryEditSource.Text := LoadInitializationFileSettingString(iniFile, initSection, 'SourceDirectory', '.');
-    DirectoryEditTarget.Text := LoadInitializationFileSettingString(iniFile, initSection, 'TargetDirectory', '.');
+    options.SourceDirectory := LoadInitializationFileSettingString(iniFile, initSection, 'SourceDirectory', '.');
+    options.TargetDirectory := LoadInitializationFileSettingString(iniFile, initSection, 'TargetDirectory', '.');
   finally
     // After the INI file was used it must be freed to prevent memory leaks.
     iniFile.Free;
   end;
-
-  { TODO : Load initialization file sections and parameters into memory collections via
-           https://wiki.freepascal.org/Using_INI_Files
-           https://www.freepascal.org/docs-html/fcl/inifiles/tinifile.html
-           https://www.freepascal.org/docs-html/fcl/inifiles/tinifile-3.html}
 end;
 
-function TSyncDirForm.ValidateSourceAndTargetDirectories: Boolean;
+function TSyncDirForm.ValidateSourceAndTargetDirectories(var options: TOptions): Boolean;
 var
   isValid: Boolean = true;
-  sourceDirectory: String;
-  targetDirectory: String;
 begin
-  sourceDirectory := Trim(DirectoryEditSource.Text);
-  if (sourceDirectory = '') then begin
+  if (options.SourceDirectory = '') then begin
     isValid := false;
     AppendLogMessage('Error: Source Directory is required');
-  end else if (not DirectoryExists(sourceDirectory)) then begin
+  end else if (not DirectoryExists(options.SourceDirectory)) then begin
     isValid := false;
-    AppendLogMessage(Format('Error: Invalid Source Directory: %s', [sourceDirectory]));
+    AppendLogMessage(Format('Error: Invalid Source Directory: %s', [options.SourceDirectory]));
   end;
 
-  targetDirectory := Trim(DirectoryEditTarget.Text);
-  if (targetDirectory = '') then begin
+  if (options.TargetDirectory = '') then begin
     isValid := false;
     AppendLogMessage('Error: Target Directory is required');
-  end else if (not DirectoryExists(targetDirectory)) then begin
+  end else if (not DirectoryExists(options.TargetDirectory)) then begin
     isValid := false;
-    AppendLogMessage(Format('Error: Invalid Target Directory: %s', [targetDirectory]));
+    AppendLogMessage(Format('Error: Invalid Target Directory: %s', [options.TargetDirectory]));
   end;
 
   if (isValid) then begin
-    sourceDirectory := ExpandFileName(EnsureDirectorySeparator(sourceDirectory));
-    targetDirectory := ExpandFileName(EnsureDirectorySeparator(targetDirectory));
+    options.SourceDirectory := ExpandFileName(EnsureDirectorySeparator(options.SourceDirectory));
+    options.TargetDirectory := ExpandFileName(EnsureDirectorySeparator(options.TargetDirectory));
 
-    if (AnsiCompareText(sourceDirectory, targetDirectory) = 0) Then begin
+    if (AnsiCompareText(options.SourceDirectory, options.TargetDirectory) = 0) Then begin
       isValid := false;
       AppendLogMessage('Error: Source and Target Directories cannot be the same.');
-      AppendLogMessage(Format('  Expanded Source Directory = %s', [sourceDirectory]));
-      AppendLogMessage(Format('  Expanded Target Directory = %s', [targetDirectory]));
+      AppendLogMessage(Format('  Expanded Source Directory = %s', [options.SourceDirectory]));
+      AppendLogMessage(Format('  Expanded Target Directory = %s', [options.TargetDirectory]));
     end;
   end;
 
   if (isValid and CheckBoxIncludeSubdirectories.Checked) then begin
-    if (Pos(AnsiLowerCase(sourceDirectory), AnsiLowerCase(targetDirectory)) = 1) then begin
+    if (Pos(AnsiLowerCase(options.SourceDirectory), AnsiLowerCase(options.TargetDirectory)) = 1) then begin
       isValid := false;
       AppendLogMessage('Error: Target Directory cannot be a sub-directory of Source Directory when "Include subdirectories" is checked');
-      AppendLogMessage(Format('  Expanded Source Directory = %s', [sourceDirectory]));
-      AppendLogMessage(Format('  Expanded Target Directory = %s', [targetDirectory]));
+      AppendLogMessage(Format('  Expanded Source Directory = %s', [options.SourceDirectory]));
+      AppendLogMessage(Format('  Expanded Target Directory = %s', [options.TargetDirectory]));
     end;
 
-    if (Pos(AnsiLowerCase(targetDirectory), AnsiLowerCase(sourceDirectory)) = 1) then begin
+    if (Pos(AnsiLowerCase(options.TargetDirectory), AnsiLowerCase(options.SourceDirectory)) = 1) then begin
       isValid := false;
       AppendLogMessage('Error: Source Directory cannot be a sub-directory of Target Directory when "Include subdirectories" is checked');
-      AppendLogMessage(Format('  Expanded Source Directory = %s', [sourceDirectory]));
-      AppendLogMessage(Format('  Expanded Target Directory = %s', [targetDirectory]));
+      AppendLogMessage(Format('  Expanded Source Directory = %s', [options.SourceDirectory]));
+      AppendLogMessage(Format('  Expanded Target Directory = %s', [options.TargetDirectory]));
     end;
-  end;
-
-  if (isValid) then begin
-    gSourceDirectory := sourceDirectory;
-    gTargetDirectory := targetDirectory;
   end;
 
   result := isValid;
@@ -343,8 +336,11 @@ var
   optionsAreValid: Boolean = true;
   synchronizationSucceeded: Boolean;
 begin
+  gInitialOptions.sourceDirectory := Trim(DirectoryEditSource.Text);
+  gInitialOptions.targetDirectory := Trim(DirectoryEditTarget.Text);
+
   if (optionsAreValid) then begin
-    optionsAreValid := ValidateSourceAndTargetDirectories();
+    optionsAreValid := ValidateSourceAndTargetDirectories(gInitialOptions);
   end;
 
   { TODO : Validate other option combinations. }
@@ -352,13 +348,14 @@ begin
   if (not optionsAreValid) then begin
     AppendLogMessage('Synchronization cancelled due to invalid options.');
   end else begin
-    { TODO : Copy form (INI file) options into a record or context class and pass to SynchronizeSourceToTarget procedure. }
-    synchronizationSucceeded := SynchronizeSourceToTarget;
+    AppendLogMessage('Synchronization started ...');
+    synchronizationSucceeded := SynchronizeSourceToTarget(gInitialOptions);
 
     { TODO : If NextSection has value,
              and synchronizationSucceeded is true,
              iterate file synchronization thru successive section(s).
              (Set user-interface options on main form as each section is processed.) }
+    // https://www.freepascal.org/docs-html/fcl/inifiles/tcustominifile.sectionexists.html
   end;
 
   { TODO : Should we show log form while synchronizing, or only when done? }
@@ -395,7 +392,10 @@ begin
   end;
   LabelInitializationSectionValue.Caption := '[' + initSection + ']';
 
-  LoadInitializationFileSettings(initFileName, initSection);
+  LoadInitializationFileSettings(initFileName, initSection, gInitialOptions);
+  DirectoryEditSource.Text := gInitialOptions.SourceDirectory;
+  DirectoryEditTarget.Text := gInitialOptions.TargetDirectory;
+
 
   LabelNextSection.Visible := false;
   LabelNextSectionValue.Caption := '';
