@@ -18,6 +18,9 @@ type
     TargetDirectory: String;
   end;
 
+  { TODO : Define a Record structure to accumulate synchronization counts:
+           files & directories copied, skipped, errors, etc. }
+
   { TSyncDirForm }
 
   TSyncDirForm = class(TForm)
@@ -336,6 +339,9 @@ var
   optionsAreValid: Boolean = true;
   synchronizationSucceeded: Boolean;
 begin
+  ButtonSynchronize.Enabled := false;
+
+  { TODO : Define procedure to load gInitialOptions from form controls. }
   gInitialOptions.sourceDirectory := Trim(DirectoryEditSource.Text);
   gInitialOptions.targetDirectory := Trim(DirectoryEditTarget.Text);
 
@@ -356,10 +362,14 @@ begin
              iterate file synchronization thru successive section(s).
              (Set user-interface options on main form as each section is processed.) }
     // https://www.freepascal.org/docs-html/fcl/inifiles/tcustominifile.sectionexists.html
+
+    { TODO : Define procedure to load NextSection options into a new TOptions record for iterative synchronization call. }
   end;
 
   { TODO : Should we show log form while synchronizing, or only when done? }
   SyncDirLogForm.Show;
+
+  ButtonSynchronize.Enabled := true;
 end;
 
 procedure TSyncDirForm.CheckBoxProcessHiddenFilesChange(Sender: TObject);
@@ -390,16 +400,18 @@ begin
   if (initSection = '') then begin
     initSection := 'SyncDir';
   end;
+
+  { TODO : Isolate loading of form controls from INI file section into a procedure to support NextSection iteration. }
   LabelInitializationSectionValue.Caption := '[' + initSection + ']';
 
   LoadInitializationFileSettings(initFileName, initSection, gInitialOptions);
   DirectoryEditSource.Text := gInitialOptions.SourceDirectory;
   DirectoryEditTarget.Text := gInitialOptions.TargetDirectory;
 
-
   LabelNextSection.Visible := false;
   LabelNextSectionValue.Caption := '';
   { TODO : Initialize user-interface options based on initialization file primary section. }
+
   { TODO : If Automatic option is selected in initialization settings,
            hide forms and start processing primary section,
            unless NotifyUser option is set.
