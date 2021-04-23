@@ -14,12 +14,18 @@ uses
 type
 
   TOptions = record
+    AreValid: Boolean;
     SourceDirectory: String;
     TargetDirectory: String;
   end;
 
   { TODO : Define a Record structure to accumulate synchronization counts:
            files & directories copied, skipped, errors, etc. }
+  TProgressContext = record
+    SynchronizationSucceeded: Boolean;
+    DirCount: LongInt;
+    FileCount: LongInt;
+  end;
 
   { TSyncDirForm }
 
@@ -52,6 +58,7 @@ type
     LabelIgnoreFileTypes: TLabel;
     LabelTargetDirectory: TLabel;
     LabelSourceDirectory: TLabel;
+    function LoadInitialOptionsFromFormControls: TOptions;
     function ValidateSourceAndTargetDirectories(var options: TOptions): Boolean;
     procedure LoadInitializationFileSettings(iniFileFullPath: String; initSection: String; var options: TOptions);
     procedure ButtonExitClick(Sender: TObject);
@@ -70,6 +77,7 @@ type
 var
   SyncDirForm: TSyncDirForm;
   gInitialOptions: TOptions;
+  gProgressContext: TProgressContext;
 
 implementation
 
@@ -117,7 +125,7 @@ var
   copySuccessful: Boolean;
   sourceFileFullPath: String;
   targetFileFullPath: String;
-  fileIndex: Integer;
+  fileIndex: LongInt;
 begin
   isSuccessful := true;
 
@@ -214,7 +222,9 @@ begin
     FindClose(searchInfo);
   end;
 
-  AppendLogMessage(Format('Finished search. Found %d directories and %d files.', [dirList.Count, fileList.Count]));
+  gProgressContext.DirCount := dirList.Count;
+  gProgressContext.FileCount := fileList.Count;
+  AppendLogMessage(Format('Finished search. Found %d directories and %d files.', [gProgressContext.DirCount, gProgressContext.FileCount]));
 
   isSuccessful := SynchronizeSourceFilesToTargetDirectory(fileList, options);
 
@@ -334,28 +344,34 @@ begin
   SyncDirLogForm.Show;
 end;
 
-procedure TSyncDirForm.ButtonSynchronizeClick(Sender: TObject);
+function TSyncDirForm.LoadInitialOptionsFromFormControls: TOptions;
 var
-  optionsAreValid: Boolean = true;
-  synchronizationSucceeded: Boolean;
+  options: TOptions;
+begin
+  options.AreValid := true;
+
+  options.sourceDirectory := Trim(DirectoryEditSource.Text);
+  options.targetDirectory := Trim(DirectoryEditTarget.Text);
+
+  result := options;
+end;
+
+procedure TSyncDirForm.ButtonSynchronizeClick(Sender: TObject);
 begin
   ButtonSynchronize.Enabled := false;
 
-  { TODO : Define procedure to load gInitialOptions from form controls. }
-  gInitialOptions.sourceDirectory := Trim(DirectoryEditSource.Text);
-  gInitialOptions.targetDirectory := Trim(DirectoryEditTarget.Text);
-
-  if (optionsAreValid) then begin
-    optionsAreValid := ValidateSourceAndTargetDirectories(gInitialOptions);
+  gInitialOptions := LoadInitialOptionsFromFormControls();
+  if (gInitialOptions.AreValid) then begin
+    ValidateSourceAndTargetDirectories(gInitialOptions);
   end;
 
   { TODO : Validate other option combinations. }
 
-  if (not optionsAreValid) then begin
+  if (not gInitialOptions.AreValid) then begin
     AppendLogMessage('Synchronization cancelled due to invalid options.');
   end else begin
     AppendLogMessage('Synchronization started ...');
-    synchronizationSucceeded := SynchronizeSourceToTarget(gInitialOptions);
+    gProgressContext.SynchronizationSucceeded := SynchronizeSourceToTarget(gInitialOptions);
 
     { TODO : If NextSection has value,
              and synchronizationSucceeded is true,
