@@ -17,6 +17,7 @@ type
     AreValid: Boolean;
     SourceDirectory: String;
     TargetDirectory: String;
+    IncludeSubdirectories: Boolean;
     ProcessHiddenFiles: Boolean;
   end;
 
@@ -284,6 +285,7 @@ begin
     options.SourceDirectory := LoadInitializationFileSettingString(iniFile, initSection, 'SourceDirectory', '.');
     options.TargetDirectory := LoadInitializationFileSettingString(iniFile, initSection, 'TargetDirectory', '.');
 
+    options.IncludeSubdirectories := LoadInitializationFileSettingBoolean(iniFile, initSection, 'IncludeSubdirectories', false);
     options.ProcessHiddenFiles := LoadInitializationFileSettingBoolean(iniFile, initSection, 'TargetDirectory', false);
   finally
     // After the INI file was used it must be freed to prevent memory leaks.
@@ -323,7 +325,7 @@ begin
     end;
   end;
 
-  if (options.AreValid and CheckBoxIncludeSubdirectories.Checked) then begin
+  if (options.AreValid and options.IncludeSubdirectories) then begin
     if (Pos(AnsiLowerCase(options.SourceDirectory), AnsiLowerCase(options.TargetDirectory)) = 1) then begin
       options.AreValid := false;
       AppendLogMessage('Error: Target Directory cannot be a sub-directory of Source Directory when "Include subdirectories" is checked');
@@ -368,6 +370,7 @@ begin
   options.SourceDirectory := Trim(DirectoryEditSource.Text);
   options.TargetDirectory := Trim(DirectoryEditTarget.Text);
 
+  options.IncludeSubdirectories := CheckBoxIncludeSubdirectories.Checked;
   options.ProcessHiddenFiles := CheckBoxProcessHiddenFiles.Checked;
 
   result := options;
