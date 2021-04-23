@@ -15,13 +15,27 @@ type
 
   TOptions = record
     AreValid: Boolean;
+
     SourceDirectory: String;
     TargetDirectory: String;
+
+    CopyOlderFiles: Boolean;
+    DeleteExtraFiles: Boolean;
+    DeleteExtraDirectories: Boolean;
     IncludeSubdirectories: Boolean;
+    MinimizeLogMessages: Boolean;
     ProcessHiddenFiles: Boolean;
+    ShowErrorMessages: Boolean;
+    SkipMissingDirectories: Boolean;
+    SkipReadOnlyTargetFiles: Boolean;
+    SynchronizeBothWays: Boolean;
+
+    OnlyProcessFileTypes: String;
+    IgnoreFileTypes: String;
+    NextSection: String;
   end;
 
-  { TODO : Add fields to record structure to accumulate synchronization counts:
+  { TODO : Add fields to context record structure to accumulate synchronization counts:
            files & directories copied, skipped, errors, etc. }
   TProgressContext = record
     SynchronizationSucceeded: Boolean;
@@ -130,8 +144,20 @@ begin
   options.SourceDirectory := Trim(DirectoryEditSource.Text);
   options.TargetDirectory := Trim(DirectoryEditTarget.Text);
 
+  options.CopyOlderFiles := CheckBoxCopyOlderFiles.Checked;
+  options.DeleteExtraFiles := CheckBoxDeleteExtraFiles.Checked;
+  options.DeleteExtraDirectories := CheckBoxDeleteExtraDirectories.Checked;
   options.IncludeSubdirectories := CheckBoxIncludeSubdirectories.Checked;
+  options.MinimizeLogMessages := CheckBoxMinimizeLogMessages.Checked;
   options.ProcessHiddenFiles := CheckBoxProcessHiddenFiles.Checked;
+  options.ShowErrorMessages := CheckBoxShowErrorMessages.Checked;
+  options.SkipMissingDirectories := CheckBoxSkipMissingDirectories.Checked;
+  options.SkipReadOnlyTargetFiles := CheckBoxSkipReadOnlyTargetFiles.Checked;
+  options.SynchronizeBothWays := CheckBoxSynchronizeBothWays.Checked;
+
+  options.OnlyProcessFileTypes := EditOnlyProcessFileTypes.Text;
+  options.IgnoreFileTypes := EditIgnoreFileTypes.Text;
+  options.NextSection := LabelNextSectionValue.Caption;
 
   result := options;
 end;
@@ -156,8 +182,21 @@ begin
     options.SourceDirectory := LoadInitializationFileSettingString(iniFile, initSection, 'SourceDirectory', '.');
     options.TargetDirectory := LoadInitializationFileSettingString(iniFile, initSection, 'TargetDirectory', '.');
 
+    options.CopyOlderFiles := LoadInitializationFileSettingBoolean(iniFile, initSection, 'CopyOlderFiles', false);
+    options.DeleteExtraFiles := LoadInitializationFileSettingBoolean(iniFile, initSection, 'DeleteExtraFiles', false);
+    options.DeleteExtraDirectories := LoadInitializationFileSettingBoolean(iniFile, initSection, 'DeleteExtraDirectories', false);
     options.IncludeSubdirectories := LoadInitializationFileSettingBoolean(iniFile, initSection, 'IncludeSubdirectories', false);
-    options.ProcessHiddenFiles := LoadInitializationFileSettingBoolean(iniFile, initSection, 'TargetDirectory', false);
+    options.MinimizeLogMessages := LoadInitializationFileSettingBoolean(iniFile, initSection, 'MinimizeLogMessages', true);
+    options.ProcessHiddenFiles := LoadInitializationFileSettingBoolean(iniFile, initSection, 'ProcessHiddenFiles', false);
+    options.ShowErrorMessages := LoadInitializationFileSettingBoolean(iniFile, initSection, 'ShowErrorMessages', true);
+    options.SkipMissingDirectories := LoadInitializationFileSettingBoolean(iniFile, initSection, 'SkipMissingDirectories', false);
+    options.SkipReadOnlyTargetFiles := LoadInitializationFileSettingBoolean(iniFile, initSection, 'SkipReadOnlyTargetFiles', false);
+    options.SynchronizeBothWays := LoadInitializationFileSettingBoolean(iniFile, initSection, 'SynchronizeBothWays', false);
+
+    options.OnlyProcessFileTypes := LoadInitializationFileSettingString(iniFile, initSection, 'OnlyProcessFileTypes', '');
+    options.IgnoreFileTypes := LoadInitializationFileSettingString(iniFile, initSection, 'IgnoreFileTypes', '');
+    options.NextSection := LoadInitializationFileSettingString(iniFile, initSection, 'NextSection', '');
+
   finally
     // After the INI file was used it must be freed to prevent memory leaks.
     iniFile.Free;
@@ -437,16 +476,15 @@ begin
     initSection := 'SyncDir';
   end;
 
-  { TODO : Isolate loading of form controls from INI file section into a procedure to support NextSection iteration. }
-  LabelInitializationSectionValue.Caption := '[' + initSection + ']';
-
   LoadInitializationFileSettings(initFileName, initSection, gInitialOptions);
+
+  { TODO : Isolate loading of form controls from INI file section into a procedure to support NextSection iteration. }
+  { TODO : Create procedure to set form controls based on initialization file primary section. }
   DirectoryEditSource.Text := gInitialOptions.SourceDirectory;
   DirectoryEditTarget.Text := gInitialOptions.TargetDirectory;
-
+  LabelInitializationSectionValue.Caption := '[' + initSection + ']';
   LabelNextSection.Visible := false;
   LabelNextSectionValue.Caption := '';
-  { TODO : Initialize user-interface options based on initialization file primary section. }
 
   { TODO : If Automatic option is selected in initialization settings,
            hide forms and start processing primary section,
