@@ -61,8 +61,8 @@ type
     LabelTargetDirectory: TLabel;
     LabelSourceDirectory: TLabel;
     function LoadInitialOptionsFromFormControls: TOptions;
-    procedure ValidateSourceAndTargetDirectories(var options: TOptions);
     procedure LoadInitializationFileSettings(iniFileFullPath: String; initSection: String; var options: TOptions);
+    procedure ValidateSourceAndTargetDirectories(var options: TOptions);
     procedure ButtonExitClick(Sender: TObject);
     procedure ButtonHelpClick(Sender: TObject);
     procedure ButtonShowLogClick(Sender: TObject);
@@ -119,6 +119,49 @@ begin
   //https://www.freepascal.org/docs-html/fcl/inifiles/tcustominifile.boolfalsestrings.html}
   settingValue := iniFile.ReadBool(sectionName, settingName, defaultValue);
   result := settingValue;
+end;
+
+function TSyncDirForm.LoadInitialOptionsFromFormControls: TOptions;
+var
+  options: TOptions;
+begin
+  options.AreValid := true;
+
+  options.SourceDirectory := Trim(DirectoryEditSource.Text);
+  options.TargetDirectory := Trim(DirectoryEditTarget.Text);
+
+  options.IncludeSubdirectories := CheckBoxIncludeSubdirectories.Checked;
+  options.ProcessHiddenFiles := CheckBoxProcessHiddenFiles.Checked;
+
+  result := options;
+end;
+
+procedure TSyncDirForm.LoadInitializationFileSettings(iniFileFullPath: String; initSection: String; var options: TOptions);
+var
+  iniFile: TINIFile;
+begin
+  // https://wiki.freepascal.org/Using_INI_Files
+  // https://www.freepascal.org/docs-html/fcl/inifiles/tinifile-3.html
+  // https://www.freepascal.org/docs-html/fcl/inifiles/tcustominifile.sectionexists.html
+  // https://www.freepascal.org/docs-html/fcl/inifiles/tcustominifile.booltruestrings.html
+  // https://www.freepascal.org/docs-html/fcl/inifiles/tcustominifile.boolfalsestrings.html}
+
+  iniFile := TINIFile.Create(iniFileFullPath);
+  try
+    // https://www.freepascal.org/docs-html/fcl/inifiles/tcustominifile.booltruestrings.html
+    // https://www.freepascal.org/docs-html/fcl/inifiles/tcustominifile.boolfalsestrings.html}
+    iniFile.BoolTrueStrings := ['true', 't', 'yes', 'y', '1'];
+    iniFile.BoolFalseStrings := ['false', 'f', 'no', 'n', '0'];
+
+    options.SourceDirectory := LoadInitializationFileSettingString(iniFile, initSection, 'SourceDirectory', '.');
+    options.TargetDirectory := LoadInitializationFileSettingString(iniFile, initSection, 'TargetDirectory', '.');
+
+    options.IncludeSubdirectories := LoadInitializationFileSettingBoolean(iniFile, initSection, 'IncludeSubdirectories', false);
+    options.ProcessHiddenFiles := LoadInitializationFileSettingBoolean(iniFile, initSection, 'TargetDirectory', false);
+  finally
+    // After the INI file was used it must be freed to prevent memory leaks.
+    iniFile.Free;
+  end;
 end;
 
 function SynchronizeSourceFilesToTargetDirectory(fileList: TStringList; var options: TOptions): Boolean;
@@ -265,34 +308,6 @@ begin
   result := isSuccessful;
 end;
 
-procedure TSyncDirForm.LoadInitializationFileSettings(iniFileFullPath: String; initSection: String; var options: TOptions);
-var
-  iniFile: TINIFile;
-begin
-  // https://wiki.freepascal.org/Using_INI_Files
-  // https://www.freepascal.org/docs-html/fcl/inifiles/tinifile-3.html
-  // https://www.freepascal.org/docs-html/fcl/inifiles/tcustominifile.sectionexists.html
-  // https://www.freepascal.org/docs-html/fcl/inifiles/tcustominifile.booltruestrings.html
-  // https://www.freepascal.org/docs-html/fcl/inifiles/tcustominifile.boolfalsestrings.html}
-
-  iniFile := TINIFile.Create(iniFileFullPath);
-  try
-    // https://www.freepascal.org/docs-html/fcl/inifiles/tcustominifile.booltruestrings.html
-    // https://www.freepascal.org/docs-html/fcl/inifiles/tcustominifile.boolfalsestrings.html}
-    iniFile.BoolTrueStrings := ['true', 't', 'yes', 'y', '1'];
-    iniFile.BoolFalseStrings := ['false', 'f', 'no', 'n', '0'];
-
-    options.SourceDirectory := LoadInitializationFileSettingString(iniFile, initSection, 'SourceDirectory', '.');
-    options.TargetDirectory := LoadInitializationFileSettingString(iniFile, initSection, 'TargetDirectory', '.');
-
-    options.IncludeSubdirectories := LoadInitializationFileSettingBoolean(iniFile, initSection, 'IncludeSubdirectories', false);
-    options.ProcessHiddenFiles := LoadInitializationFileSettingBoolean(iniFile, initSection, 'TargetDirectory', false);
-  finally
-    // After the INI file was used it must be freed to prevent memory leaks.
-    iniFile.Free;
-  end;
-end;
-
 procedure TSyncDirForm.ValidateSourceAndTargetDirectories(var options: TOptions);
 begin
   options.AreValid := true;
@@ -359,21 +374,6 @@ end;
 procedure TSyncDirForm.ButtonShowLogClick(Sender: TObject);
 begin
   SyncDirLogForm.Show;
-end;
-
-function TSyncDirForm.LoadInitialOptionsFromFormControls: TOptions;
-var
-  options: TOptions;
-begin
-  options.AreValid := true;
-
-  options.SourceDirectory := Trim(DirectoryEditSource.Text);
-  options.TargetDirectory := Trim(DirectoryEditTarget.Text);
-
-  options.IncludeSubdirectories := CheckBoxIncludeSubdirectories.Checked;
-  options.ProcessHiddenFiles := CheckBoxProcessHiddenFiles.Checked;
-
-  result := options;
 end;
 
 procedure TSyncDirForm.ButtonSynchronizeClick(Sender: TObject);
