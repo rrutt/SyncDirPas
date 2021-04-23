@@ -74,8 +74,9 @@ type
     LabelIgnoreFileTypes: TLabel;
     LabelTargetDirectory: TLabel;
     LabelSourceDirectory: TLabel;
-    function LoadInitialOptionsFromFormControls: TOptions;
     procedure LoadInitializationFileSettings(iniFileFullPath: String; initSection: String; var options: TOptions);
+    procedure LoadInitialOptionsFromFormControls(var options: TOptions);
+    procedure LoadFormControlsFromOptions(const initSection: String; const options: TOptions);
     procedure ValidateSourceAndTargetDirectories(var options: TOptions);
     procedure ButtonExitClick(Sender: TObject);
     procedure ButtonHelpClick(Sender: TObject);
@@ -135,33 +136,6 @@ begin
   result := settingValue;
 end;
 
-function TSyncDirForm.LoadInitialOptionsFromFormControls: TOptions;
-var
-  options: TOptions;
-begin
-  options.AreValid := true;
-
-  options.SourceDirectory := Trim(DirectoryEditSource.Text);
-  options.TargetDirectory := Trim(DirectoryEditTarget.Text);
-
-  options.CopyOlderFiles := CheckBoxCopyOlderFiles.Checked;
-  options.DeleteExtraFiles := CheckBoxDeleteExtraFiles.Checked;
-  options.DeleteExtraDirectories := CheckBoxDeleteExtraDirectories.Checked;
-  options.IncludeSubdirectories := CheckBoxIncludeSubdirectories.Checked;
-  options.MinimizeLogMessages := CheckBoxMinimizeLogMessages.Checked;
-  options.ProcessHiddenFiles := CheckBoxProcessHiddenFiles.Checked;
-  options.ShowErrorMessages := CheckBoxShowErrorMessages.Checked;
-  options.SkipMissingDirectories := CheckBoxSkipMissingDirectories.Checked;
-  options.SkipReadOnlyTargetFiles := CheckBoxSkipReadOnlyTargetFiles.Checked;
-  options.SynchronizeBothWays := CheckBoxSynchronizeBothWays.Checked;
-
-  options.OnlyProcessFileTypes := EditOnlyProcessFileTypes.Text;
-  options.IgnoreFileTypes := EditIgnoreFileTypes.Text;
-  options.NextSection := LabelNextSectionValue.Caption;
-
-  result := options;
-end;
-
 procedure TSyncDirForm.LoadInitializationFileSettings(iniFileFullPath: String; initSection: String; var options: TOptions);
 var
   iniFile: TINIFile;
@@ -200,6 +174,58 @@ begin
   finally
     // After the INI file was used it must be freed to prevent memory leaks.
     iniFile.Free;
+  end;
+end;
+
+procedure TSyncDirForm.LoadInitialOptionsFromFormControls(var options: TOptions);
+begin
+  options.AreValid := true;
+
+  options.SourceDirectory := Trim(DirectoryEditSource.Text);
+  options.TargetDirectory := Trim(DirectoryEditTarget.Text);
+
+  options.CopyOlderFiles := CheckBoxCopyOlderFiles.Checked;
+  options.DeleteExtraFiles := CheckBoxDeleteExtraFiles.Checked;
+  options.DeleteExtraDirectories := CheckBoxDeleteExtraDirectories.Checked;
+  options.IncludeSubdirectories := CheckBoxIncludeSubdirectories.Checked;
+  options.MinimizeLogMessages := CheckBoxMinimizeLogMessages.Checked;
+  options.ProcessHiddenFiles := CheckBoxProcessHiddenFiles.Checked;
+  options.ShowErrorMessages := CheckBoxShowErrorMessages.Checked;
+  options.SkipMissingDirectories := CheckBoxSkipMissingDirectories.Checked;
+  options.SkipReadOnlyTargetFiles := CheckBoxSkipReadOnlyTargetFiles.Checked;
+  options.SynchronizeBothWays := CheckBoxSynchronizeBothWays.Checked;
+
+  options.OnlyProcessFileTypes := EditOnlyProcessFileTypes.Text;
+  options.IgnoreFileTypes := EditIgnoreFileTypes.Text;
+  options.NextSection := LabelNextSectionValue.Caption;
+end;
+
+procedure TSyncDirForm.LoadFormControlsFromOptions(const initSection: String; const options: TOptions);
+begin
+  DirectoryEditSource.Text := options.SourceDirectory;
+  DirectoryEditTarget.Text := options.TargetDirectory;
+
+  CheckBoxCopyOlderFiles.Checked := options.CopyOlderFiles;
+  CheckBoxDeleteExtraFiles.Checked := options.DeleteExtraFiles;
+  CheckBoxDeleteExtraDirectories.Checked := options.DeleteExtraDirectories;
+  CheckBoxIncludeSubdirectories.Checked := options.IncludeSubdirectories;
+  CheckBoxMinimizeLogMessages.Checked := options.MinimizeLogMessages;
+  CheckBoxProcessHiddenFiles.Checked := options.ProcessHiddenFiles;
+  CheckBoxShowErrorMessages.Checked := options.ShowErrorMessages;
+  CheckBoxSkipMissingDirectories.Checked := options.SkipMissingDirectories;
+  CheckBoxSkipReadOnlyTargetFiles.Checked := options.SkipReadOnlyTargetFiles;
+  CheckBoxSynchronizeBothWays.Checked := options.SynchronizeBothWays;
+
+  EditOnlyProcessFileTypes.Text := options.OnlyProcessFileTypes;
+  EditIgnoreFileTypes.Text := options.IgnoreFileTypes;
+
+  LabelInitializationSectionValue.Caption := '[' + initSection + ']';
+
+  LabelNextSectionValue.Caption := options.NextSection;
+  if (options.NextSection <> '') then begin
+    LabelNextSection.Visible := true;
+  end else begin
+    LabelNextSection.Visible := false;
   end;
 end;
 
@@ -419,7 +445,7 @@ procedure TSyncDirForm.ButtonSynchronizeClick(Sender: TObject);
 begin
   ButtonSynchronize.Enabled := false;
 
-  gInitialOptions := LoadInitialOptionsFromFormControls();
+  LoadInitialOptionsFromFormControls(gInitialOptions);
   if (gInitialOptions.AreValid) then begin
     ValidateSourceAndTargetDirectories(gInitialOptions);
   end;
@@ -477,14 +503,7 @@ begin
   end;
 
   LoadInitializationFileSettings(initFileName, initSection, gInitialOptions);
-
-  { TODO : Isolate loading of form controls from INI file section into a procedure to support NextSection iteration. }
-  { TODO : Create procedure to set form controls based on initialization file primary section. }
-  DirectoryEditSource.Text := gInitialOptions.SourceDirectory;
-  DirectoryEditTarget.Text := gInitialOptions.TargetDirectory;
-  LabelInitializationSectionValue.Caption := '[' + initSection + ']';
-  LabelNextSection.Visible := false;
-  LabelNextSectionValue.Caption := '';
+  LoadFormControlsFromOptions(initSection, gInitialOptions);
 
   { TODO : If Automatic option is selected in initialization settings,
            hide forms and start processing primary section,
