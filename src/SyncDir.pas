@@ -19,7 +19,7 @@ type
     TargetDirectory: String;
   end;
 
-  { TODO : Define a Record structure to accumulate synchronization counts:
+  { TODO : Add fields to record structure to accumulate synchronization counts:
            files & directories copied, skipped, errors, etc. }
   TProgressContext = record
     SynchronizationSucceeded: Boolean;
@@ -125,6 +125,10 @@ var
   copySuccessful: Boolean;
   sourceFileFullPath: String;
   targetFileFullPath: String;
+  sourceFileAge: LongInt;
+  targetFileAge: LongInt;
+  sourceFileDate: TDateTime;
+  targetFileDate: TDateTime;
   fileIndex: LongInt;
 begin
   isSuccessful := true;
@@ -141,22 +145,31 @@ begin
     targetFileFullPath := EnsureDirectorySeparator(options.TargetDirectory) + fileList.Strings[fileIndex];
 
     { TODO : Check file timestamps before copying. }
-    // https://www.freepascal.org/docs-html/rtl/sysutils/fileage.html
-    // https://www.freepascal.org/docs-html/rtl/sysutils/filedatetodatetime.html
-    // https://www.freepascal.org/docs-html/rtl/sysutils/datetimeroutines.html
-    // https://www.freepascal.org/docs-html/rtl/sysutils/formatdatetime.html
-    // https://www.freepascal.org/docs-html/rtl/sysutils/formatchars.html
+    sourceFileAge := FileAge(sourceFileFullPath);
+    targetFileAge := FileAge(targetFileFullPath);
+    sourceFileDate := FileDateToDateTime(sourceFileAge);
+    targetFileDate := FileDateToDateTime(targetFileAge);
+    AppendLogMessage(
+        Format('Source file age = %d = %s for [%s]',
+            [sourceFileAge, FormatDateTime('yyyy-mm-dd hh:nn:ss.zzz', sourceFileDate), sourceFileFullPath]));
+    AppendLogMessage(
+        Format('Target file age = %d = %s for [%s]',
+            [targetFileAge, FormatDateTime('yyyy-mm-dd hh:nn:ss.zzz', targetFileDate), targetFileFullPath]));
 
-    { TODO : Check CopyOlderFiles and SkipReadOnlyTargetFiles options. }
-    // https://www.freepascal.org/docs-html/rtl/sysutils/filegetattr.html
-
-    copySuccessful := CopyFile(sourceFileFullPath, targetFileFullPath, [cffOverwriteFile, cffCreateDestDirectory, cffPreserveTime]);
-    if (copySuccessful) then begin
-      AppendLogMessage(Format('Synchronized [%s] into [%s]', [sourceFileFullPath, targetFileFullPath]));
+    { TODO : Check CopyOlderFiles option. }
+    if (sourceFileAge > targetFileAge) then begin
+      { TODO : Check SkipReadOnlyTargetFiles option. }
+      // https://www.freepascal.org/docs-html/rtl/sysutils/filegetattr.html
+      copySuccessful := CopyFile(sourceFileFullPath, targetFileFullPath, [cffOverwriteFile, cffCreateDestDirectory, cffPreserveTime]);
+      if (copySuccessful) then begin
+        AppendLogMessage(Format('Synchronized [%s] into [%s]', [sourceFileFullPath, targetFileFullPath]));
+      end else begin
+        isSuccessful := false;
+        { TODO : Determine impact of ShowErrorMessages option. }
+        AppendLogMessage(Format('ERROR: Could not synchronize [%s] into [%s]', [sourceFileFullPath, targetFileFullPath]));
+      end;
     end else begin
-      isSuccessful := false;
-      { TODO : Determine impact of ShowErrorMessages option. }
-      AppendLogMessage(Format('ERROR: Could not synchronize [%s] into [%s]', [sourceFileFullPath, targetFileFullPath]));
+      AppendLogMessage(Format('Skipped copying [%s] to [%s] based on file timestamps.', [sourceFileFullPath, targetFileFullPath]));
     end;
 
     inc(fileIndex);
@@ -190,6 +203,8 @@ begin
   // https://www.freepascal.org/docs-html/rtl/sysutils/findfirst.html
   // https://www.freepascal.org/docs-html/rtl/sysutils/findnext.html
   searchAttr := faAnyFile;
+
+  { TODO : Filter directory list based on ProcessHiddenFiles options. }
   //searchAttr := searchAttr and (not faHidden);
   If FindFirst(EnsureDirectorySeparator(options.SourceDirectory) + '*', searchAttr, searchInfo) = 0 then
     begin
@@ -206,14 +221,13 @@ begin
         { TODO : If  MinimizeLogMessages is true, do NOT echo directory and file names. }
         if (Attr and faDirectory) = faDirectory then begin
           if ((Name <> '.') and (Name <> '..')) then begin
-            { TODO : Filter directory list based on ProcessHiddenFiles options. }
             { TODO : If SkipMissingDirectories is true,
                      check TargetDir for pre-existence of a matching directory. }
             AppendLogMessage(Format('%sDirectory: %s  Size: %d', [filePrefix, Name, Size]));
             dirList.Add(Name);
           end;
         end else begin
-          { TODO : Filter file list based on IgnoreFileTypes, OnlyProcessFileTypes, SkipReadOnlyTargetFiles, and ProcessHiddenFiles options. }
+          { TODO : Filter file list based on IgnoreFileTypes, OnlyProcessFileTypes, and SkipReadOnlyTargetFiles options. }
           AppendLogMessage(Format('%sFile: %s  Size: %d', [filePrefix, Name, Size]));
           fileList.Add(Name);
         end;
