@@ -17,6 +17,7 @@ type
     AreValid: Boolean;
     SourceDirectory: String;
     TargetDirectory: String;
+    ProcessHiddenFiles: Boolean;
   end;
 
   { TODO : Add fields to record structure to accumulate synchronization counts:
@@ -59,7 +60,7 @@ type
     LabelTargetDirectory: TLabel;
     LabelSourceDirectory: TLabel;
     function LoadInitialOptionsFromFormControls: TOptions;
-    function ValidateSourceAndTargetDirectories(var options: TOptions): Boolean;
+    procedure ValidateSourceAndTargetDirectories(var options: TOptions);
     procedure LoadInitializationFileSettings(iniFileFullPath: String; initSection: String; var options: TOptions);
     procedure ButtonExitClick(Sender: TObject);
     procedure ButtonHelpClick(Sender: TObject);
@@ -203,9 +204,9 @@ begin
   // https://www.freepascal.org/docs-html/rtl/sysutils/findfirst.html
   // https://www.freepascal.org/docs-html/rtl/sysutils/findnext.html
   searchAttr := faAnyFile;
-
-  { TODO : Filter directory list based on ProcessHiddenFiles options. }
-  //searchAttr := searchAttr and (not faHidden);
+  if (not options.ProcessHiddenFiles) then begin
+    searchAttr := searchAttr and (not faHidden);
+  end;
   If FindFirst(EnsureDirectorySeparator(options.SourceDirectory) + '*', searchAttr, searchInfo) = 0 then
     begin
     repeat
@@ -282,61 +283,61 @@ begin
 
     options.SourceDirectory := LoadInitializationFileSettingString(iniFile, initSection, 'SourceDirectory', '.');
     options.TargetDirectory := LoadInitializationFileSettingString(iniFile, initSection, 'TargetDirectory', '.');
+
+    options.ProcessHiddenFiles := LoadInitializationFileSettingBoolean(iniFile, initSection, 'TargetDirectory', false);
   finally
     // After the INI file was used it must be freed to prevent memory leaks.
     iniFile.Free;
   end;
 end;
 
-function TSyncDirForm.ValidateSourceAndTargetDirectories(var options: TOptions): Boolean;
-var
-  isValid: Boolean = true;
+procedure TSyncDirForm.ValidateSourceAndTargetDirectories(var options: TOptions);
 begin
+  options.AreValid := true;
+
   if (options.SourceDirectory = '') then begin
-    isValid := false;
+    options.AreValid := false;
     AppendLogMessage('Error: Source Directory is required');
   end else if (not DirectoryExists(options.SourceDirectory)) then begin
-    isValid := false;
+    options.AreValid := false;
     AppendLogMessage(Format('Error: Invalid Source Directory: %s', [options.SourceDirectory]));
   end;
 
   if (options.TargetDirectory = '') then begin
-    isValid := false;
+    options.AreValid := false;
     AppendLogMessage('Error: Target Directory is required');
   end else if (not DirectoryExists(options.TargetDirectory)) then begin
-    isValid := false;
+    options.AreValid := false;
     AppendLogMessage(Format('Error: Invalid Target Directory: %s', [options.TargetDirectory]));
   end;
 
-  if (isValid) then begin
+  if (options.AreValid) then begin
     options.SourceDirectory := ExpandFileName(EnsureDirectorySeparator(options.SourceDirectory));
     options.TargetDirectory := ExpandFileName(EnsureDirectorySeparator(options.TargetDirectory));
 
     if (AnsiCompareText(options.SourceDirectory, options.TargetDirectory) = 0) Then begin
-      isValid := false;
+      options.AreValid := false;
       AppendLogMessage('Error: Source and Target Directories cannot be the same.');
       AppendLogMessage(Format('  Expanded Source Directory = %s', [options.SourceDirectory]));
       AppendLogMessage(Format('  Expanded Target Directory = %s', [options.TargetDirectory]));
     end;
   end;
 
-  if (isValid and CheckBoxIncludeSubdirectories.Checked) then begin
+  if (options.AreValid and CheckBoxIncludeSubdirectories.Checked) then begin
     if (Pos(AnsiLowerCase(options.SourceDirectory), AnsiLowerCase(options.TargetDirectory)) = 1) then begin
-      isValid := false;
+      options.AreValid := false;
       AppendLogMessage('Error: Target Directory cannot be a sub-directory of Source Directory when "Include subdirectories" is checked');
       AppendLogMessage(Format('  Expanded Source Directory = %s', [options.SourceDirectory]));
       AppendLogMessage(Format('  Expanded Target Directory = %s', [options.TargetDirectory]));
     end;
 
     if (Pos(AnsiLowerCase(options.TargetDirectory), AnsiLowerCase(options.SourceDirectory)) = 1) then begin
-      isValid := false;
+      options.AreValid := false;
       AppendLogMessage('Error: Source Directory cannot be a sub-directory of Target Directory when "Include subdirectories" is checked');
       AppendLogMessage(Format('  Expanded Source Directory = %s', [options.SourceDirectory]));
       AppendLogMessage(Format('  Expanded Target Directory = %s', [options.TargetDirectory]));
     end;
   end;
-
-  result := isValid;
 end;
 
 procedure TSyncDirForm.ButtonExitClick(Sender: TObject);
@@ -364,8 +365,10 @@ var
 begin
   options.AreValid := true;
 
-  options.sourceDirectory := Trim(DirectoryEditSource.Text);
-  options.targetDirectory := Trim(DirectoryEditTarget.Text);
+  options.SourceDirectory := Trim(DirectoryEditSource.Text);
+  options.TargetDirectory := Trim(DirectoryEditTarget.Text);
+
+  options.ProcessHiddenFiles := CheckBoxProcessHiddenFiles.Checked;
 
   result := options;
 end;
