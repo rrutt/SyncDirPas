@@ -1,7 +1,6 @@
 unit SyncDir;
 
 {$mode objfpc}{$H+}
-{$WARN 5044 off : Symbol "$1" is not portable}
 interface
 
 uses
@@ -44,10 +43,8 @@ type
     MissingSubDirCount: LongInt;
     FileList: TStringList;
     FileCount: LongInt;
-    CopiedFileCount: LongInt;
     DeletedFileCount: LongInt;
     ErrorFileCount: LongInt;
-    HiddenFileCount: LongInt;
     ReadOnlyFileCount: LongInt;
     SkippedFileCount: LongInt;
     SuccessfulFileCount: LongInt;
@@ -239,6 +236,55 @@ begin
   end;
 end;
 
+procedure RecursivelyScanSourceDirectoriesAndFiles(
+    var context: TProgressContext;
+    var options: TOptions;
+    const sourceDirectory: String;
+    const {%H-}targetDirectory: String);
+var
+  searchInfo: TSearchRec;
+  searchAttr: LongInt;
+  filePrefix: String;
+begin
+  // https://www.freepascal.org/docs-html/rtl/sysutils/findfirst.html
+  // https://www.freepascal.org/docs-html/rtl/sysutils/findnext.html
+  searchAttr := faAnyFile;
+  if (not options.ProcessHiddenFiles) then begin
+    searchAttr := searchAttr and (not faHidden{%H-});
+  end;
+  If FindFirst(EnsureDirectorySeparator(sourceDirectory) + '*', searchAttr, searchInfo) = 0 then
+    begin
+    repeat
+      with searchInfo do begin
+        filePrefix := '';
+        if (Attr and faHidden{%H-}) = faHidden{%H-} then begin
+          filePrefix := filePrefix + 'Hidden ';
+        end;
+        if (Attr and faReadOnly) = faReadOnly then begin
+          filePrefix := filePrefix + 'ReadOnly ';
+        end;
+
+        { TODO : If  MinimizeLogMessages is true, do NOT echo directory and file names. }
+        if (Attr and faDirectory) = faDirectory then begin
+          if ((Name <> '.') and (Name <> '..')) then begin
+            AppendLogMessage(Format('%sDirectory: %s  Size: %d', [filePrefix, Name, Size]));
+            context.DirList.Add(Name);
+          end;
+        end else begin
+          { TODO : Filter file list based on IgnoreFileTypes, OnlyProcessFileTypes, and SkipReadOnlyTargetFiles options. }
+          AppendLogMessage(Format('%sFile: %s  Size: %d', [filePrefix, Name, Size]));
+          context.FileList.Add(Name);
+        end;
+      end;
+    until FindNext(searchInfo) <> 0;
+    FindClose(searchInfo);
+  end;
+
+  { TODO : Perform sub-directory directory/file scan, if option set. }
+  { TODO : If SkipMissingDirectories is true,
+           check TargetDir for pre-existence of a matching directory. }
+end;
+
 function SynchronizeSourceFilesToTargetDirectory(var context: TProgressContext; var options: TOptions): Boolean;
 var
   isSuccessful: Boolean;
@@ -302,9 +348,6 @@ end;
 procedure SynchronizeSourceToTarget(var context: TProgressContext; var options: TOptions);
 var
   isSuccessful: Boolean;
-  searchInfo: TSearchRec;
-  searchAttr: LongInt;
-  filePrefix: String;
 begin
   AppendLogMessage(Format('Synchronizing [%s] into [%s] ...', [options.SourceDirectory, options.TargetDirectory]));
 
@@ -312,47 +355,11 @@ begin
            write detailed option settings to Log.
            Also show each sub-directory as it is being processed. }
 
-  // https://www.freepascal.org/docs-html/rtl/sysutils/findfirst.html
-  // https://www.freepascal.org/docs-html/rtl/sysutils/findnext.html
-  searchAttr := faAnyFile;
-  if (not options.ProcessHiddenFiles) then begin
-    searchAttr := searchAttr and (not faHidden);
-  end;
-  If FindFirst(EnsureDirectorySeparator(options.SourceDirectory) + '*', searchAttr, searchInfo) = 0 then
-    begin
-    repeat
-      with searchInfo do begin
-        filePrefix := '';
-        if (Attr and faHidden) = faHidden then begin
-          filePrefix := filePrefix + 'Hidden ';
-        end;
-        if (Attr and faReadOnly) = faReadOnly then begin
-          filePrefix := filePrefix + 'ReadOnly ';
-        end;
-
-        { TODO : If  MinimizeLogMessages is true, do NOT echo directory and file names. }
-        if (Attr and faDirectory) = faDirectory then begin
-          if ((Name <> '.') and (Name <> '..')) then begin
-            { TODO : If SkipMissingDirectories is true,
-                     check TargetDir for pre-existence of a matching directory. }
-            AppendLogMessage(Format('%sDirectory: %s  Size: %d', [filePrefix, Name, Size]));
-            context.DirList.Add(Name);
-          end;
-        end else begin
-          { TODO : Filter file list based on IgnoreFileTypes, OnlyProcessFileTypes, and SkipReadOnlyTargetFiles options. }
-          AppendLogMessage(Format('%sFile: %s  Size: %d', [filePrefix, Name, Size]));
-          context.FileList.Add(Name);
-        end;
-      end;
-    until FindNext(searchInfo) <> 0;
-    FindClose(searchInfo);
-  end;
+  RecursivelyScanSourceDirectoriesAndFiles(context, options, options.SourceDirectory, options.TargetDirectory);
 
   context.DirCount := context.DirList.Count;
   context.FileCount := context.FileList.Count;
   AppendLogMessage(Format('Finished search. Found %d directories and %d files.', [context.DirCount, context.FileCount]));
-
-  isSuccessful := SynchronizeSourceFilesToTargetDirectory(context, options);
 
   { TODO : Honor SynchronizeBothWays option. }
 
@@ -360,8 +367,9 @@ begin
   // https://www.freepascal.org/docs-html/rtl/sysutils/deletefile.html
   // https://www.freepascal.org/docs-html/rtl/sysutils/removedir.html
 
-  { TODO : Perform sub-directory synchronization, if option set. }
   { TODO : Honor SkipMissingDirectories option. }
+
+  isSuccessful := SynchronizeSourceFilesToTargetDirectory(context, options);
 
   context.DirList.Free;
   context.FileList.Free;
@@ -370,6 +378,17 @@ begin
     AppendLogMessage(Format('Synchronization of [%s] into [%s] completed.', [options.SourceDirectory, options.TargetDirectory]));
   end else begin
     AppendLogMessage(Format('Synchronization of [%s] into [%s] failed!', [options.SourceDirectory, options.TargetDirectory]));
+  end;
+
+  AppendLogMessage(Format('  Successfully copied %d file(s).', [context.SuccessfulFileCount]));
+  if (context.ReadOnlyFileCount > 0) then begin
+    AppendLogMessage(Format('  Bypassed %d read-only file(s).', [context.ReadOnlyFileCount]));
+  end;
+  if (context.SkippedFileCount > 0) then begin
+    AppendLogMessage(Format('  Skipped copying %d file(s).', [context.SkippedFileCount]));
+  end;
+  if (context.ErrorFileCount > 0) then begin
+    AppendLogMessage(Format('  Encountered error copying %d file(s).', [context.ErrorFileCount]));
   end;
 
   context.SynchronizationSucceeded := isSuccessful;
@@ -392,10 +411,8 @@ begin
   context.MissingSubDirCount := 0;
 
   context.FileCount := 0;
-  context.CopiedFileCount := 0;
   context.DeletedFileCount := 0;
   context.ErrorFileCount := 0;
-  context.HiddenFileCount := 0;
   context.ReadOnlyFileCount := 0;
   context.SkippedFileCount := 0;
   context.SuccessfulFileCount := 0;
