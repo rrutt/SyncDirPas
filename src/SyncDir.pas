@@ -311,15 +311,28 @@ begin
     targetFileFullPath := EnsureDirectorySeparator(options.TargetDirectory) + context.FileList.Strings[fileIndex];
 
     sourceFileAge := FileAge(sourceFileFullPath);
+    if (sourceFileAge < 0) then begin
+      AppendLogMessage(
+          Format('Source file age = %d for [%s]',
+              [sourceFileAge, sourceFileFullPath]));
+    end else begin
+      sourceFileDate := FileDateToDateTime(sourceFileAge);
+      AppendLogMessage(
+          Format('Source file age = %d = %s for [%s]',
+              [sourceFileAge, FormatDateTime('yyyy-mm-dd hh:nn:ss.zzz', sourceFileDate), sourceFileFullPath]));
+    end;
+
     targetFileAge := FileAge(targetFileFullPath);
-    sourceFileDate := FileDateToDateTime(sourceFileAge);
-    targetFileDate := FileDateToDateTime(targetFileAge);
-    AppendLogMessage(
-        Format('Source file age = %d = %s for [%s]',
-            [sourceFileAge, FormatDateTime('yyyy-mm-dd hh:nn:ss.zzz', sourceFileDate), sourceFileFullPath]));
-    AppendLogMessage(
+    if (targetFileAge < 0) then begin
+      AppendLogMessage(
+          Format('Target file age = %d for [%s]',
+              [targetFileAge, targetFileFullPath]));
+    end else begin
+      targetFileDate := FileDateToDateTime(targetFileAge);
+      AppendLogMessage(
         Format('Target file age = %d = %s for [%s]',
             [targetFileAge, FormatDateTime('yyyy-mm-dd hh:nn:ss.zzz', targetFileDate), targetFileFullPath]));
+    end;
 
     if ((options.CopyOlderFiles and (sourceFileAge <> targetFileAge)) or (sourceFileAge > targetFileAge)) then begin
       { TODO : Check SkipReadOnlyTargetFiles option. }

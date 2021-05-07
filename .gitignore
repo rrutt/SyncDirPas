@@ -1,4 +1,5 @@
 src/lib/
 src/backup/
 src/target/
+TestTarget/
 *.exe
