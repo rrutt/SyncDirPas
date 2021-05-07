@@ -39,8 +39,19 @@ type
            files & directories copied, skipped, errors, etc. }
   TProgressContext = record
     SynchronizationSucceeded: Boolean;
+    DirList: TStringList;
     DirCount: LongInt;
+    SubDirCount: LongInt;
+    DeletedSubDirCount: LongInt;
+    MissingSubDirCount: LongInt;
+    FileList: TStringList;
     FileCount: LongInt;
+    CopiedFileCount: LongInt;
+    DeletedFileCount: LongInt;
+    ErrorFileCount: LongInt;
+    HiddenFileCount: LongInt;
+    ReadOnlyFileCount: LongInt;
+    SkippedFileCount: LongInt;
   end;
 
   { TSyncDirForm }
@@ -94,7 +105,6 @@ type
 var
   SyncDirForm: TSyncDirForm;
   gInitialOptions: TOptions;
-  gProgressContext: TProgressContext;
 
 implementation
 
@@ -229,7 +239,7 @@ begin
   end;
 end;
 
-function SynchronizeSourceFilesToTargetDirectory(fileList: TStringList; var options: TOptions): Boolean;
+function SynchronizeSourceFilesToTargetDirectory(var context: TProgressContext; var options: TOptions): Boolean;
 var
   isSuccessful: Boolean;
   copySuccessful: Boolean;
@@ -250,9 +260,9 @@ begin
            the second to actual synchronize if user agrees. }
 
   fileIndex := 0;
-  while (fileIndex < fileList.Count) do begin
-    sourceFileFullPath := EnsureDirectorySeparator(options.SourceDirectory) + fileList.Strings[fileIndex];
-    targetFileFullPath := EnsureDirectorySeparator(options.TargetDirectory) + fileList.Strings[fileIndex];
+  while (fileIndex < context.FileList.Count) do begin
+    sourceFileFullPath := EnsureDirectorySeparator(options.SourceDirectory) + context.FileList.Strings[fileIndex];
+    targetFileFullPath := EnsureDirectorySeparator(options.TargetDirectory) + context.FileList.Strings[fileIndex];
 
     sourceFileAge := FileAge(sourceFileFullPath);
     targetFileAge := FileAge(targetFileFullPath);
@@ -286,13 +296,11 @@ begin
   result := isSuccessful;
 end;
 
-function SynchronizeSourceToTarget(var options: TOptions): Boolean;
+procedure SynchronizeSourceToTarget(var context: TProgressContext; var options: TOptions);
 var
   isSuccessful: Boolean;
   searchInfo: TSearchRec;
   searchAttr: LongInt;
-  dirList: TStringList;
-  fileList: TStringList;
   filePrefix: String;
 begin
   AppendLogMessage(Format('Synchronizing [%s] into [%s] ...', [options.SourceDirectory, options.TargetDirectory]));
@@ -305,8 +313,8 @@ begin
   // https://wiki.freepascal.org/TStringList
   // https://wiki.freepascal.org/TStringList-TStrings_Tutorial
 
-  dirList := TStringList.Create;
-  fileList := TStringList.Create;
+  context.DirList := TStringList.Create;
+  context.FileList := TStringList.Create;
 
   // https://www.freepascal.org/docs-html/rtl/sysutils/findfirst.html
   // https://www.freepascal.org/docs-html/rtl/sysutils/findnext.html
@@ -332,23 +340,23 @@ begin
             { TODO : If SkipMissingDirectories is true,
                      check TargetDir for pre-existence of a matching directory. }
             AppendLogMessage(Format('%sDirectory: %s  Size: %d', [filePrefix, Name, Size]));
-            dirList.Add(Name);
+            context.DirList.Add(Name);
           end;
         end else begin
           { TODO : Filter file list based on IgnoreFileTypes, OnlyProcessFileTypes, and SkipReadOnlyTargetFiles options. }
           AppendLogMessage(Format('%sFile: %s  Size: %d', [filePrefix, Name, Size]));
-          fileList.Add(Name);
+          context.FileList.Add(Name);
         end;
       end;
     until FindNext(searchInfo) <> 0;
     FindClose(searchInfo);
   end;
 
-  gProgressContext.DirCount := dirList.Count;
-  gProgressContext.FileCount := fileList.Count;
-  AppendLogMessage(Format('Finished search. Found %d directories and %d files.', [gProgressContext.DirCount, gProgressContext.FileCount]));
+  context.DirCount := context.DirList.Count;
+  context.FileCount := context.FileList.Count;
+  AppendLogMessage(Format('Finished search. Found %d directories and %d files.', [context.DirCount, context.FileCount]));
 
-  isSuccessful := SynchronizeSourceFilesToTargetDirectory(fileList, options);
+  isSuccessful := SynchronizeSourceFilesToTargetDirectory(context, options);
 
   { TODO : Honor SynchronizeBothWays option. }
 
@@ -359,8 +367,8 @@ begin
   { TODO : Perform sub-directory synchronization, if option set. }
   { TODO : Honor SkipMissingDirectories option. }
 
-  dirList.Free;
-  fileList.Free;
+  context.DirList.Free;
+  context.FileList.Free;
 
   if (isSuccessful) then begin
     AppendLogMessage(Format('Synchronization of [%s] into [%s] completed.', [options.SourceDirectory, options.TargetDirectory]));
@@ -368,7 +376,7 @@ begin
     AppendLogMessage(Format('Synchronization of [%s] into [%s] failed!', [options.SourceDirectory, options.TargetDirectory]));
   end;
 
-  result := isSuccessful;
+  context.SynchronizationSucceeded := isSuccessful;
 end;
 
 procedure TSyncDirForm.ValidateSourceAndTargetDirectories(var options: TOptions);
@@ -440,6 +448,8 @@ begin
 end;
 
 procedure TSyncDirForm.ButtonSynchronizeClick(Sender: TObject);
+var
+  context: TProgressContext;
 begin
   ButtonSynchronize.Enabled := false;
 
@@ -454,7 +464,7 @@ begin
     AppendLogMessage('Synchronization cancelled due to invalid options.');
   end else begin
     AppendLogMessage('Synchronization started ...');
-    gProgressContext.SynchronizationSucceeded := SynchronizeSourceToTarget(gInitialOptions);
+    SynchronizeSourceToTarget(context{%H-}, gInitialOptions);
 
     { TODO : If NextSection has value,
              and synchronizationSucceeded is true,
