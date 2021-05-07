@@ -35,8 +35,6 @@ type
     NextSection: String;
   end;
 
-  { TODO : Add fields to context record structure to accumulate synchronization counts:
-           files & directories copied, skipped, errors, etc. }
   TProgressContext = record
     SynchronizationSucceeded: Boolean;
     DirList: TStringList;
@@ -52,6 +50,7 @@ type
     HiddenFileCount: LongInt;
     ReadOnlyFileCount: LongInt;
     SkippedFileCount: LongInt;
+    SuccessfulFileCount: LongInt;
   end;
 
   { TSyncDirForm }
@@ -85,6 +84,7 @@ type
     LabelIgnoreFileTypes: TLabel;
     LabelTargetDirectory: TLabel;
     LabelSourceDirectory: TLabel;
+    function InitializeProgressContext: TProgressContext;
     procedure LoadInitializationFileSettings(iniFileFullPath: String; initSection: String; var options: TOptions);
     procedure LoadInitialOptionsFromFormControls(var options: TOptions);
     procedure LoadFormControlsFromOptions(const initSection: String; const options: TOptions);
@@ -280,13 +280,16 @@ begin
       // https://www.freepascal.org/docs-html/rtl/sysutils/filegetattr.html
       copySuccessful := CopyFile(sourceFileFullPath, targetFileFullPath, [cffOverwriteFile, cffCreateDestDirectory, cffPreserveTime]);
       if (copySuccessful) then begin
+        Inc(context.SuccessfulFileCount);
         AppendLogMessage(Format('Synchronized [%s] into [%s]', [sourceFileFullPath, targetFileFullPath]));
       end else begin
         isSuccessful := false;
+        Inc(context.ErrorFileCount);
         { TODO : Determine impact of ShowErrorMessages option. }
         AppendLogMessage(Format('ERROR: Could not synchronize [%s] into [%s]', [sourceFileFullPath, targetFileFullPath]));
       end;
     end else begin
+      Inc(context.SkippedFileCount);
       AppendLogMessage(Format('Skipped copying [%s] to [%s] based on file timestamps.', [sourceFileFullPath, targetFileFullPath]));
     end;
 
@@ -308,13 +311,6 @@ begin
   { TODO : If MinimizeLogMessages options is false,
            write detailed option settings to Log.
            Also show each sub-directory as it is being processed. }
-
-  // https://www.freepascal.org/docs-html/rtl/classes/tstringlist.html
-  // https://wiki.freepascal.org/TStringList
-  // https://wiki.freepascal.org/TStringList-TStrings_Tutorial
-
-  context.DirList := TStringList.Create;
-  context.FileList := TStringList.Create;
 
   // https://www.freepascal.org/docs-html/rtl/sysutils/findfirst.html
   // https://www.freepascal.org/docs-html/rtl/sysutils/findnext.html
@@ -377,6 +373,34 @@ begin
   end;
 
   context.SynchronizationSucceeded := isSuccessful;
+end;
+
+function TSyncDirForm.InitializeProgressContext: TProgressContext;
+var
+  context: TProgressContext;
+begin
+  context.SynchronizationSucceeded := false;
+
+  // https://www.freepascal.org/docs-html/rtl/classes/tstringlist.html
+  // https://wiki.freepascal.org/TStringList
+  // https://wiki.freepascal.org/TStringList-TStrings_Tutorial
+  context.DirList := TStringList.Create;
+  context.FileList := TStringList.Create;
+
+  context.SubDirCount := 0;
+  context.DeletedSubDirCount := 0;
+  context.MissingSubDirCount := 0;
+
+  context.FileCount := 0;
+  context.CopiedFileCount := 0;
+  context.DeletedFileCount := 0;
+  context.ErrorFileCount := 0;
+  context.HiddenFileCount := 0;
+  context.ReadOnlyFileCount := 0;
+  context.SkippedFileCount := 0;
+  context.SuccessfulFileCount := 0;
+
+  result := context;
 end;
 
 procedure TSyncDirForm.ValidateSourceAndTargetDirectories(var options: TOptions);
@@ -464,7 +488,8 @@ begin
     AppendLogMessage('Synchronization cancelled due to invalid options.');
   end else begin
     AppendLogMessage('Synchronization started ...');
-    SynchronizeSourceToTarget(context{%H-}, gInitialOptions);
+    context := InitializeProgressContext();
+    SynchronizeSourceToTarget(context, gInitialOptions);
 
     { TODO : If NextSection has value,
              and synchronizationSucceeded is true,
