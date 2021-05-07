@@ -254,7 +254,6 @@ begin
     sourceFileFullPath := EnsureDirectorySeparator(options.SourceDirectory) + fileList.Strings[fileIndex];
     targetFileFullPath := EnsureDirectorySeparator(options.TargetDirectory) + fileList.Strings[fileIndex];
 
-    { TODO : Check file timestamps before copying. }
     sourceFileAge := FileAge(sourceFileFullPath);
     targetFileAge := FileAge(targetFileFullPath);
     sourceFileDate := FileDateToDateTime(sourceFileAge);
@@ -266,8 +265,7 @@ begin
         Format('Target file age = %d = %s for [%s]',
             [targetFileAge, FormatDateTime('yyyy-mm-dd hh:nn:ss.zzz', targetFileDate), targetFileFullPath]));
 
-    { TODO : Check CopyOlderFiles option. }
-    if (sourceFileAge > targetFileAge) then begin
+    if ((options.CopyOlderFiles and (sourceFileAge <> targetFileAge)) or (sourceFileAge > targetFileAge)) then begin
       { TODO : Check SkipReadOnlyTargetFiles option. }
       // https://www.freepascal.org/docs-html/rtl/sysutils/filegetattr.html
       copySuccessful := CopyFile(sourceFileFullPath, targetFileFullPath, [cffOverwriteFile, cffCreateDestDirectory, cffPreserveTime]);
