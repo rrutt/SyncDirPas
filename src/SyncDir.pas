@@ -36,12 +36,12 @@ type
 
   TProgressContext = record
     SynchronizationSucceeded: Boolean;
-    DirList: TStringList;
     DirCount: LongInt;
     SubDirCount: LongInt;
     DeletedSubDirCount: LongInt;
     MissingSubDirCount: LongInt;
-    FileList: TStringList;
+    SourceFileList: TStringList;
+    TargetFileList: TStringList;
     FileCount: LongInt;
     DeletedFileCount: LongInt;
     ErrorFileCount: LongInt;
@@ -120,6 +120,7 @@ begin
   result := resultPath;
 end;
 
+{ TODO : Add AppendVerboseLogMessage procedure. }
 procedure AppendLogMessage(message: String);
 begin
   SyncDirLogForm.MemoLog.Lines.Add(message);
@@ -236,16 +237,30 @@ begin
   end;
 end;
 
+procedure ScanSubdirectories(
+    var context: TProgressContext;
+    var options: TOptions;
+    const sourceDirectory: String;
+    const targetDirectory: String;
+    const subdirList: TStringList); forward;
+
 procedure RecursivelyScanSourceDirectoriesAndFiles(
     var context: TProgressContext;
     var options: TOptions;
     const sourceDirectory: String;
-    const {%H-}targetDirectory: String);
+    const targetDirectory: String);
 var
+  subdirList: TStringList;
   searchInfo: TSearchRec;
   searchAttr: LongInt;
   filePrefix: String;
+  sourceFileFullPath: String;
+  targetFileFullPath: String;
 begin
+  AppendLogMessage(Format('Scanning Source Directory [%s] ...', [sourceDirectory]));
+
+  subdirList := TStringList.Create;
+
   // https://www.freepascal.org/docs-html/rtl/sysutils/findfirst.html
   // https://www.freepascal.org/docs-html/rtl/sysutils/findnext.html
   searchAttr := faAnyFile;
@@ -264,25 +279,62 @@ begin
           filePrefix := filePrefix + 'ReadOnly ';
         end;
 
-        { TODO : If  MinimizeLogMessages is true, do NOT echo directory and file names. }
+        { TODO : If  MinimizeLogMessages is true, do NOT echo directory and file names. (Use AppendVerboseLogMessage procedure.) }
         if (Attr and faDirectory) = faDirectory then begin
           if ((Name <> '.') and (Name <> '..')) then begin
+            { TODO : If SkipMissingDirectories is true,
+                     check TargetDir for pre-existence of a matching directory. }
             AppendLogMessage(Format('%sDirectory: %s  Size: %d', [filePrefix, Name, Size]));
-            context.DirList.Add(Name);
+            subdirList.Add(Name);
           end;
         end else begin
           { TODO : Filter file list based on IgnoreFileTypes, OnlyProcessFileTypes, and SkipReadOnlyTargetFiles options. }
-          AppendLogMessage(Format('%sFile: %s  Size: %d', [filePrefix, Name, Size]));
-          context.FileList.Add(Name);
+
+          sourceFileFullPath := EnsureDirectorySeparator(sourceDirectory) + Name;
+          targetFileFullPath := EnsureDirectorySeparator(targetDirectory) + Name;
+
+          context.SourceFileList.Add(sourceFileFullPath);
+          context.TargetFileList.Add(targetFileFullPath);
+
+          AppendLogMessage(Format('%sFile: %s  Size: %d', [filePrefix, sourceFileFullPath, Size]));
         end;
       end;
     until FindNext(searchInfo) <> 0;
     FindClose(searchInfo);
   end;
 
-  { TODO : Perform sub-directory directory/file scan, if option set. }
-  { TODO : If SkipMissingDirectories is true,
-           check TargetDir for pre-existence of a matching directory. }
+  context.DirCount := context.DirCount + subdirList.Count;
+
+  if (options.IncludeSubdirectories) then begin
+    ScanSubdirectories(context, options, sourceDirectory, targetDirectory, subdirList);
+  end;
+
+  subdirList.Free;
+end;
+
+procedure ScanSubdirectories(
+    var context: TProgressContext;
+    var options: TOptions;
+    const sourceDirectory: String;
+    const targetDirectory: String;
+    const subdirList: TStringList);
+var
+  subdirIndex: LongInt;
+  subdir: String;
+  sourceSubdirFullPath: String;
+  targetSubdirFullPath: String;
+begin
+  subDirIndex := 0;
+  while (subDirIndex < subDirList.Count) do begin
+    subdir := subDirList.Strings[subDirIndex];
+
+    sourceSubdirFullPath := EnsureDirectorySeparator(SourceDirectory) + subdir;
+    targetSubDirFullPath := EnsureDirectorySeparator(TargetDirectory) + subdir;
+
+    RecursivelyScanSourceDirectoriesAndFiles(context, options, sourceSubdirFullPath, targetSubdirFullPath);
+
+    inc(subDirIndex);
+  end;
 end;
 
 function SynchronizeSourceFilesToTargetDirectory(var context: TProgressContext; var options: TOptions): Boolean;
@@ -306,9 +358,9 @@ begin
            the second to actual synchronize if user agrees. }
 
   fileIndex := 0;
-  while (fileIndex < context.FileList.Count) do begin
-    sourceFileFullPath := EnsureDirectorySeparator(options.SourceDirectory) + context.FileList.Strings[fileIndex];
-    targetFileFullPath := EnsureDirectorySeparator(options.TargetDirectory) + context.FileList.Strings[fileIndex];
+  while (fileIndex < context.SourceFileList.Count) do begin
+    sourceFileFullPath := context.SourceFileList.Strings[fileIndex];
+    targetFileFullPath := context.TargetFileList.Strings[fileIndex];
 
     sourceFileAge := FileAge(sourceFileFullPath);
     if (sourceFileAge < 0) then begin
@@ -368,10 +420,9 @@ begin
            write detailed option settings to Log.
            Also show each sub-directory as it is being processed. }
 
+  context.DirCount := 0;
   RecursivelyScanSourceDirectoriesAndFiles(context, options, options.SourceDirectory, options.TargetDirectory);
-
-  context.DirCount := context.DirList.Count;
-  context.FileCount := context.FileList.Count;
+  context.FileCount := context.SourceFileList.Count;
   AppendLogMessage(Format('Finished search. Found %d directories and %d files.', [context.DirCount, context.FileCount]));
 
   { TODO : Honor SynchronizeBothWays option. }
@@ -384,8 +435,8 @@ begin
 
   isSuccessful := SynchronizeSourceFilesToTargetDirectory(context, options);
 
-  context.DirList.Free;
-  context.FileList.Free;
+  context.SourceFileList.Free;
+  context.TargetFileList.Free;
 
   if (isSuccessful) then begin
     AppendLogMessage(Format('Synchronization of [%s] into [%s] completed.', [options.SourceDirectory, options.TargetDirectory]));
@@ -416,8 +467,8 @@ begin
   // https://www.freepascal.org/docs-html/rtl/classes/tstringlist.html
   // https://wiki.freepascal.org/TStringList
   // https://wiki.freepascal.org/TStringList-TStrings_Tutorial
-  context.DirList := TStringList.Create;
-  context.FileList := TStringList.Create;
+  context.SourceFileList := TStringList.Create;
+  context.TargetFileList := TStringList.Create;
 
   context.SubDirCount := 0;
   context.DeletedSubDirCount := 0;
