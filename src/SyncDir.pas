@@ -120,10 +120,16 @@ begin
   result := resultPath;
 end;
 
-{ TODO : Add AppendVerboseLogMessage procedure. }
 procedure AppendLogMessage(message: String);
 begin
   SyncDirLogForm.MemoLog.Lines.Add(message);
+end;
+
+procedure AppendVerboseLogMessage(message: String);
+begin
+  if (not gInitialOptions.MinimizeLogMessages) then begin
+    SyncDirLogForm.MemoLog.Lines.Add(Format('{%s}', [message]));
+  end;
 end;
 
 function LoadInitializationFileSettingString(iniFile: TINIFile; sectionName: String; settingName: String; defaultValue: String): String;
@@ -257,7 +263,7 @@ var
   sourceFileFullPath: String;
   targetFileFullPath: String;
 begin
-  AppendLogMessage(Format('Scanning Source Directory [%s] ...', [sourceDirectory]));
+  AppendVerboseLogMessage(Format('Scanning Source Directory [%s] ...', [sourceDirectory]));
 
   subdirList := TStringList.Create;
 
@@ -279,12 +285,11 @@ begin
           filePrefix := filePrefix + 'ReadOnly ';
         end;
 
-        { TODO : If  MinimizeLogMessages is true, do NOT echo directory and file names. (Use AppendVerboseLogMessage procedure.) }
         if (Attr and faDirectory) = faDirectory then begin
           if ((Name <> '.') and (Name <> '..')) then begin
             { TODO : If SkipMissingDirectories is true,
                      check TargetDir for pre-existence of a matching directory. }
-            AppendLogMessage(Format('%sDirectory: %s  Size: %d', [filePrefix, Name, Size]));
+            AppendVerboseLogMessage(Format('%sDirectory: %s  Size: %d', [filePrefix, Name, Size]));
             subdirList.Add(Name);
           end;
         end else begin
@@ -296,7 +301,7 @@ begin
           context.SourceFileList.Add(sourceFileFullPath);
           context.TargetFileList.Add(targetFileFullPath);
 
-          AppendLogMessage(Format('%sFile: %s  Size: %d', [filePrefix, sourceFileFullPath, Size]));
+          AppendVerboseLogMessage(Format('%sFile: %s  Size: %d', [filePrefix, sourceFileFullPath, Size]));
         end;
       end;
     until FindNext(searchInfo) <> 0;
@@ -364,24 +369,24 @@ begin
 
     sourceFileAge := FileAge(sourceFileFullPath);
     if (sourceFileAge < 0) then begin
-      AppendLogMessage(
+      AppendVerboseLogMessage(
           Format('Source file age = %d for [%s]',
               [sourceFileAge, sourceFileFullPath]));
     end else begin
       sourceFileDate := FileDateToDateTime(sourceFileAge);
-      AppendLogMessage(
+      AppendVerboseLogMessage(
           Format('Source file age = %d = %s for [%s]',
               [sourceFileAge, FormatDateTime('yyyy-mm-dd hh:nn:ss.zzz', sourceFileDate), sourceFileFullPath]));
     end;
 
     targetFileAge := FileAge(targetFileFullPath);
     if (targetFileAge < 0) then begin
-      AppendLogMessage(
+      AppendVerboseLogMessage(
           Format('Target file age = %d for [%s]',
               [targetFileAge, targetFileFullPath]));
     end else begin
       targetFileDate := FileDateToDateTime(targetFileAge);
-      AppendLogMessage(
+      AppendVerboseLogMessage(
         Format('Target file age = %d = %s for [%s]',
             [targetFileAge, FormatDateTime('yyyy-mm-dd hh:nn:ss.zzz', targetFileDate), targetFileFullPath]));
     end;
