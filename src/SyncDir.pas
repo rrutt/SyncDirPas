@@ -262,6 +262,8 @@ var
   filePrefix: String;
   sourceFileFullPath: String;
   targetFileFullPath: String;
+  sourceSubdirFullPath: String;
+  targetSubdirFullPath: String;
 begin
   AppendVerboseLogMessage(Format('Scanning Source Directory [%s] ...', [sourceDirectory]));
 
@@ -287,10 +289,17 @@ begin
 
         if (Attr and faDirectory) = faDirectory then begin
           if ((Name <> '.') and (Name <> '..')) then begin
-            { TODO : If SkipMissingDirectories is true,
-                     check TargetDir for pre-existence of a matching directory. }
-            AppendVerboseLogMessage(Format('%sDirectory: %s  Size: %d', [filePrefix, Name, Size]));
-            subdirList.Add(Name);
+            sourceSubdirFullPath := EnsureDirectorySeparator(sourceDirectory) + Name;
+            targetSubdirFullPath := EnsureDirectorySeparator(targetDirectory) + Name;
+            if (options.SkipMissingDirectories and (not DirectoryExists(targetSubdirFullPath))) then begin
+              AppendLogMessage(
+                Format(
+                  'Skipped Source %sSubdirectory [%s] since Target Subdirectory [%s] does not exist.',
+                  [filePrefix, sourceSubdirFullPath, targetSubdirFullPath]));
+            end else begin
+              AppendVerboseLogMessage(Format('%sDirectory: [%s]', [filePrefix, Name]));
+              subdirList.Add(Name);
+            end;
           end;
         end else begin
           { TODO : Filter file list based on IgnoreFileTypes, OnlyProcessFileTypes, and SkipReadOnlyTargetFiles options. }
@@ -301,7 +310,7 @@ begin
           context.SourceFileList.Add(sourceFileFullPath);
           context.TargetFileList.Add(targetFileFullPath);
 
-          AppendVerboseLogMessage(Format('%sFile: %s  Size: %d', [filePrefix, sourceFileFullPath, Size]));
+          AppendVerboseLogMessage(Format('%sFile: [%s]  Size: %d', [filePrefix, sourceFileFullPath, Size]));
         end;
       end;
     until FindNext(searchInfo) <> 0;
@@ -397,12 +406,12 @@ begin
       copySuccessful := CopyFile(sourceFileFullPath, targetFileFullPath, [cffOverwriteFile, cffCreateDestDirectory, cffPreserveTime]);
       if (copySuccessful) then begin
         Inc(context.SuccessfulFileCount);
-        AppendLogMessage(Format('Synchronized [%s] into [%s]', [sourceFileFullPath, targetFileFullPath]));
+        AppendLogMessage(Format('Synchronized [%s] into [%s].', [sourceFileFullPath, targetFileFullPath]));
       end else begin
         isSuccessful := false;
         Inc(context.ErrorFileCount);
         { TODO : Determine impact of ShowErrorMessages option. }
-        AppendLogMessage(Format('ERROR: Could not synchronize [%s] into [%s]', [sourceFileFullPath, targetFileFullPath]));
+        AppendLogMessage(Format('ERROR: Could not synchronize [%s] into [%s].', [sourceFileFullPath, targetFileFullPath]));
       end;
     end else begin
       Inc(context.SkippedFileCount);
@@ -495,10 +504,10 @@ begin
 
   if (options.SourceDirectory = '') then begin
     options.AreValid := false;
-    AppendLogMessage('Error: Source Directory is required');
+    AppendLogMessage('Error: Source Directory is required.');
   end else if (not DirectoryExists(options.SourceDirectory)) then begin
     options.AreValid := false;
-    AppendLogMessage(Format('Error: Invalid Source Directory: %s', [options.SourceDirectory]));
+    AppendLogMessage(Format('Error: Invalid Source Directory: [%s].', [options.SourceDirectory]));
   end;
 
   if (options.TargetDirectory = '') then begin
@@ -506,7 +515,7 @@ begin
     AppendLogMessage('Error: Target Directory is required');
   end else if (not DirectoryExists(options.TargetDirectory)) then begin
     options.AreValid := false;
-    AppendLogMessage(Format('Error: Invalid Target Directory: %s', [options.TargetDirectory]));
+    AppendLogMessage(Format('Error: Invalid Target Directory: [%s].', [options.TargetDirectory]));
   end;
 
   if (options.AreValid) then begin
@@ -516,8 +525,8 @@ begin
     if (AnsiCompareText(options.SourceDirectory, options.TargetDirectory) = 0) Then begin
       options.AreValid := false;
       AppendLogMessage('Error: Source and Target Directories cannot be the same.');
-      AppendLogMessage(Format('  Expanded Source Directory = %s', [options.SourceDirectory]));
-      AppendLogMessage(Format('  Expanded Target Directory = %s', [options.TargetDirectory]));
+      AppendLogMessage(Format('  Expanded Source Directory = [%s].', [options.SourceDirectory]));
+      AppendLogMessage(Format('  Expanded Target Directory = [%s].', [options.TargetDirectory]));
     end;
   end;
 
@@ -525,15 +534,15 @@ begin
     if (Pos(AnsiLowerCase(options.SourceDirectory), AnsiLowerCase(options.TargetDirectory)) = 1) then begin
       options.AreValid := false;
       AppendLogMessage('Error: Target Directory cannot be a sub-directory of Source Directory when "Include subdirectories" is checked');
-      AppendLogMessage(Format('  Expanded Source Directory = %s', [options.SourceDirectory]));
-      AppendLogMessage(Format('  Expanded Target Directory = %s', [options.TargetDirectory]));
+      AppendLogMessage(Format('  Expanded Source Directory = [%s].', [options.SourceDirectory]));
+      AppendLogMessage(Format('  Expanded Target Directory = [%s].', [options.TargetDirectory]));
     end;
 
     if (Pos(AnsiLowerCase(options.TargetDirectory), AnsiLowerCase(options.SourceDirectory)) = 1) then begin
       options.AreValid := false;
       AppendLogMessage('Error: Source Directory cannot be a sub-directory of Target Directory when "Include subdirectories" is checked');
-      AppendLogMessage(Format('  Expanded Source Directory = %s', [options.SourceDirectory]));
-      AppendLogMessage(Format('  Expanded Target Directory = %s', [options.TargetDirectory]));
+      AppendLogMessage(Format('  Expanded Source Directory = [%s].', [options.SourceDirectory]));
+      AppendLogMessage(Format('  Expanded Target Directory = [%s].', [options.TargetDirectory]));
     end;
   end;
 end;
