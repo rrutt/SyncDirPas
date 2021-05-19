@@ -23,6 +23,7 @@ type
     DeleteExtraDirectories: Boolean;
     IncludeSubdirectories: Boolean;
     MinimizeLogMessages: Boolean;
+    NotifyUser: Boolean;
     ProcessHiddenFiles: Boolean;
     ShowErrorMessages: Boolean;
     SkipMissingDirectories: Boolean;
@@ -175,6 +176,7 @@ begin
     options.DeleteExtraDirectories := LoadInitializationFileSettingBoolean(iniFile, initSection, 'DeleteExtraDirectories', false);
     options.IncludeSubdirectories := LoadInitializationFileSettingBoolean(iniFile, initSection, 'IncludeSubdirectories', false);
     options.MinimizeLogMessages := LoadInitializationFileSettingBoolean(iniFile, initSection, 'MinimizeLogMessages', true);
+    options.NotifyUser := LoadInitializationFileSettingBoolean(iniFile, initSection, 'NotifyUser', true);
     options.ProcessHiddenFiles := LoadInitializationFileSettingBoolean(iniFile, initSection, 'ProcessHiddenFiles', false);
     options.ShowErrorMessages := LoadInitializationFileSettingBoolean(iniFile, initSection, 'ShowErrorMessages', true);
     options.SkipMissingDirectories := LoadInitializationFileSettingBoolean(iniFile, initSection, 'SkipMissingDirectories', false);
@@ -203,6 +205,7 @@ begin
   options.DeleteExtraDirectories := CheckBoxDeleteExtraDirectories.Checked;
   options.IncludeSubdirectories := CheckBoxIncludeSubdirectories.Checked;
   options.MinimizeLogMessages := CheckBoxMinimizeLogMessages.Checked;
+  options.NotifyUser := true;
   options.ProcessHiddenFiles := CheckBoxProcessHiddenFiles.Checked;
   options.ShowErrorMessages := CheckBoxShowErrorMessages.Checked;
   options.SkipMissingDirectories := CheckBoxSkipMissingDirectories.Checked;
@@ -241,6 +244,37 @@ begin
   end else begin
     LabelNextSection.Visible := false;
   end;
+end;
+
+procedure ClearProgressContextCounts(var context: TProgressContext);
+begin
+  context.SubDirCount := 0;
+  context.DeletedSubDirCount := 0;
+  context.MissingSubDirCount := 0;
+
+  context.FileCount := 0;
+  context.DeletedFileCount := 0;
+  context.ErrorFileCount := 0;
+  context.ReadOnlyFileCount := 0;
+  context.SkippedFileCount := 0;
+  context.SuccessfulFileCount := 0;
+end;
+
+function TSyncDirForm.InitializeProgressContext: TProgressContext;
+var
+  context: TProgressContext;
+begin
+  context.SynchronizationSucceeded := false;
+
+  // https://www.freepascal.org/docs-html/rtl/classes/tstringlist.html
+  // https://wiki.freepascal.org/TStringList
+  // https://wiki.freepascal.org/TStringList-TStrings_Tutorial
+  context.SourceFileList := TStringList.Create;
+  context.TargetFileList := TStringList.Create;
+
+  ClearProgressContextCounts(context);
+
+  result := context;
 end;
 
 procedure ScanSubdirectories(
@@ -351,7 +385,10 @@ begin
   end;
 end;
 
-function SynchronizeSourceFilesToTargetDirectory(var context: TProgressContext; var options: TOptions): Boolean;
+function SynchronizeSourceFilesToTargetDirectory(
+    var context: TProgressContext;
+    var options: TOptions;
+    const actuallySynchronize: Boolean): Boolean;
 var
   isSuccessful: Boolean;
   copySuccessful: Boolean;
@@ -366,10 +403,6 @@ begin
   isSuccessful := true;
 
   // https://wiki.freepascal.org/CopyFile
-
-  { TODO : If NotifyUser option is true, perform two-passes of synchronization.
-           One to obtain file and directory counts;
-           the second to actual synchronize if user agrees. }
 
   fileIndex := 0;
   while (fileIndex < context.SourceFileList.Count) do begin
@@ -403,15 +436,20 @@ begin
     if ((options.CopyOlderFiles and (sourceFileAge <> targetFileAge)) or (sourceFileAge > targetFileAge)) then begin
       { TODO : Check SkipReadOnlyTargetFiles option. }
       // https://www.freepascal.org/docs-html/rtl/sysutils/filegetattr.html
-      copySuccessful := CopyFile(sourceFileFullPath, targetFileFullPath, [cffOverwriteFile, cffCreateDestDirectory, cffPreserveTime]);
-      if (copySuccessful) then begin
-        Inc(context.SuccessfulFileCount);
-        AppendLogMessage(Format('Synchronized [%s] into [%s].', [sourceFileFullPath, targetFileFullPath]));
+      if (actuallySynchronize) then begin
+        copySuccessful := CopyFile(sourceFileFullPath, targetFileFullPath, [cffOverwriteFile, cffCreateDestDirectory, cffPreserveTime]);
+        if (copySuccessful) then begin
+          Inc(context.SuccessfulFileCount);
+          AppendLogMessage(Format('Synchronized [%s] into [%s].', [sourceFileFullPath, targetFileFullPath]));
+        end else begin
+          isSuccessful := false;
+          Inc(context.ErrorFileCount);
+          { TODO : Determine impact of ShowErrorMessages option. }
+          AppendLogMessage(Format('ERROR: Could not synchronize [%s] into [%s].', [sourceFileFullPath, targetFileFullPath]));
+        end;
       end else begin
-        isSuccessful := false;
-        Inc(context.ErrorFileCount);
-        { TODO : Determine impact of ShowErrorMessages option. }
-        AppendLogMessage(Format('ERROR: Could not synchronize [%s] into [%s].', [sourceFileFullPath, targetFileFullPath]));
+        AppendVerboseLogMessage(Format('Will synchronize [%s] into [%s].', [sourceFileFullPath, targetFileFullPath]));
+        Inc(context.SuccessfulFileCount);
       end;
     end else begin
       Inc(context.SkippedFileCount);
@@ -424,15 +462,64 @@ begin
   result := isSuccessful;
 end;
 
+function PromptUserWhetherToActuallySynchronize(var context: TProgressContext; var options: TOptions): Boolean;
+var
+  actuallySynchronize: Boolean;
+  subdirPhrase: String;
+  readOnlyPhrase: String;
+  skippedFilePhrase: String;
+  promptMessage: String;
+begin
+  actuallySynchronize := false;
+
+  if (options.IncludeSubdirectories) then begin
+    subdirPhrase := ' and its subdirectories';
+  end else begin
+    subdirPhrase := '';
+  end;
+
+  if (context.ReadOnlyFileCount > 0) then begin
+    readOnlyPhrase := Format(', %d read-only file(s) will be skipped', [context.ReadOnlyFileCount]);
+  end else begin
+    readOnlyPhrase := '';
+  end;
+
+  if (context.SkippedFileCount > 0) then begin
+    skippedFilePhrase := Format(', %d file(s) will be skipped based on file timestamps', [context.SkippedFileCount]);
+  end else begin
+    skippedFilePhrase := '';
+  end;
+
+  promptMessage :=
+    Format(
+      'In order to synchronize Source Directory [%s]%s into Target Directory [%s], %d file(s) will be copied%s%s.',
+      [options.SourceDirectory,
+       subdirPhrase,
+       options.TargetDirectory,
+       context.SuccessfulFileCount,
+       readOnlyPhrase,
+       skippedFilePhrase]);
+
+  AppendLogMessage(promptMessage);
+
+  actuallySynchronize :=
+     (mrYes = MessageDlg('Proceed with synchronization?', promptMessage, mtConfirmation, [mbYes, mbNo], 0));
+
+  if (actuallySynchronize) then begin
+    AppendLogMessage('User chose to proceed with synchronization.');
+  end else begin
+    AppendLogMessage('User chose to cancel synchronization.');
+  end;
+
+  result := actuallySynchronize;
+end;
+
 procedure SynchronizeSourceToTarget(var context: TProgressContext; var options: TOptions);
 var
   isSuccessful: Boolean;
+  actuallySynchronize: Boolean;
 begin
   AppendLogMessage(Format('Synchronizing [%s] into [%s] ...', [options.SourceDirectory, options.TargetDirectory]));
-
-  { TODO : If MinimizeLogMessages options is false,
-           write detailed option settings to Log.
-           Also show each sub-directory as it is being processed. }
 
   context.DirCount := 0;
   RecursivelyScanSourceDirectoriesAndFiles(context, options, options.SourceDirectory, options.TargetDirectory);
@@ -445,9 +532,31 @@ begin
   // https://www.freepascal.org/docs-html/rtl/sysutils/deletefile.html
   // https://www.freepascal.org/docs-html/rtl/sysutils/removedir.html
 
-  { TODO : Honor SkipMissingDirectories option. }
+  if (options.NotifyUser) then begin
+    actuallySynchronize := false;
+    isSuccessful := SynchronizeSourceFilesToTargetDirectory(context, options, actuallySynchronize);
+    actuallySynchronize := PromptUserWhetherToActuallySynchronize(context, options);
+  end else begin
+    actuallySynchronize := true;
+  end;
 
-  isSuccessful := SynchronizeSourceFilesToTargetDirectory(context, options);
+  if (actuallySynchronize) then begin
+    ClearProgressContextCounts(context);
+    isSuccessful := SynchronizeSourceFilesToTargetDirectory(context, options, actuallySynchronize);
+
+    AppendLogMessage(Format('  Successfully copied %d file(s).', [context.SuccessfulFileCount]));
+    if (context.ReadOnlyFileCount > 0) then begin
+      AppendLogMessage(Format('  Bypassed %d read-only file(s).', [context.ReadOnlyFileCount]));
+    end;
+    if (context.SkippedFileCount > 0) then begin
+      AppendLogMessage(Format('  Skipped copying %d file(s).', [context.SkippedFileCount]));
+    end;
+    if (context.ErrorFileCount > 0) then begin
+      AppendLogMessage(Format('  Encountered error copying %d file(s).', [context.ErrorFileCount]));
+    end;
+  end else begin
+    isSuccessful := false;
+  end;
 
   context.SourceFileList.Free;
   context.TargetFileList.Free;
@@ -458,44 +567,7 @@ begin
     AppendLogMessage(Format('Synchronization of [%s] into [%s] failed!', [options.SourceDirectory, options.TargetDirectory]));
   end;
 
-  AppendLogMessage(Format('  Successfully copied %d file(s).', [context.SuccessfulFileCount]));
-  if (context.ReadOnlyFileCount > 0) then begin
-    AppendLogMessage(Format('  Bypassed %d read-only file(s).', [context.ReadOnlyFileCount]));
-  end;
-  if (context.SkippedFileCount > 0) then begin
-    AppendLogMessage(Format('  Skipped copying %d file(s).', [context.SkippedFileCount]));
-  end;
-  if (context.ErrorFileCount > 0) then begin
-    AppendLogMessage(Format('  Encountered error copying %d file(s).', [context.ErrorFileCount]));
-  end;
-
   context.SynchronizationSucceeded := isSuccessful;
-end;
-
-function TSyncDirForm.InitializeProgressContext: TProgressContext;
-var
-  context: TProgressContext;
-begin
-  context.SynchronizationSucceeded := false;
-
-  // https://www.freepascal.org/docs-html/rtl/classes/tstringlist.html
-  // https://wiki.freepascal.org/TStringList
-  // https://wiki.freepascal.org/TStringList-TStrings_Tutorial
-  context.SourceFileList := TStringList.Create;
-  context.TargetFileList := TStringList.Create;
-
-  context.SubDirCount := 0;
-  context.DeletedSubDirCount := 0;
-  context.MissingSubDirCount := 0;
-
-  context.FileCount := 0;
-  context.DeletedFileCount := 0;
-  context.ErrorFileCount := 0;
-  context.ReadOnlyFileCount := 0;
-  context.SkippedFileCount := 0;
-  context.SuccessfulFileCount := 0;
-
-  result := context;
 end;
 
 procedure TSyncDirForm.ValidateSourceAndTargetDirectories(var options: TOptions);
