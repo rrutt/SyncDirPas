@@ -205,7 +205,6 @@ begin
   options.DeleteExtraDirectories := CheckBoxDeleteExtraDirectories.Checked;
   options.IncludeSubdirectories := CheckBoxIncludeSubdirectories.Checked;
   options.MinimizeLogMessages := CheckBoxMinimizeLogMessages.Checked;
-  options.NotifyUser := true;
   options.ProcessHiddenFiles := CheckBoxProcessHiddenFiles.Checked;
   options.ShowErrorMessages := CheckBoxShowErrorMessages.Checked;
   options.SkipMissingDirectories := CheckBoxSkipMissingDirectories.Checked;
