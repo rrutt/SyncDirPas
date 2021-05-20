@@ -37,20 +37,24 @@ type
 
   TProgressContext = record
     SynchronizationSucceeded: Boolean;
-    DirCount: LongInt;
-    SubDirCount: LongInt;
-    DeletedSubDirCount: LongInt;
-    MissingSubDirCount: LongInt;
     SourceFileList: TStringList;
     TargetFileList: TStringList;
+    ExtraDirList: TStringList;
+    ExtraFileList: TStringList;
     OnlyProcessFileTypeList: TStringList;
     IgnoreFileTypeList: TStringList;
-    FileCount: LongInt;
+    SourceDirCount: LongInt;
+    SourceFileCount: LongInt;
+    DeletedDirCount: LongInt;
+    DeletedDirErrorCount: LongInt;
     DeletedFileCount: LongInt;
+    DeletedFileErrorCount: LongInt;
     ErrorFileCount: LongInt;
     ReadOnlyFileCount: LongInt;
     SkippedFileCount: LongInt;
     SuccessfulFileCount: LongInt;
+    ExtraDirCount: LongInt;
+    ExtraFileCount: LongInt;
   end;
 
   { TSyncDirForm }
@@ -250,15 +254,17 @@ end;
 
 procedure ClearProgressContextCounts(var context: TProgressContext);
 begin
-  context.SubDirCount := 0;
-  context.DeletedSubDirCount := 0;
-  context.MissingSubDirCount := 0;
-
-  context.FileCount := 0;
+  context.SourceDirCount := 0;
+  context.SourceFileCount := 0;
+  context.DeletedDirCount := 0;
+  context.DeletedDirErrorCount := 0;
   context.DeletedFileCount := 0;
+  context.DeletedFileErrorCount := 0;
   context.ErrorFileCount := 0;
   context.SkippedFileCount := 0;
   context.SuccessfulFileCount := 0;
+  context.ExtraDirCount := 0;
+  context.ExtraFileCount := 0;
 end;
 
 function LoadFileTypeList(var fileTypes: String): TStringList;
@@ -285,6 +291,9 @@ begin
   context.SourceFileList := TStringList.Create;
   context.TargetFileList := TStringList.Create;
 
+  context.ExtraDirList := TStringList.Create;
+  context.ExtraFileList := TStringList.Create;
+
   context.OnlyProcessFileTypeList := LoadFileTypeList(options.OnlyProcessFileTypes);
   context.IgnoreFileTypeList := LoadFileTypeList(options.IgnoreFileTypes);
 
@@ -298,11 +307,14 @@ end;
 
 procedure TSyncDirForm.FinalizeProgressContext(var context: TProgressContext);
 begin
-    context.SourceFileList.Free;
-    context.TargetFileList.Free;
+  context.SourceFileList.Free;
+  context.TargetFileList.Free;
 
-    context.OnlyProcessFileTypeList.Free;
-    context.IgnoreFileTypeList.Free;
+  context.ExtraDirList.Free;
+  context.ExtraFileList.Free;
+
+  context.OnlyProcessFileTypeList.Free;
+  context.IgnoreFileTypeList.Free;
 end;
 
 function FilterFileType(const fileName: String; const context: TProgressContext): Boolean;
@@ -350,7 +362,7 @@ begin
   result := isReadOnly;
 end;
 
-procedure ScanSubdirectories(
+procedure ScanSourceSubdirectories(
     var context: TProgressContext;
     var options: TOptions;
     const sourceDirectory: String;
@@ -402,10 +414,10 @@ begin
             if (options.SkipMissingDirectories and (not DirectoryExists(targetSubdirFullPath))) then begin
               AppendLogMessage(
                 Format(
-                  'Skipped Source %sSubdirectory [%s] since Target Subdirectory [%s] does not exist.',
+                  'Skipped source %ssubdirectory [%s] since target subdirectory [%s] does not exist.',
                   [filePrefix, sourceSubdirFullPath, targetSubdirFullPath]));
             end else begin
-              AppendVerboseLogMessage(Format('%sDirectory: [%s]', [filePrefix, Name]));
+              AppendVerboseLogMessage(Format('%sSource subirectory: [%s]', [filePrefix, Name]));
               subdirList.Add(Name);
             end;
           end;
@@ -419,17 +431,17 @@ begin
             if (options.SkipReadOnlyTargetFiles and FileIsReadOnly(targetFileFullPath)) then begin
               AppendVerboseLogMessage(
                   Format(
-                      'Bypassing synchronization of %sfile [%s] to ReadOnly file [%s].',
+                      'Bypassing synchronization of %sfile [%s] to read-only file [%s].',
                       [filePrefix, sourceFileFullPath, targetFileFullPath]));
               Inc(context.ReadOnlyFileCount);
             end else begin
               context.SourceFileList.Add(sourceFileFullPath);
               context.TargetFileList.Add(targetFileFullPath);
 
-              AppendVerboseLogMessage(Format('%sFile: [%s]  Size: %d', [filePrefix, sourceFileFullPath, Size]));
+              AppendVerboseLogMessage(Format('%sSource file: [%s]  Size: %d', [filePrefix, sourceFileFullPath, Size]));
             end;
           end else begin
-            AppendVerboseLogMessage(Format('Bypassing %sfile [%s] based on its file type.', [filePrefix, sourceFileFullPath]));
+            AppendVerboseLogMessage(Format('Bypassing %ssource file [%s] based on its file type.', [filePrefix, sourceFileFullPath]));
           end;
         end;
       end;
@@ -437,16 +449,141 @@ begin
     FindClose(searchInfo);
   end;
 
-  context.DirCount := context.DirCount + subdirList.Count;
+  context.SourceDirCount := context.SourceDirCount + subdirList.Count;
 
   if (options.IncludeSubdirectories) then begin
-    ScanSubdirectories(context, options, sourceDirectory, targetDirectory, subdirList);
+    ScanSourceSubdirectories(context, options, sourceDirectory, targetDirectory, subdirList);
   end;
 
   subdirList.Free;
 end;
 
-procedure ScanSubdirectories(
+procedure ScanSourceSubdirectories(
+    var context: TProgressContext;
+    var options: TOptions;
+    const sourceDirectory: String;
+    const targetDirectory: String;
+    const subdirList: TStringList);
+var
+  subdirIndex: LongInt;
+  subdir: String;
+  sourceSubdirFullPath: String;
+  targetSubdirFullPath: String;
+begin
+  subDirIndex := 0;
+  while (subDirIndex < subDirList.Count) do begin
+    subdir := subDirList.Strings[subDirIndex];
+
+    sourceSubdirFullPath := EnsureDirectorySeparator(SourceDirectory) + subdir;
+    targetSubDirFullPath := EnsureDirectorySeparator(TargetDirectory) + subdir;
+
+    RecursivelyScanSourceDirectoriesAndFiles(context, options, sourceSubdirFullPath, targetSubdirFullPath);
+
+    inc(subDirIndex);
+  end;
+end;
+
+procedure ScanTargetSubdirectories(
+    var context: TProgressContext;
+    var options: TOptions;
+    const sourceDirectory: String;
+    const targetDirectory: String;
+    const subdirList: TStringList); forward;
+
+procedure RecursivelyScanTargetDirectoriesAndFiles(
+    var context: TProgressContext;
+    var options: TOptions;
+    const sourceDirectory: String;
+    const targetDirectory: String);
+var
+  subdirList: TStringList;
+  searchInfo: TSearchRec;
+  searchAttr: LongInt;
+  fileTypeIsAccepted: Boolean;
+  filePrefix: String;
+  sourceFileFullPath: String;
+  targetFileFullPath: String;
+  sourceSubdirFullPath: String;
+  targetSubdirFullPath: String;
+begin
+  AppendVerboseLogMessage(Format('Scanning Target Directory [%s] ...', [targetDirectory]));
+
+  subdirList := TStringList.Create;
+
+  // https://www.freepascal.org/docs-html/rtl/sysutils/findfirst.html
+  // https://www.freepascal.org/docs-html/rtl/sysutils/findnext.html
+  searchAttr := faAnyFile;
+  if (not options.ProcessHiddenFiles) then begin
+    searchAttr := searchAttr and (not faHidden{%H-});
+  end;
+  if (FindFirst(EnsureDirectorySeparator(targetDirectory) + '*', searchAttr, searchInfo) = 0) then
+    begin
+    repeat
+      with searchInfo do begin
+        filePrefix := '';
+        if ((Attr and faHidden{%H-}) = faHidden{%H-}) then begin
+          filePrefix := filePrefix + 'Hidden ';
+        end;
+        if ((Attr and faReadOnly) = faReadOnly) then begin
+          filePrefix := filePrefix + 'ReadOnly ';
+        end;
+
+        if (Attr and faDirectory) = faDirectory then begin
+          if ((Name <> '.') and (Name <> '..')) then begin
+            sourceSubdirFullPath := EnsureDirectorySeparator(sourceDirectory) + Name;
+            targetSubdirFullPath := EnsureDirectorySeparator(targetDirectory) + Name;
+            if (options.DeleteExtraDirectories and (not DirectoryExists(sourceSubdirFullPath))) then begin
+              AppendLogMessage(
+                Format(
+                  'Will delete extra %starget subdirectory [%s] since source subdirectory [%s] does not exist.',
+                  [filePrefix, targetSubdirFullPath, sourceSubdirFullPath]));
+              context.ExtraDirList.Add(targetSubdirFullPath);
+              subdirList.Add(Name);
+            end else begin
+              AppendVerboseLogMessage(Format('%sTarget subdirectory: [%s]', [filePrefix, Name]));
+              subdirList.Add(Name);
+            end;
+          end;
+        end else begin
+          sourceFileFullPath := EnsureDirectorySeparator(sourceDirectory) + Name;
+          targetFileFullPath := EnsureDirectorySeparator(targetDirectory) + Name;
+
+          fileTypeIsAccepted := FilterFileType(Name, context);
+
+          if (fileTypeIsAccepted) then begin
+            if (options.DeleteExtraFiles and (not FileExists(sourceFileFullPath))) then begin
+              if (options.SkipReadOnlyTargetFiles and FileIsReadOnly(targetFileFullPath)) then begin
+                AppendVerboseLogMessage(
+                    Format(
+                        'Bypassing deletion of extra read-only target file [%s].',
+                        [targetFileFullPath]));
+              end else begin
+                AppendLogMessage(
+                  Format(
+                    'Will delete extra %starget file [%s] since source file [%s] does not exist.',
+                    [filePrefix, targetFileFullPath, sourceFileFullPath]));
+                context.ExtraFileList.Add(targetFileFullPath);
+              end;
+            end else begin
+              AppendVerboseLogMessage(Format('%sTarget file: [%s]', [filePrefix, Name]));
+            end;
+          end else begin
+            AppendVerboseLogMessage(Format('Bypassing %starget file [%s] based on its file type.', [filePrefix, targetFileFullPath]));
+          end;
+        end;
+      end;
+    until FindNext(searchInfo) <> 0;
+    FindClose(searchInfo);
+  end;
+
+  if (options.IncludeSubdirectories) then begin
+    ScanTargetSubdirectories(context, options, sourceDirectory, targetDirectory, subdirList);
+  end;
+
+  subdirList.Free;
+end;
+
+procedure ScanTargetSubdirectories(
     var context: TProgressContext;
     var options: TOptions;
     const sourceDirectory: String;
@@ -485,13 +622,12 @@ var
   sourceFileDate: TDateTime;
   targetFileDate: TDateTime;
   fileIndex: LongInt;
+  errorMessage: String;
 begin
   isSuccessful := true;
 
-  // https://wiki.freepascal.org/CopyFile
-
   fileIndex := 0;
-  while (fileIndex < context.SourceFileList.Count) do begin
+  while (isSuccessful and (fileIndex < context.SourceFileList.Count)) do begin
     sourceFileFullPath := context.SourceFileList.Strings[fileIndex];
     targetFileFullPath := context.TargetFileList.Strings[fileIndex];
 
@@ -521,15 +657,19 @@ begin
 
     if ((options.CopyOlderFiles and (sourceFileAge <> targetFileAge)) or (sourceFileAge > targetFileAge)) then begin
       if (actuallySynchronize) then begin
+        // https://wiki.freepascal.org/CopyFile
         copySuccessful := CopyFile(sourceFileFullPath, targetFileFullPath, [cffOverwriteFile, cffCreateDestDirectory, cffPreserveTime]);
         if (copySuccessful) then begin
           Inc(context.SuccessfulFileCount);
           AppendLogMessage(Format('Synchronized [%s] into [%s].', [sourceFileFullPath, targetFileFullPath]));
         end else begin
-          isSuccessful := false;
           Inc(context.ErrorFileCount);
-          { TODO : Determine impact of ShowErrorMessages option. }
-          AppendLogMessage(Format('ERROR: Could not synchronize [%s] into [%s].', [sourceFileFullPath, targetFileFullPath]));
+          errorMessage := Format('ERROR: Could not synchronize [%s] into [%s].', [sourceFileFullPath, targetFileFullPath]);
+          AppendLogMessage(errorMessage);
+          if (options.ShowErrorMessages) then begin
+            isSuccessful :=
+              (mrOK = MessageDlg('SyncDirPas: Synchronization Error', errorMessage, mtConfirmation, [mbOK, mbCancel], 0));
+          end;
         end;
       end else begin
         AppendVerboseLogMessage(Format('Will synchronize [%s] into [%s].', [sourceFileFullPath, targetFileFullPath]));
@@ -552,6 +692,8 @@ var
   subdirPhrase: String;
   readOnlyPhrase: String;
   skippedFilePhrase: String;
+  extraFilePhrase: String;
+  extraDirPhrase: String;
   promptMessage: String;
 begin
   actuallySynchronize := false;
@@ -574,20 +716,34 @@ begin
     skippedFilePhrase := '';
   end;
 
+  if (context.ExtraFileCount > 0) then begin
+    extraFilePhrase := Format(', and %d extra target file(s) will be deleted', [context.ExtraFileCount]);
+  end else begin
+    extraFilePhrase := '';
+  end;
+
+  if (context.ExtraDirCount > 0) then begin
+    extraDirPhrase := Format(', and %d extra target directory(ies) will be deleted', [context.ExtraDirCount]);
+  end else begin
+    extraDirPhrase := '';
+  end;
+
   promptMessage :=
     Format(
-      'In order to synchronize Source Directory [%s]%s into Target Directory [%s], %d file(s) will be copied%s%s.',
+      'In order to synchronize Source Directory [%s]%s into Target Directory [%s], %d file(s) will be copied%s%s%s%s.',
       [options.SourceDirectory,
        subdirPhrase,
        options.TargetDirectory,
        context.SuccessfulFileCount,
        readOnlyPhrase,
-       skippedFilePhrase]);
+       skippedFilePhrase,
+       extraFilePhrase,
+       extraDirPhrase]);
 
   AppendLogMessage(promptMessage);
 
   actuallySynchronize :=
-     (mrYes = MessageDlg('Proceed with synchronization?', promptMessage, mtConfirmation, [mbYes, mbNo], 0));
+     (mrYes = MessageDlg('SyncDirPas: Proceed with synchronization?', promptMessage, mtConfirmation, [mbYes, mbNo], 0));
 
   if (actuallySynchronize) then begin
     AppendLogMessage('User chose to proceed with synchronization.');
@@ -598,28 +754,54 @@ begin
   result := actuallySynchronize;
 end;
 
+function DeleteExtraTargetFiles(var context: TProgressContext; var options: TOptions): Boolean;
+var
+  isSuccessful: Boolean;
+begin
+  { TODO : Honor DeleteExtraFiles option. }
+  // https://www.freepascal.org/docs-html/rtl/sysutils/deletefile.html
+  isSuccessful := true;
+
+  result := isSuccessful;
+end;
+
+function DeleteExtraTargetDirectories(var context: TProgressContext; var options: TOptions): Boolean;
+var
+  isSuccessful: Boolean;
+begin
+  { TODO : Honor DeleteExtraDirectories option. }
+  // https://www.freepascal.org/docs-html/rtl/sysutils/removedir.html
+  isSuccessful := true;
+
+  // Iterate directory list in reverse order so deeper subdirectories are deleted first.
+
+  result := isSuccessful;
+end;
+
 procedure SynchronizeSourceToTarget(var context: TProgressContext; var options: TOptions);
 var
   isSuccessful: Boolean;
   actuallySynchronize: Boolean;
+  message: String;
 begin
   AppendLogMessage(Format('Synchronizing [%s] into [%s] ...', [options.SourceDirectory, options.TargetDirectory]));
 
-  context.DirCount := 0;
   RecursivelyScanSourceDirectoriesAndFiles(context, options, options.SourceDirectory, options.TargetDirectory);
-  context.FileCount := context.SourceFileList.Count;
-  AppendLogMessage(Format('Finished search. Found %d directories and %d files.', [context.DirCount, context.FileCount]));
+  context.SourceFileCount := context.SourceFileList.Count;
+  AppendLogMessage(Format('Finished search. Found %d directories and %d files.', [context.SourceDirCount, context.SourceFileCount]));
 
   { TODO : Honor SynchronizeBothWays option. }
 
-  { TODO : Honor DeleteExtraFiles and DeleteExtraDirectories options. }
-  // https://www.freepascal.org/docs-html/rtl/sysutils/deletefile.html
-  // https://www.freepascal.org/docs-html/rtl/sysutils/removedir.html
+  if (options.DeleteExtraDirectories or options.DeleteExtraFiles) then begin
+    RecursivelyScanTargetDirectoriesAndFiles(context, options, options.SourceDirectory, options.TargetDirectory);
+  end;
+  context.ExtraDirCount := context.ExtraDirList.Count;
+  context.ExtraFileCount := context.ExtraFileList.Count;
 
   if (options.NotifyUser) then begin
     actuallySynchronize := false;
     isSuccessful := SynchronizeSourceFilesToTargetDirectory(context, options, actuallySynchronize);
-    actuallySynchronize := PromptUserWhetherToActuallySynchronize(context, options);
+    actuallySynchronize := (isSuccessful and PromptUserWhetherToActuallySynchronize(context, options));
   end else begin
     actuallySynchronize := true;
   end;
@@ -627,6 +809,15 @@ begin
   if (actuallySynchronize) then begin
     ClearProgressContextCounts(context);
     isSuccessful := SynchronizeSourceFilesToTargetDirectory(context, options, actuallySynchronize);
+
+    // We need to delete extra files before extra directories to help create empty extra directories.
+    if (isSuccessful and (context.ExtraFileCount > 0)) then begin
+      isSuccessful := DeleteExtraTargetFiles(context, options);
+    end;
+
+    if (isSuccessful and (context.ExtraDirCount > 0)) then begin
+      isSuccessful := DeleteExtraTargetDirectories(context, options);
+    end;
 
     AppendLogMessage(Format('  Successfully copied %d file(s).', [context.SuccessfulFileCount]));
     if (context.ReadOnlyFileCount > 0) then begin
@@ -636,8 +827,23 @@ begin
       AppendLogMessage(Format('  Skipped copying %d file(s).', [context.SkippedFileCount]));
     end;
     if (context.ErrorFileCount > 0) then begin
-      AppendLogMessage(Format('  Encountered error copying %d file(s).', [context.ErrorFileCount]));
-      ShowMessage(Format('Encountered error copying %d file(s).', [context.ErrorFileCount]));
+      message := Format('  Encountered error copying %d file(s).', [context.ErrorFileCount]);
+      AppendLogMessage(message);
+      if (options.ShowErrorMessages) then begin
+        Application.MessageBox(PChar(message), 'SyncDirPas Error', 0);
+      end;
+    end;
+    if (context.DeletedFileCount > 0) then begin
+      AppendLogMessage(Format('  Deleted %d extra target file(s).', [context.DeletedFileCount]));
+    end;
+    if (context.DeletedFileErrorCount > 0) then begin
+      AppendLogMessage(Format('  Encountered error deleting %d extra target file(s).', [context.DeletedFileErrorCount]));
+    end;
+    if (context.DeletedDirCount > 0) then begin
+      AppendLogMessage(Format('  Deleted %d extra target directory(ies).', [context.DeletedDirCount]));
+    end;
+    if (context.DeletedDirErrorCount > 0) then begin
+      AppendLogMessage(Format('  Encountered error deleting %d extra target directory(ies).', [context.DeletedDirErrorCount]));
     end;
   end else begin
     isSuccessful := false;

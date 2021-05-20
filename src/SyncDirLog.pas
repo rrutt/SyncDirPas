@@ -48,7 +48,7 @@ end;
 procedure TSyncDirLog.ButtonCopyTextClick(Sender: TObject);
 begin
   Clipboard.AsText := MemoLog.Text;
-  ShowMessage('The log text has been copied to the clipboard.');
+  Application.MessageBox('The log text has been copied to the clipboard.', 'SyncDirPas Log', 0);
 end;
 
 end.
