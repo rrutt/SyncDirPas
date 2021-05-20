@@ -89,6 +89,7 @@ type
     LabelTargetDirectory: TLabel;
     LabelSourceDirectory: TLabel;
     function InitializeProgressContext(options: TOptions): TProgressContext;
+    function PerformSynchronizationPass(var options: TOptions): Boolean;
     procedure FinalizeProgressContext(var context: TProgressContext);
     procedure LoadInitializationFileSettings(iniFileFullPath: String; initSection: String; var options: TOptions);
     procedure LoadInitialOptionsFromFormControls(var options: TOptions);
@@ -973,37 +974,61 @@ begin
   SyncDirLogForm.Show;
 end;
 
-procedure TSyncDirForm.ButtonSynchronizeClick(Sender: TObject);
+function TSyncDirForm.PerformSynchronizationPass(var options: TOptions): Boolean;
 var
   context: TProgressContext;
+  isSuccessful: Boolean;
 begin
-  ButtonSynchronize.Enabled := false;
-
-  LoadInitialOptionsFromFormControls(gInitialOptions);
-  if (gInitialOptions.AreValid) then begin
-    ValidateSourceAndTargetDirectories(gInitialOptions);
+  if (options.AreValid) then begin
+    ValidateSourceAndTargetDirectories(options);
   end;
 
   { TODO : Validate other option combinations. }
 
-  if (not gInitialOptions.AreValid) then begin
+  if (not options.AreValid) then begin
+    isSuccessful := false;;
     AppendLogMessage('Synchronization cancelled due to invalid options.');
   end else begin
     AppendLogMessage('Synchronization started ...');
-    context := InitializeProgressContext(gInitialOptions);
-    SynchronizeSourceToTarget(context, gInitialOptions);
+    context := InitializeProgressContext(options);
+    SynchronizeSourceToTarget(context, options);
+    isSuccessful := context.SynchronizationSucceeded;
     FinalizeProgressContext(context);
-
-    { TODO : Honor SynchronizeBothWays option by swapping SourceDirectory and TargetDirectory and repeating above sequence. }
-
-    { TODO : If NextSection has value,
-             and synchronizationSucceeded is true,
-             iterate file synchronization thru successive section(s).
-             (Set user-interface options on main form as each section is processed.) }
-    // https://www.freepascal.org/docs-html/fcl/inifiles/tcustominifile.sectionexists.html
-
-    { TODO : Define procedure to load NextSection options into a new TOptions record for iterative/recursive synchronization call. }
   end;
+
+  result := isSuccessful;
+end;
+
+procedure TSyncDirForm.ButtonSynchronizeClick(Sender: TObject);
+var
+  currentOptions: TOptions;
+  synchronizationSucceeded: Boolean;
+  swapDirectory: String;
+begin
+  ButtonSynchronize.Enabled := false;
+
+  LoadInitialOptionsFromFormControls(gInitialOptions);
+  currentOptions := gInitialOptions;
+
+  synchronizationSucceeded := PerformSynchronizationPass(currentOptions);
+
+  if (synchronizationSucceeded and currentOptions.SynchronizeBothWays) then begin
+    { TODO : Honor SynchronizeBothWays option by swapping SourceDirectory and TargetDirectory and repeating above sequence. }
+    AppendLogMessage('SynchronizeBothWays is enabled. Swapping Source Directory and Target Directory.');
+    swapDirectory := currentOptions.SourceDirectory;
+    currentOptions.SourceDirectory := currentOptions.TargetDirectory;
+    currentOptions.TargetDirectory := swapDirectory;
+
+    synchronizationSucceeded := PerformSynchronizationPass(currentOptions);
+  end;
+
+  { TODO : If NextSection has value,
+           and synchronizationSucceeded is true,
+           iterate file synchronization thru successive section(s).
+           (Set user-interface options on main form as each section is processed.) }
+  // https://www.freepascal.org/docs-html/fcl/inifiles/tcustominifile.sectionexists.html
+
+  { TODO : Define procedure to load NextSection options into a new TOptions record for iterative/recursive synchronization call. }
 
   { TODO : Should we show log form while synchronizing, or only when done? }
   SyncDirLogForm.Show;
