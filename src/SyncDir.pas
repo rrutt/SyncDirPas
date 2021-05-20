@@ -333,6 +333,21 @@ begin
   result := isAccepted;
 end;
 
+function FileIsReadOnly(const fileFullPath: String): Boolean;
+var
+  isReadOnly: Boolean;
+  searchInfo: TSearchRec;
+begin
+  fileIsReadOnly := false;
+
+  if (FindFirst(fileFullPath, faAnyFile, searchInfo) = 0) then begin
+    isReadOnly := ((searchInfo.Attr and faReadOnly) = faReadOnly);
+  end;
+  FindClose(searchInfo);
+
+  result := isReadOnly;
+end;
+
 procedure ScanSubdirectories(
     var context: TProgressContext;
     var options: TOptions;
@@ -366,15 +381,15 @@ begin
   if (not options.ProcessHiddenFiles) then begin
     searchAttr := searchAttr and (not faHidden{%H-});
   end;
-  If FindFirst(EnsureDirectorySeparator(sourceDirectory) + '*', searchAttr, searchInfo) = 0 then
+  if (FindFirst(EnsureDirectorySeparator(sourceDirectory) + '*', searchAttr, searchInfo) = 0) then
     begin
     repeat
       with searchInfo do begin
         filePrefix := '';
-        if (Attr and faHidden{%H-}) = faHidden{%H-} then begin
+        if ((Attr and faHidden{%H-}) = faHidden{%H-}) then begin
           filePrefix := filePrefix + 'Hidden ';
         end;
-        if (Attr and faReadOnly) = faReadOnly then begin
+        if ((Attr and faReadOnly) = faReadOnly) then begin
           filePrefix := filePrefix + 'ReadOnly ';
         end;
 
@@ -396,15 +411,22 @@ begin
           sourceFileFullPath := EnsureDirectorySeparator(sourceDirectory) + Name;
           targetFileFullPath := EnsureDirectorySeparator(targetDirectory) + Name;
 
-          { TODO : Filter file list based on SkipReadOnlyTargetFiles option. }
           fileTypeIsAccepted := FilterFileType(Name, context);
-          if (fileTypeIsAccepted) then begin
-            context.SourceFileList.Add(sourceFileFullPath);
-            context.TargetFileList.Add(targetFileFullPath);
 
-            AppendVerboseLogMessage(Format('%sFile: [%s]  Size: %d', [filePrefix, sourceFileFullPath, Size]));
+          if (fileTypeIsAccepted) then begin
+            if (options.SkipReadOnlyTargetFiles and FileIsReadOnly(targetFileFullPath)) then begin
+              AppendVerboseLogMessage(
+                  Format(
+                      'Bypassing synchronization of %sfile [%s] to ReadOnly file [%s].',
+                      [filePrefix, sourceFileFullPath, targetFileFullPath]));
+            end else begin
+              context.SourceFileList.Add(sourceFileFullPath);
+              context.TargetFileList.Add(targetFileFullPath);
+
+              AppendVerboseLogMessage(Format('%sFile: [%s]  Size: %d', [filePrefix, sourceFileFullPath, Size]));
+            end;
           end else begin
-            AppendVerboseLogMessage(Format('Bypassing file [%s] based on its file type.', [sourceFileFullPath]));
+            AppendVerboseLogMessage(Format('Bypassing %sfile [%s] based on its file type.', [filePrefix, sourceFileFullPath]));
           end;
         end;
       end;
@@ -495,8 +517,6 @@ begin
     end;
 
     if ((options.CopyOlderFiles and (sourceFileAge <> targetFileAge)) or (sourceFileAge > targetFileAge)) then begin
-      { TODO : Check SkipReadOnlyTargetFiles option. }
-      // https://www.freepascal.org/docs-html/rtl/sysutils/filegetattr.html
       if (actuallySynchronize) then begin
         copySuccessful := CopyFile(sourceFileFullPath, targetFileFullPath, [cffOverwriteFile, cffCreateDestDirectory, cffPreserveTime]);
         if (copySuccessful) then begin
