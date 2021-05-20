@@ -263,8 +263,6 @@ begin
   context.ErrorFileCount := 0;
   context.SkippedFileCount := 0;
   context.SuccessfulFileCount := 0;
-  context.ExtraDirCount := 0;
-  context.ExtraFileCount := 0;
 end;
 
 function LoadFileTypeList(var fileTypes: String): TStringList;
@@ -299,8 +297,10 @@ begin
 
   ClearProgressContextCounts(context);
 
-  // This count accumulates during the initial file scan, so cannot be cleared prior to when the actual synchronization occurs.
+  // These counts accumulate during the initial file scan, so they cannot be cleared prior to when the actual synchronization occurs.
   context.ReadOnlyFileCount := 0;
+  context.ExtraDirCount := 0;
+  context.ExtraFileCount := 0;
 
   result := context;
 end;
@@ -602,7 +602,7 @@ begin
     sourceSubdirFullPath := EnsureDirectorySeparator(SourceDirectory) + subdir;
     targetSubDirFullPath := EnsureDirectorySeparator(TargetDirectory) + subdir;
 
-    RecursivelyScanSourceDirectoriesAndFiles(context, options, sourceSubdirFullPath, targetSubdirFullPath);
+    RecursivelyScanTargetDirectoriesAndFiles(context, options, sourceSubdirFullPath, targetSubdirFullPath);
 
     inc(subDirIndex);
   end;
@@ -757,10 +757,35 @@ end;
 function DeleteExtraTargetFiles(var context: TProgressContext; var options: TOptions): Boolean;
 var
   isSuccessful: Boolean;
+  fileDeleted: Boolean;
+  fileIndex: LongInt;
+  targetFileFullPath: String;
+  errorMessage: String;
 begin
-  { TODO : Honor DeleteExtraFiles option. }
-  // https://www.freepascal.org/docs-html/rtl/sysutils/deletefile.html
   isSuccessful := true;
+
+  fileIndex := 0;
+  while (isSuccessful and (fileIndex < context.ExtraFileList.Count)) do begin
+    targetFileFullPath := context.ExtraFileList.Strings[fileIndex];
+    AppendVerboseLogMessage(Format('Deleting extra target file [%s] ...', [targetFileFullPath]));
+
+    // https://www.freepascal.org/docs-html/rtl/sysutils/deletefile.html
+    fileDeleted := DeleteFile(targetFileFullPath);
+    if (fileDeleted) then begin
+      Inc(context.DeletedFileCount);
+      AppendLogMessage(Format('Deleted extra target file [%s].', [targetFileFullPath]));
+    end else begin
+      Inc(context.DeletedFileErrorCount);
+      errorMessage := Format('ERROR: Could not delete extra target file [%s].', [targetFileFullPath]);
+      AppendLogMessage(errorMessage);
+      if (options.ShowErrorMessages) then begin
+        isSuccessful :=
+          (mrOK = MessageDlg('SyncDirPas: Synchronization Error', errorMessage, mtConfirmation, [mbOK, mbCancel], 0));
+      end;
+    end;
+
+    inc(fileIndex);
+  end;
 
   result := isSuccessful;
 end;
@@ -768,12 +793,36 @@ end;
 function DeleteExtraTargetDirectories(var context: TProgressContext; var options: TOptions): Boolean;
 var
   isSuccessful: Boolean;
+  dirRemoved: Boolean;
+  dirIndex: LongInt;
+  targetDirFullPath: String;
+  errorMessage: String;
 begin
-  { TODO : Honor DeleteExtraDirectories option. }
-  // https://www.freepascal.org/docs-html/rtl/sysutils/removedir.html
   isSuccessful := true;
 
   // Iterate directory list in reverse order so deeper subdirectories are deleted first.
+  dirIndex := context.ExtraDirList.Count;
+  while (isSuccessful and (dirIndex > 0)) do begin
+    Dec(dirIndex);
+
+    targetDirFullPath := context.ExtraDirList.Strings[dirIndex];
+    AppendVerboseLogMessage(Format('Deleting extra target directory [%s] ...', [targetDirFullPath]));
+
+    // https://www.freepascal.org/docs-html/rtl/sysutils/removedir.html
+    dirRemoved := RemoveDir(targetDirFullPath);
+    if (dirRemoved) then begin
+      Inc(context.DeletedDirCount);
+      AppendLogMessage(Format('Deleted extra target directory [%s].', [targetDirFullPath]));
+    end else begin
+      Inc(context.DeletedDirErrorCount);
+      errorMessage := Format('ERROR: Could not delete extra target directory [%s].', [targetDirFullPath]);
+      AppendLogMessage(errorMessage);
+      if (options.ShowErrorMessages) then begin
+        isSuccessful :=
+          (mrOK = MessageDlg('SyncDirPas: Synchronization Error', errorMessage, mtConfirmation, [mbOK, mbCancel], 0));
+      end;
+    end;
+  end;
 
   result := isSuccessful;
 end;
@@ -789,8 +838,6 @@ begin
   RecursivelyScanSourceDirectoriesAndFiles(context, options, options.SourceDirectory, options.TargetDirectory);
   context.SourceFileCount := context.SourceFileList.Count;
   AppendLogMessage(Format('Finished search. Found %d directories and %d files.', [context.SourceDirCount, context.SourceFileCount]));
-
-  { TODO : Honor SynchronizeBothWays option. }
 
   if (options.DeleteExtraDirectories or options.DeleteExtraFiles) then begin
     RecursivelyScanTargetDirectoriesAndFiles(context, options, options.SourceDirectory, options.TargetDirectory);
@@ -947,13 +994,15 @@ begin
     SynchronizeSourceToTarget(context, gInitialOptions);
     FinalizeProgressContext(context);
 
+    { TODO : Honor SynchronizeBothWays option by swapping SourceDirectory and TargetDirectory and repeating above sequence. }
+
     { TODO : If NextSection has value,
              and synchronizationSucceeded is true,
              iterate file synchronization thru successive section(s).
              (Set user-interface options on main form as each section is processed.) }
     // https://www.freepascal.org/docs-html/fcl/inifiles/tcustominifile.sectionexists.html
 
-    { TODO : Define procedure to load NextSection options into a new TOptions record for iterative synchronization call. }
+    { TODO : Define procedure to load NextSection options into a new TOptions record for iterative/recursive synchronization call. }
   end;
 
   { TODO : Should we show log form while synchronizing, or only when done? }
