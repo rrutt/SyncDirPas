@@ -219,7 +219,6 @@ object SyncDirForm: TSyncDirForm
     Font.Name = 'Segoe UI'
     Font.Pitch = fpVariable
     Font.Quality = fqDraft
-    Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 3
   end

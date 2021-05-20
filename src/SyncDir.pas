@@ -43,6 +43,8 @@ type
     MissingSubDirCount: LongInt;
     SourceFileList: TStringList;
     TargetFileList: TStringList;
+    OnlyProcessFileTypeList: TStringList;
+    IgnoreFileTypeList: TStringList;
     FileCount: LongInt;
     DeletedFileCount: LongInt;
     ErrorFileCount: LongInt;
@@ -82,7 +84,8 @@ type
     LabelIgnoreFileTypes: TLabel;
     LabelTargetDirectory: TLabel;
     LabelSourceDirectory: TLabel;
-    function InitializeProgressContext: TProgressContext;
+    function InitializeProgressContext(options: TOptions): TProgressContext;
+    procedure FinalizeProgressContext(var context: TProgressContext);
     procedure LoadInitializationFileSettings(iniFileFullPath: String; initSection: String; var options: TOptions);
     procedure LoadInitialOptionsFromFormControls(var options: TOptions);
     procedure LoadFormControlsFromOptions(const initSection: String; const options: TOptions);
@@ -259,7 +262,19 @@ begin
   context.SuccessfulFileCount := 0;
 end;
 
-function TSyncDirForm.InitializeProgressContext: TProgressContext;
+function LoadFileTypeList(var fileTypes: String): TStringList;
+var
+  fileTypeList: TStringList;
+begin
+  fileTypeList := TStringList.Create;
+  fileTypeList.Delimiter := ',';
+  fileTypeList.QuoteChar := '''';
+  fileTypeList.DelimitedText := LowerCase(fileTypes);
+
+  result := fileTypeList;
+end;
+
+function TSyncDirForm.InitializeProgressContext(options: TOptions): TProgressContext;
 var
   context: TProgressContext;
 begin
@@ -271,9 +286,51 @@ begin
   context.SourceFileList := TStringList.Create;
   context.TargetFileList := TStringList.Create;
 
+  context.OnlyProcessFileTypeList := LoadFileTypeList(options.OnlyProcessFileTypes);
+  context.IgnoreFileTypeList := LoadFileTypeList(options.IgnoreFileTypes);
+
   ClearProgressContextCounts(context);
 
   result := context;
+end;
+
+procedure TSyncDirForm.FinalizeProgressContext(var context: TProgressContext);
+begin
+    context.SourceFileList.Free;
+    context.TargetFileList.Free;
+
+    context.OnlyProcessFileTypeList.Free;
+    context.IgnoreFileTypeList.Free;
+end;
+
+function FilterFileType(const fileName: String; const context: TProgressContext): Boolean;
+var
+  fileType: String;
+  n: LongInt;
+  isAccepted: Boolean;
+begin
+  isAccepted := true;
+
+  fileType := LowerCase(ExtractFileExt(fileName));
+  if (fileType = '') then begin
+    fileType := '.';
+  end else begin
+    n := Length(fileType);
+    if (n > 1) then begin
+      // Not an empty file type, so remove the initial '.'
+      fileType := RightStr(fileType, n - 1);
+    end;
+  end;
+
+  if (context.OnlyProcessFileTypeList.Count > 0) then begin
+    isAccepted := isAccepted and (context.OnlyProcessFileTypeList.IndexOf(fileType) >= 0);
+  end;
+
+  if (context.IgnoreFileTypeList.Count > 0) then begin
+    isAccepted := isAccepted and (context.IgnoreFileTypeList.IndexOf(fileType) < 0);
+  end;
+
+  result := isAccepted;
 end;
 
 procedure ScanSubdirectories(
@@ -292,6 +349,7 @@ var
   subdirList: TStringList;
   searchInfo: TSearchRec;
   searchAttr: LongInt;
+  fileTypeIsAccepted: Boolean;
   filePrefix: String;
   sourceFileFullPath: String;
   targetFileFullPath: String;
@@ -335,15 +393,19 @@ begin
             end;
           end;
         end else begin
-          { TODO : Filter file list based on IgnoreFileTypes, OnlyProcessFileTypes, and SkipReadOnlyTargetFiles options. }
-
           sourceFileFullPath := EnsureDirectorySeparator(sourceDirectory) + Name;
           targetFileFullPath := EnsureDirectorySeparator(targetDirectory) + Name;
 
-          context.SourceFileList.Add(sourceFileFullPath);
-          context.TargetFileList.Add(targetFileFullPath);
+          { TODO : Filter file list based on SkipReadOnlyTargetFiles option. }
+          fileTypeIsAccepted := FilterFileType(Name, context);
+          if (fileTypeIsAccepted) then begin
+            context.SourceFileList.Add(sourceFileFullPath);
+            context.TargetFileList.Add(targetFileFullPath);
 
-          AppendVerboseLogMessage(Format('%sFile: [%s]  Size: %d', [filePrefix, sourceFileFullPath, Size]));
+            AppendVerboseLogMessage(Format('%sFile: [%s]  Size: %d', [filePrefix, sourceFileFullPath, Size]));
+          end else begin
+            AppendVerboseLogMessage(Format('Bypassing file [%s] based on its file type.', [sourceFileFullPath]));
+          end;
         end;
       end;
     until FindNext(searchInfo) <> 0;
@@ -557,9 +619,6 @@ begin
     isSuccessful := false;
   end;
 
-  context.SourceFileList.Free;
-  context.TargetFileList.Free;
-
   if (isSuccessful) then begin
     AppendLogMessage(Format('Synchronization of [%s] into [%s] completed.', [options.SourceDirectory, options.TargetDirectory]));
   end else begin
@@ -654,8 +713,9 @@ begin
     AppendLogMessage('Synchronization cancelled due to invalid options.');
   end else begin
     AppendLogMessage('Synchronization started ...');
-    context := InitializeProgressContext();
+    context := InitializeProgressContext(gInitialOptions);
     SynchronizeSourceToTarget(context, gInitialOptions);
+    FinalizeProgressContext(context);
 
     { TODO : If NextSection has value,
              and synchronizationSucceeded is true,
