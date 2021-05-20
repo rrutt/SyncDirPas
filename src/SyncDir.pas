@@ -257,7 +257,6 @@ begin
   context.FileCount := 0;
   context.DeletedFileCount := 0;
   context.ErrorFileCount := 0;
-  context.ReadOnlyFileCount := 0;
   context.SkippedFileCount := 0;
   context.SuccessfulFileCount := 0;
 end;
@@ -290,6 +289,9 @@ begin
   context.IgnoreFileTypeList := LoadFileTypeList(options.IgnoreFileTypes);
 
   ClearProgressContextCounts(context);
+
+  // This count accumulates during the initial file scan, so cannot be cleared prior to when the actual synchronization occurs.
+  context.ReadOnlyFileCount := 0;
 
   result := context;
 end;
@@ -419,6 +421,7 @@ begin
                   Format(
                       'Bypassing synchronization of %sfile [%s] to ReadOnly file [%s].',
                       [filePrefix, sourceFileFullPath, targetFileFullPath]));
+              Inc(context.ReadOnlyFileCount);
             end else begin
               context.SourceFileList.Add(sourceFileFullPath);
               context.TargetFileList.Add(targetFileFullPath);
@@ -560,13 +563,13 @@ begin
   end;
 
   if (context.ReadOnlyFileCount > 0) then begin
-    readOnlyPhrase := Format(', %d read-only file(s) will be skipped', [context.ReadOnlyFileCount]);
+    readOnlyPhrase := Format(', and %d read-only target file(s) will be bypassed', [context.ReadOnlyFileCount]);
   end else begin
     readOnlyPhrase := '';
   end;
 
   if (context.SkippedFileCount > 0) then begin
-    skippedFilePhrase := Format(', %d file(s) will be skipped based on file timestamps', [context.SkippedFileCount]);
+    skippedFilePhrase := Format(', and %d file(s) will be skipped based on file timestamps', [context.SkippedFileCount]);
   end else begin
     skippedFilePhrase := '';
   end;
@@ -627,13 +630,14 @@ begin
 
     AppendLogMessage(Format('  Successfully copied %d file(s).', [context.SuccessfulFileCount]));
     if (context.ReadOnlyFileCount > 0) then begin
-      AppendLogMessage(Format('  Bypassed %d read-only file(s).', [context.ReadOnlyFileCount]));
+      AppendLogMessage(Format('  Bypassed %d read-only target file(s).', [context.ReadOnlyFileCount]));
     end;
     if (context.SkippedFileCount > 0) then begin
       AppendLogMessage(Format('  Skipped copying %d file(s).', [context.SkippedFileCount]));
     end;
     if (context.ErrorFileCount > 0) then begin
       AppendLogMessage(Format('  Encountered error copying %d file(s).', [context.ErrorFileCount]));
+      ShowMessage(Format('Encountered error copying %d file(s).', [context.ErrorFileCount]));
     end;
   end else begin
     isSuccessful := false;
