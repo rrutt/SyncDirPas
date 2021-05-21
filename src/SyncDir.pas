@@ -32,6 +32,8 @@ type
 
     OnlyProcessFileTypes: String;
     IgnoreFileTypes: String;
+
+    CurrentSection: String;
     NextSection: String;
   end;
 
@@ -93,7 +95,7 @@ type
     function LoadInitializationFileSettings(iniFileFullPath: String; initSection: String; var options: TOptions): Boolean;
     procedure FinalizeProgressContext(var context: TProgressContext);
     procedure LoadInitialOptionsFromFormControls(var options: TOptions);
-    procedure LoadFormControlsFromOptions(const initSection: String; const options: TOptions);
+    procedure LoadFormControlsFromOptions(const options: TOptions);
     procedure ValidateSourceAndTargetDirectories(var options: TOptions);
     procedure ButtonExitClick(Sender: TObject);
     procedure ButtonHelpClick(Sender: TObject);
@@ -197,6 +199,8 @@ begin
 
     options.OnlyProcessFileTypes := LoadInitializationFileSettingString(iniFile, initSection, 'OnlyProcessFileTypes', '');
     options.IgnoreFileTypes := LoadInitializationFileSettingString(iniFile, initSection, 'IgnoreFileTypes', '');
+
+    options.CurrentSection := initSection;
     options.NextSection := LoadInitializationFileSettingString(iniFile, initSection, 'NextSection', '');
 
   finally
@@ -230,7 +234,7 @@ begin
   options.NextSection := LabelNextSectionValue.Caption;
 end;
 
-procedure TSyncDirForm.LoadFormControlsFromOptions(const initSection: String; const options: TOptions);
+procedure TSyncDirForm.LoadFormControlsFromOptions(const options: TOptions);
 begin
   DirectoryEditSource.Text := options.SourceDirectory;
   DirectoryEditTarget.Text := options.TargetDirectory;
@@ -249,7 +253,7 @@ begin
   EditOnlyProcessFileTypes.Text := options.OnlyProcessFileTypes;
   EditIgnoreFileTypes.Text := options.IgnoreFileTypes;
 
-  LabelInitializationSectionValue.Caption := initSection;
+  LabelInitializationSectionValue.Caption := options.CurrentSection;
 
   if (options.NextSection <> '') then begin
     LabelNextSectionValue.Caption := options.NextSection;
@@ -1034,12 +1038,10 @@ begin
     end;
 
     initSection := currentOptions.NextSection;
-    if (synchronizationSucceeded and (Length(initSection) = 0)) then begin
-      initSectionExists := false;
-    end else begin
+    if (synchronizationSucceeded and (Length(initSection) > 0)) then begin
       initSectionExists := LoadInitializationFileSettings(gInitFileName, initSection, currentOptions);
       if (initSectionExists) then begin
-        LoadFormControlsFromOptions(initSection, currentOptions);
+        LoadFormControlsFromOptions(currentOptions);
       end else begin
         errorMessage := Format('ERROR: Initialization file section [%s] does not exist.', [initSection]);
         AppendLogMessage(errorMessage);
@@ -1047,6 +1049,8 @@ begin
           Application.MessageBox(PChar(errorMessage), 'SyncDirPas Error', 0);
         end;
       end;
+    end else begin
+      initSectionExists := false;
     end;
   end;
 
@@ -1091,7 +1095,7 @@ begin
     errorMessage := Format('ERROR: Initialization file section [%s] does not exist.', [initSection]);
     Application.MessageBox(PChar(errorMessage), 'SyncDirPas Error', 0);
   end;
-  LoadFormControlsFromOptions(initSection, gInitialOptions);
+  LoadFormControlsFromOptions(gInitialOptions);
 
   { TODO : If Automatic option is selected in initialization settings,
            hide forms and start processing primary section,
@@ -1101,8 +1105,6 @@ begin
            write log to SyncDir.log in current directory when complete.
            Add an initialization option for this?
            If so, write file based on that option rather than the Automatic option. }
-  { TODO : Make LabelNextSection visible if a NextSection is active.
-           Make invisible again when last section is being processed. }
 end;
 
 END.
