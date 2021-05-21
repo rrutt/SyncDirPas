@@ -90,8 +90,8 @@ type
     LabelSourceDirectory: TLabel;
     function InitializeProgressContext(options: TOptions): TProgressContext;
     function PerformSynchronizationPass(var options: TOptions): Boolean;
+    function LoadInitializationFileSettings(iniFileFullPath: String; initSection: String; var options: TOptions): Boolean;
     procedure FinalizeProgressContext(var context: TProgressContext);
-    procedure LoadInitializationFileSettings(iniFileFullPath: String; initSection: String; var options: TOptions);
     procedure LoadInitialOptionsFromFormControls(var options: TOptions);
     procedure LoadFormControlsFromOptions(const initSection: String; const options: TOptions);
     procedure ValidateSourceAndTargetDirectories(var options: TOptions);
@@ -111,6 +111,7 @@ type
 var
   SyncDirForm: TSyncDirForm;
   gInitialOptions: TOptions;
+  gInitFileName: String;
 
 implementation
 
@@ -159,9 +160,10 @@ begin
   result := settingValue;
 end;
 
-procedure TSyncDirForm.LoadInitializationFileSettings(iniFileFullPath: String; initSection: String; var options: TOptions);
+function TSyncDirForm.LoadInitializationFileSettings(iniFileFullPath: String; initSection: String; var options: TOptions): Boolean;
 var
   iniFile: TINIFile;
+  initSectionExists: Boolean;
 begin
   // https://wiki.freepascal.org/Using_INI_Files
   // https://www.freepascal.org/docs-html/fcl/inifiles/tinifile-3.html
@@ -171,6 +173,8 @@ begin
 
   iniFile := TINIFile.Create(iniFileFullPath);
   try
+    initSectionExists := iniFile.SectionExists(initSection);
+
     // https://www.freepascal.org/docs-html/fcl/inifiles/tcustominifile.booltruestrings.html
     // https://www.freepascal.org/docs-html/fcl/inifiles/tcustominifile.boolfalsestrings.html}
     iniFile.BoolTrueStrings := ['true', 't', 'yes', 'y', '1'];
@@ -199,6 +203,8 @@ begin
     // After the INI file was used it must be freed to prevent memory leaks.
     iniFile.Free;
   end;
+
+  result := initSectionExists;
 end;
 
 procedure TSyncDirForm.LoadInitialOptionsFromFormControls(var options: TOptions);
@@ -243,12 +249,13 @@ begin
   EditOnlyProcessFileTypes.Text := options.OnlyProcessFileTypes;
   EditIgnoreFileTypes.Text := options.IgnoreFileTypes;
 
-  LabelInitializationSectionValue.Caption := '[' + initSection + ']';
+  LabelInitializationSectionValue.Caption := initSection;
 
-  LabelNextSectionValue.Caption := options.NextSection;
   if (options.NextSection <> '') then begin
+    LabelNextSectionValue.Caption := options.NextSection;
     LabelNextSection.Visible := true;
   end else begin
+    LabelNextSectionValue.Caption := '';
     LabelNextSection.Visible := false;
   end;
 end;
@@ -1003,32 +1010,45 @@ procedure TSyncDirForm.ButtonSynchronizeClick(Sender: TObject);
 var
   currentOptions: TOptions;
   synchronizationSucceeded: Boolean;
+  initSectionExists: Boolean;
   swapDirectory: String;
+  initSection: String;
+  errorMessage: String;
 begin
   ButtonSynchronize.Enabled := false;
 
   LoadInitialOptionsFromFormControls(gInitialOptions);
   currentOptions := gInitialOptions;
 
-  synchronizationSucceeded := PerformSynchronizationPass(currentOptions);
-
-  if (synchronizationSucceeded and currentOptions.SynchronizeBothWays) then begin
-    { TODO : Honor SynchronizeBothWays option by swapping SourceDirectory and TargetDirectory and repeating above sequence. }
-    AppendLogMessage('SynchronizeBothWays is enabled. Swapping Source Directory and Target Directory.');
-    swapDirectory := currentOptions.SourceDirectory;
-    currentOptions.SourceDirectory := currentOptions.TargetDirectory;
-    currentOptions.TargetDirectory := swapDirectory;
-
+  initSectionExists := true;
+  while (initSectionExists) do begin
     synchronizationSucceeded := PerformSynchronizationPass(currentOptions);
+
+    if (synchronizationSucceeded and currentOptions.SynchronizeBothWays) then begin
+      AppendLogMessage('SynchronizeBothWays is enabled. Swapping Source Directory and Target Directory.');
+      swapDirectory := currentOptions.SourceDirectory;
+      currentOptions.SourceDirectory := currentOptions.TargetDirectory;
+      currentOptions.TargetDirectory := swapDirectory;
+
+      synchronizationSucceeded := PerformSynchronizationPass(currentOptions);
+    end;
+
+    initSection := currentOptions.NextSection;
+    if (synchronizationSucceeded and (Length(initSection) = 0)) then begin
+      initSectionExists := false;
+    end else begin
+      initSectionExists := LoadInitializationFileSettings(gInitFileName, initSection, currentOptions);
+      if (initSectionExists) then begin
+        LoadFormControlsFromOptions(initSection, currentOptions);
+      end else begin
+        errorMessage := Format('ERROR: Initialization file section [%s] does not exist.', [initSection]);
+        AppendLogMessage(errorMessage);
+        if (currentOptions.ShowErrorMessages) then begin
+          Application.MessageBox(PChar(errorMessage), 'SyncDirPas Error', 0);
+        end;
+      end;
+    end;
   end;
-
-  { TODO : If NextSection has value,
-           and synchronizationSucceeded is true,
-           iterate file synchronization thru successive section(s).
-           (Set user-interface options on main form as each section is processed.) }
-  // https://www.freepascal.org/docs-html/fcl/inifiles/tcustominifile.sectionexists.html
-
-  { TODO : Define procedure to load NextSection options into a new TOptions record for iterative/recursive synchronization call. }
 
   { TODO : Should we show log form while synchronizing, or only when done? }
   SyncDirLogForm.Show;
@@ -1045,27 +1065,32 @@ end;
 procedure TSyncDirForm.FormCreate(Sender: TObject);
 var
   currentWorkingDirectory: String = '';
-  initFileName: String;
   initSection: String;
+  errorMessage: String;
+  initSectionExists: Boolean;
 begin
   currentWorkingDirectory := GetCurrentDir;
   //ShowMessage('Current Working Directory = ' + currentWorkingDirectory);
 
-  initFileName := paramStr(1);
-  if (initFileName = '') then begin
-    initFileName := 'SyncDir.ini';
+  gInitFileName := paramStr(1);
+  if (gInitFileName = '') then begin
+    gInitFileName := 'SyncDir.ini';
   end;
-  if (ExtractFilePath(initFileName) = '') then begin
-    initFileName := currentWorkingDirectory + DirectorySeparator  + initFileName;
+  if (ExtractFilePath(gInitFileName) = '') then begin
+    gInitFileName := currentWorkingDirectory + DirectorySeparator  + gInitFileName;
   end;
-  LabelInitializationFileValue.Caption := initFileName;
+  LabelInitializationFileValue.Caption := gInitFileName;
 
   initSection := paramStr(2);
   if (initSection = '') then begin
     initSection := 'SyncDir';
   end;
 
-  LoadInitializationFileSettings(initFileName, initSection, gInitialOptions);
+  initSectionExists := LoadInitializationFileSettings(gInitFileName, initSection, gInitialOptions);
+  if (not initSectionExists) then begin
+    errorMessage := Format('ERROR: Initialization file section [%s] does not exist.', [initSection]);
+    Application.MessageBox(PChar(errorMessage), 'SyncDirPas Error', 0);
+  end;
   LoadFormControlsFromOptions(initSection, gInitialOptions);
 
   { TODO : If Automatic option is selected in initialization settings,
