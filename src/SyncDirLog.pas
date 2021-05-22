@@ -1,5 +1,7 @@
 unit SyncDirLog;
 
+{ Copyright © 2021 Rick Rutt }
+
 {$mode objfpc}{$H+}
 
 interface

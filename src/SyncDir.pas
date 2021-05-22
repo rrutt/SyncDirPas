@@ -1,6 +1,9 @@
 unit SyncDir;
 
+{ Copyright © 2021 Rick Rutt }
+
 {$mode objfpc}{$H+}
+
 interface
 
 uses

@@ -1,5 +1,7 @@
 program SyncDirPas;
 
+{ Copyright © 2021 Rick Rutt }
+
 {$mode objfpc}{$H+}
 
 uses
@@ -13,8 +15,8 @@ uses
 {$R *.res}
 
 begin
-  RequireDerivedFormResource:=True;
-  Application.Scaled:=True;
+  RequireDerivedFormResource := True;
+  Application.Scaled := True;
   Application.Initialize;
   Application.CreateForm(TSyncDirForm, SyncDirForm);
   Application.CreateForm(TSyncDirLog, SyncDirLogForm);
