@@ -103,7 +103,7 @@ type
     procedure FinalizeProgressContext(var context: TProgressContext);
     procedure LoadInitialOptionsFromFormControls(var options: TOptions);
     procedure LoadFormControlsFromOptions(const options: TOptions);
-    procedure ValidateSourceAndTargetDirectories(var options: TOptions);
+    procedure ValidateOptions(var options: TOptions);
     procedure ButtonExitClick(Sender: TObject);
     procedure ButtonHelpClick(Sender: TObject);
     procedure ButtonShowLogClick(Sender: TObject);
@@ -983,7 +983,7 @@ begin
   context.SynchronizationSucceeded := isSuccessful;
 end;
 
-procedure TSyncDirForm.ValidateSourceAndTargetDirectories(var options: TOptions);
+procedure TSyncDirForm.ValidateOptions(var options: TOptions);
 begin
   options.AreValid := true;
 
@@ -1030,6 +1030,16 @@ begin
       AppendLogMessage(Format('  Expanded Target Directory = [%s].', [options.TargetDirectory]));
     end;
   end;
+
+  if (options.SynchronizeBothWays and (options.DeleteExtraFiles or options.DeleteExtraDirectories)) then begin
+    options.AreValid := false;
+    AppendLogMessage('Error: When SynchronizeBothWays is enabled, both DeleteExtraFiles and DeleteExtraDirectories must be disabled.');
+  end;
+
+  if (options.DeleteExtraDirectories and (not options.IncludeSubdirectories)) then begin
+    options.AreValid := false;
+    AppendLogMessage('Error: When DeleteExtraDirectories is enabled, IncludeSubdirectories must be enabled.');
+  end;
 end;
 
 procedure TSyncDirForm.ButtonExitClick(Sender: TObject);
@@ -1063,21 +1073,19 @@ function TSyncDirForm.PerformSynchronizationPass(var options: TOptions): Boolean
 var
   context: TProgressContext;
   isSuccessful: Boolean;
+  message: String;
 begin
   AppendLogMessage(Format('Processing initialization section [%s] in file [%s].', [options.CurrentSection, gIniFileName]));
 
   if (options.AreValid) then begin
-    ValidateSourceAndTargetDirectories(options);
+    ValidateOptions(options);
   end;
-
-  { TODO : Validate other option combinations. }
-  { TODO : When the **SynchronizeBothWays** option is enabled, the **[DeleteExtraFiles](#DeleteExtraFiles)** and **[DeleteExtraDirectories](#DeleteExtraDirectories)** options must be disabled. }
-  { TODO : When the **DeleteExtraDirectories** option is enabled, the **[SynchronizeBothWays](#SynchronizeBothWays)** option must be disabled and the **[IncludeSubdirectories](#IncludeSubdirectories)** option must be enabled. }
-  { TODO : When the **DeleteExtraFiles** option is enabled, the **[SynchronizeBothWays](#SynchronizeBothWays)** option must be disabled. }
 
   if (not options.AreValid) then begin
     isSuccessful := false;;
-    AppendLogMessage('Synchronization cancelled due to invalid options.');
+    message := 'Synchronization cancelled due to invalid options.';
+    AppendLogMessage(message);
+    Application.MessageBox(PChar(message), 'SyncDirPas Log', 0);
   end else begin
     AppendLogMessage('Synchronization started ...');
     context := InitializeProgressContext(options);
@@ -1133,7 +1141,6 @@ begin
     end;
   end;
 
-  { TODO : Should we show log form while synchronizing, or only when done? }
   if (not gInitialOptions.Automatic) then begin
     ButtonShowLogClick(Sender);
   end;
