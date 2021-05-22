@@ -405,7 +405,7 @@ begin
   // https://www.freepascal.org/docs-html/rtl/sysutils/findnext.html
   searchAttr := faAnyFile;
   if (not options.ProcessHiddenFiles) then begin
-    searchAttr := searchAttr and (not faHidden{%H-});
+    searchAttr := searchAttr and (not faHidden{%H-} and not (faSysFile{%H-}));
   end;
   if (FindFirst(EnsureDirectorySeparator(sourceDirectory) + '*', searchAttr, searchInfo) = 0) then
     begin
@@ -414,6 +414,9 @@ begin
         filePrefix := '';
         if ((Attr and faHidden{%H-}) = faHidden{%H-}) then begin
           filePrefix := filePrefix + 'Hidden ';
+        end;
+        if ((Attr and faSysFile{%H-}) = faSysFile{%H-}) then begin
+          filePrefix := filePrefix + 'System ';
         end;
         if ((Attr and faReadOnly) = faReadOnly) then begin
           filePrefix := filePrefix + 'ReadOnly ';
@@ -995,6 +998,9 @@ begin
   end;
 
   { TODO : Validate other option combinations. }
+  { TODO : When the **SynchronizeBothWays** option is enabled, the **[DeleteExtraFiles](#DeleteExtraFiles)** and **[DeleteExtraDirectories](#DeleteExtraDirectories)** options must be disabled. }
+  { TODO : When the **DeleteExtraDirectories** option is enabled, the **[SynchronizeBothWays](#SynchronizeBothWays)** option must be disabled and the **[IncludeSubdirectories](#IncludeSubdirectories)** option must be enabled. }
+  { TODO : When the **DeleteExtraFiles** option is enabled, the **[SynchronizeBothWays](#SynchronizeBothWays)** option must be disabled. }
 
   if (not options.AreValid) then begin
     isSuccessful := false;;

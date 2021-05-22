@@ -1,6 +1,8 @@
 src/lib/
 src/backup/
 src/target/
+SyncDirPas/
 TestTarget/
 TestTargetTwo/
 *.exe
+README.html
