@@ -92,7 +92,7 @@ type
     LabelSourceDirectory: TLabel;
     function InitializeProgressContext(options: TOptions): TProgressContext;
     function PerformSynchronizationPass(var options: TOptions): Boolean;
-    function LoadInitializationFileSettings(iniFileFullPath: String; initSection: String; var options: TOptions): Boolean;
+    function LoadInitializationFileSettings(iniFileFullPath: String; iniSection: String; var options: TOptions): Boolean;
     procedure FinalizeProgressContext(var context: TProgressContext);
     procedure LoadInitialOptionsFromFormControls(var options: TOptions);
     procedure LoadFormControlsFromOptions(const options: TOptions);
@@ -113,7 +113,7 @@ type
 var
   SyncDirForm: TSyncDirForm;
   gInitialOptions: TOptions;
-  gInitFileName: String;
+  gIniFileName: String;
 
 implementation
 
@@ -162,10 +162,10 @@ begin
   result := settingValue;
 end;
 
-function TSyncDirForm.LoadInitializationFileSettings(iniFileFullPath: String; initSection: String; var options: TOptions): Boolean;
+function TSyncDirForm.LoadInitializationFileSettings(iniFileFullPath: String; iniSection: String; var options: TOptions): Boolean;
 var
   iniFile: TINIFile;
-  initSectionExists: Boolean;
+  iniSectionExists: Boolean;
 begin
   // https://wiki.freepascal.org/Using_INI_Files
   // https://www.freepascal.org/docs-html/fcl/inifiles/tinifile-3.html
@@ -175,40 +175,40 @@ begin
 
   iniFile := TINIFile.Create(iniFileFullPath);
   try
-    initSectionExists := iniFile.SectionExists(initSection);
+    iniSectionExists := iniFile.SectionExists(iniSection);
 
     // https://www.freepascal.org/docs-html/fcl/inifiles/tcustominifile.booltruestrings.html
     // https://www.freepascal.org/docs-html/fcl/inifiles/tcustominifile.boolfalsestrings.html}
     iniFile.BoolTrueStrings := ['true', 't', 'yes', 'y', '1'];
     iniFile.BoolFalseStrings := ['false', 'f', 'no', 'n', '0'];
 
-    options.SourceDirectory := LoadInitializationFileSettingString(iniFile, initSection, 'SourceDirectory', '.');
-    options.TargetDirectory := LoadInitializationFileSettingString(iniFile, initSection, 'TargetDirectory', '.');
+    options.SourceDirectory := LoadInitializationFileSettingString(iniFile, iniSection, 'SourceDirectory', '.');
+    options.TargetDirectory := LoadInitializationFileSettingString(iniFile, iniSection, 'TargetDirectory', '.');
 
-    options.CopyOlderFiles := LoadInitializationFileSettingBoolean(iniFile, initSection, 'CopyOlderFiles', false);
-    options.DeleteExtraFiles := LoadInitializationFileSettingBoolean(iniFile, initSection, 'DeleteExtraFiles', false);
-    options.DeleteExtraDirectories := LoadInitializationFileSettingBoolean(iniFile, initSection, 'DeleteExtraDirectories', false);
-    options.IncludeSubdirectories := LoadInitializationFileSettingBoolean(iniFile, initSection, 'IncludeSubdirectories', false);
-    options.MinimizeLogMessages := LoadInitializationFileSettingBoolean(iniFile, initSection, 'MinimizeLogMessages', true);
-    options.NotifyUser := LoadInitializationFileSettingBoolean(iniFile, initSection, 'NotifyUser', true);
-    options.ProcessHiddenFiles := LoadInitializationFileSettingBoolean(iniFile, initSection, 'ProcessHiddenFiles', false);
-    options.ShowErrorMessages := LoadInitializationFileSettingBoolean(iniFile, initSection, 'ShowErrorMessages', true);
-    options.SkipMissingDirectories := LoadInitializationFileSettingBoolean(iniFile, initSection, 'SkipMissingDirectories', false);
-    options.SkipReadOnlyTargetFiles := LoadInitializationFileSettingBoolean(iniFile, initSection, 'SkipReadOnlyTargetFiles', false);
-    options.SynchronizeBothWays := LoadInitializationFileSettingBoolean(iniFile, initSection, 'SynchronizeBothWays', false);
+    options.CopyOlderFiles := LoadInitializationFileSettingBoolean(iniFile, iniSection, 'CopyOlderFiles', false);
+    options.DeleteExtraFiles := LoadInitializationFileSettingBoolean(iniFile, iniSection, 'DeleteExtraFiles', false);
+    options.DeleteExtraDirectories := LoadInitializationFileSettingBoolean(iniFile, iniSection, 'DeleteExtraDirectories', false);
+    options.IncludeSubdirectories := LoadInitializationFileSettingBoolean(iniFile, iniSection, 'IncludeSubdirectories', false);
+    options.MinimizeLogMessages := LoadInitializationFileSettingBoolean(iniFile, iniSection, 'MinimizeLogMessages', true);
+    options.NotifyUser := LoadInitializationFileSettingBoolean(iniFile, iniSection, 'NotifyUser', true);
+    options.ProcessHiddenFiles := LoadInitializationFileSettingBoolean(iniFile, iniSection, 'ProcessHiddenFiles', false);
+    options.ShowErrorMessages := LoadInitializationFileSettingBoolean(iniFile, iniSection, 'ShowErrorMessages', true);
+    options.SkipMissingDirectories := LoadInitializationFileSettingBoolean(iniFile, iniSection, 'SkipMissingDirectories', false);
+    options.SkipReadOnlyTargetFiles := LoadInitializationFileSettingBoolean(iniFile, iniSection, 'SkipReadOnlyTargetFiles', false);
+    options.SynchronizeBothWays := LoadInitializationFileSettingBoolean(iniFile, iniSection, 'SynchronizeBothWays', false);
 
-    options.OnlyProcessFileTypes := LoadInitializationFileSettingString(iniFile, initSection, 'OnlyProcessFileTypes', '');
-    options.IgnoreFileTypes := LoadInitializationFileSettingString(iniFile, initSection, 'IgnoreFileTypes', '');
+    options.OnlyProcessFileTypes := LoadInitializationFileSettingString(iniFile, iniSection, 'OnlyProcessFileTypes', '');
+    options.IgnoreFileTypes := LoadInitializationFileSettingString(iniFile, iniSection, 'IgnoreFileTypes', '');
 
-    options.CurrentSection := initSection;
-    options.NextSection := LoadInitializationFileSettingString(iniFile, initSection, 'NextSection', '');
+    options.CurrentSection := iniSection;
+    options.NextSection := LoadInitializationFileSettingString(iniFile, iniSection, 'NextSection', '');
 
   finally
     // After the INI file was used it must be freed to prevent memory leaks.
     iniFile.Free;
   end;
 
-  result := initSectionExists;
+  result := iniSectionExists;
 end;
 
 procedure TSyncDirForm.LoadInitialOptionsFromFormControls(var options: TOptions);
@@ -692,7 +692,11 @@ begin
       end;
     end else begin
       Inc(context.SkippedFileCount);
-      AppendLogMessage(Format('Skipped copying [%s] to [%s] based on file timestamps.', [sourceFileFullPath, targetFileFullPath]));
+      if (actuallySynchronize) then begin
+        AppendVerboseLogMessage(Format('Skipped copying [%s] to [%s] based on file timestamps.', [sourceFileFullPath, targetFileFullPath]));
+      end else begin
+        AppendVerboseLogMessage(Format('Will skip copying [%s] to [%s] based on file timestamps.', [sourceFileFullPath, targetFileFullPath]));
+      end;
     end;
 
     inc(fileIndex);
@@ -1020,9 +1024,9 @@ procedure TSyncDirForm.ButtonSynchronizeClick(Sender: TObject);
 var
   currentOptions: TOptions;
   synchronizationSucceeded: Boolean;
-  initSectionExists: Boolean;
+  iniSectionExists: Boolean;
+  iniSection: String;
   swapDirectory: String;
-  initSection: String;
   errorMessage: String;
 begin
   ButtonSynchronize.Enabled := false;
@@ -1030,8 +1034,8 @@ begin
   LoadInitialOptionsFromFormControls(gInitialOptions);
   currentOptions := gInitialOptions;
 
-  initSectionExists := true;
-  while (initSectionExists) do begin
+  iniSectionExists := true;
+  while (iniSectionExists) do begin
     synchronizationSucceeded := PerformSynchronizationPass(currentOptions);
 
     if (synchronizationSucceeded and currentOptions.SynchronizeBothWays) then begin
@@ -1043,20 +1047,20 @@ begin
       synchronizationSucceeded := PerformSynchronizationPass(currentOptions);
     end;
 
-    initSection := currentOptions.NextSection;
-    if (synchronizationSucceeded and (Length(initSection) > 0)) then begin
-      initSectionExists := LoadInitializationFileSettings(gInitFileName, initSection, currentOptions);
-      if (initSectionExists) then begin
+    iniSection := currentOptions.NextSection;
+    if (synchronizationSucceeded and (Length(iniSection) > 0)) then begin
+      iniSectionExists := LoadInitializationFileSettings(gIniFileName, iniSection, currentOptions);
+      if (iniSectionExists) then begin
         LoadFormControlsFromOptions(currentOptions);
       end else begin
-        errorMessage := Format('ERROR: Initialization file section [%s] does not exist.', [initSection]);
+        errorMessage := Format('ERROR: Initialization file section [%s] does not exist in file [%s].', [iniSection, gIniFileName]);
         AppendLogMessage(errorMessage);
         if (currentOptions.ShowErrorMessages) then begin
           Application.MessageBox(PChar(errorMessage), 'SyncDirPas Error', 0);
         end;
       end;
     end else begin
-      initSectionExists := false;
+      iniSectionExists := false;
     end;
   end;
 
@@ -1075,30 +1079,35 @@ end;
 procedure TSyncDirForm.FormCreate(Sender: TObject);
 var
   currentWorkingDirectory: String = '';
-  initSection: String;
   errorMessage: String;
-  initSectionExists: Boolean;
+  iniSection: String;
+  iniSectionExists: Boolean;
+  iniFileExists: Boolean;
 begin
   currentWorkingDirectory := GetCurrentDir;
   //ShowMessage('Current Working Directory = ' + currentWorkingDirectory);
 
-  gInitFileName := paramStr(1);
-  if (gInitFileName = '') then begin
-    gInitFileName := 'SyncDir.ini';
+  gIniFileName := paramStr(1);
+  if (gIniFileName = '') then begin
+    gIniFileName := 'SyncDir.ini';
   end;
-  if (ExtractFilePath(gInitFileName) = '') then begin
-    gInitFileName := currentWorkingDirectory + DirectorySeparator  + gInitFileName;
+  if (ExtractFilePath(gIniFileName) = '') then begin
+    gIniFileName := currentWorkingDirectory + DirectorySeparator  + gIniFileName;
   end;
-  LabelInitializationFileValue.Caption := gInitFileName;
+  LabelInitializationFileValue.Caption := gIniFileName;
 
-  initSection := paramStr(2);
-  if (initSection = '') then begin
-    initSection := 'SyncDir';
+  iniSection := paramStr(2);
+  if (iniSection = '') then begin
+    iniSection := 'SyncDir';
   end;
 
-  initSectionExists := LoadInitializationFileSettings(gInitFileName, initSection, gInitialOptions);
-  if (not initSectionExists) then begin
-    errorMessage := Format('ERROR: Initialization file section [%s] does not exist.', [initSection]);
+  iniFileExists := FileExists(gIniFileName);
+  iniSectionExists := LoadInitializationFileSettings(gIniFileName, iniSection, gInitialOptions);
+  if (not iniFileExists) then begin
+    errorMessage := Format('ERROR: Initialization file [%s] does not exist.', [gIniFileName]);
+    Application.MessageBox(PChar(errorMessage), 'SyncDirPas Error', 0);
+  end else if (not iniSectionExists) then begin
+    errorMessage := Format('ERROR: Initialization file section [%s] does not exist in file [%s].', [iniSection, gIniFileName]);
     Application.MessageBox(PChar(errorMessage), 'SyncDirPas Error', 0);
   end;
   LoadFormControlsFromOptions(gInitialOptions);
