@@ -8,6 +8,7 @@ uses
   LCLIntf,
   fileutil,
   inifiles,
+  Process,
   SyncDirLog;
 
 type
@@ -33,6 +34,11 @@ type
 
     OnlyProcessFileTypes: String;
     IgnoreFileTypes: String;
+
+    RunCommand: String;
+    RunDirectory: String;
+    AlternateRunCommand: String;
+    AlternateRunDirectory: String;
 
     CurrentSection: String;
     NextSection: String;
@@ -137,8 +143,6 @@ begin
   result := resultPath;
 end;
 
-{ TODO : Add a TStringList to accept log messages if will be writing to a file instead of to the Log Window. }
-
 procedure AppendLogMessage(message: String);
 begin
   if (gLogToFile) then begin
@@ -215,6 +219,11 @@ begin
 
     options.OnlyProcessFileTypes := LoadInitializationFileSettingString(iniFile, iniSection, 'OnlyProcessFileTypes', '');
     options.IgnoreFileTypes := LoadInitializationFileSettingString(iniFile, iniSection, 'IgnoreFileTypes', '');
+
+    options.RunCommand := LoadInitializationFileSettingString(iniFile, iniSection, 'RunCommand', '');
+    options.RunDirectory := LoadInitializationFileSettingString(iniFile, iniSection, 'RunDirectory', gCurrentWorkingDirectory);
+    options.AlternateRunCommand := LoadInitializationFileSettingString(iniFile, iniSection, 'AlternateRunCommand', options.RunCommand);
+    options.AlternateRunDirectory := LoadInitializationFileSettingString(iniFile, iniSection, 'AlternateRunDirectory', options.RunDirectory);
 
     options.CurrentSection := iniSection;
     options.NextSection := LoadInitializationFileSettingString(iniFile, iniSection, 'NextSection', '');
@@ -862,10 +871,29 @@ begin
   result := isSuccessful;
 end;
 
+procedure LaunchExternalApplication(const command: String; const directory: String; notify: Boolean);
+var
+  proc: TProcess;
+  message: String;
+begin
+  proc := TProcess.Create(nil);
+  proc.CurrentDirectory := directory;
+  proc.{%H-}CommandLine {%H-}:= command;
+  proc.Execute;
+  proc.Free;
+
+  message := Format('Launched external program [%s] with working directory [%s].', [command, directory]);
+  AppendLogMessage(message);
+  if (notify) then begin
+    Application.MessageBox(PChar(message), 'SyncDirPas', 0);
+  end;
+end;
+
 procedure SynchronizeSourceToTarget(var context: TProgressContext; var options: TOptions);
 var
   isSuccessful: Boolean;
   actuallySynchronize: Boolean;
+  synchronizationActuallyOccurred: Boolean;
   message: String;
 begin
   AppendLogMessage(Format('Synchronizing [%s] into [%s] ...', [options.SourceDirectory, options.TargetDirectory]));
@@ -901,7 +929,12 @@ begin
       isSuccessful := DeleteExtraTargetDirectories(context, options);
     end;
 
-    AppendLogMessage(Format('  Successfully copied %d file(s).', [context.SuccessfulFileCount]));
+    synchronizationActuallyOccurred := false;
+
+    if (context.SuccessfulFileCount > 0) then begin
+      synchronizationActuallyOccurred := true;
+      AppendLogMessage(Format('  Successfully copied %d file(s).', [context.SuccessfulFileCount]));
+    end;
     if (context.ReadOnlyFileCount > 0) then begin
       AppendLogMessage(Format('  Bypassed %d read-only target file(s).', [context.ReadOnlyFileCount]));
     end;
@@ -916,12 +949,14 @@ begin
       end;
     end;
     if (context.DeletedFileCount > 0) then begin
+      synchronizationActuallyOccurred := true;
       AppendLogMessage(Format('  Deleted %d extra target file(s).', [context.DeletedFileCount]));
     end;
     if (context.DeletedFileErrorCount > 0) then begin
       AppendLogMessage(Format('  Encountered error deleting %d extra target file(s).', [context.DeletedFileErrorCount]));
     end;
     if (context.DeletedDirCount > 0) then begin
+      synchronizationActuallyOccurred := true;
       AppendLogMessage(Format('  Deleted %d extra target directory(ies).', [context.DeletedDirCount]));
     end;
     if (context.DeletedDirErrorCount > 0) then begin
@@ -935,6 +970,14 @@ begin
     AppendLogMessage(Format('Synchronization of [%s] into [%s] completed.', [options.SourceDirectory, options.TargetDirectory]));
   end else begin
     AppendLogMessage(Format('Synchronization of [%s] into [%s] failed!', [options.SourceDirectory, options.TargetDirectory]));
+  end;
+
+  if (options.Automatic and actuallySynchronize) then begin
+    if (synchronizationActuallyOccurred) then begin
+      LaunchExternalApplication(options.AlternateRunCommand, options.AlternateRunDirectory, options.NotifyUser);
+    end else begin
+      LaunchExternalApplication(options.RunCommand, options.RunDirectory, options.NotifyUser);
+    end;
   end;
 
   context.SynchronizationSucceeded := isSuccessful;
@@ -1132,21 +1175,12 @@ begin
   if (gInitialOptions.Automatic) then begin
     gLogToFile := true;
     ButtonSynchronizeClick(Sender);
+
     if (gInitialOptions.NotifyUser) then begin
       ButtonShowLogClick(Sender);
     end;
     Halt(1)
   end;
-
-  { TODO : If Automatic option is selected in initialization settings,
-           hide forms and start processing primary section,
-           unless NotifyUser option is set.
-           Halt application when done processing. }
-  { TODO : If Automatic option is enabled,
-           write log to SyncDir.log in current directory when complete.
-           Add an initialization option for this?
-           If so, write file based on that option rather than the Automatic option. }
-  { TODO : Use TStringList to write log to file instead of Log Window: https://freepascalanswers.wordpress.com/2012/01/14/write-into-a-text-file/ }
 end;
 
 initialization
