@@ -113,7 +113,11 @@ type
 var
   SyncDirForm: TSyncDirForm;
   gInitialOptions: TOptions;
+  gCurrentWorkingDirectory: String;
   gIniFileName: String;
+  gLogFileName: String;
+  gLogToFile: Boolean;
+  gLogFileMessages: TStringList;
 
 implementation
 
@@ -132,15 +136,25 @@ begin
   result := resultPath;
 end;
 
+{ TODO : Add a TStringList to accept log messages if will be writing to a file instead of to the Log Window. }
+
 procedure AppendLogMessage(message: String);
 begin
-  SyncDirLogForm.MemoLog.Lines.Add(message);
+  if (gLogToFile) then begin
+    gLogFileMessages.Add(message);
+  end else begin
+    SyncDirLogForm.MemoLog.Lines.Add(message);
+  end;
 end;
 
 procedure AppendVerboseLogMessage(message: String);
 begin
   if (not gInitialOptions.MinimizeLogMessages) then begin
-    SyncDirLogForm.MemoLog.Lines.Add(Format('{%s}', [message]));
+    if (gLogToFile) then begin
+      gLogFileMessages.Add(message);
+    end else begin
+      SyncDirLogForm.MemoLog.Lines.Add(Format('{%s}', [message]));
+    end;
   end;
 end;
 
@@ -982,14 +996,22 @@ procedure TSyncDirForm.ButtonHelpClick(Sender: TObject);
 var
   helpFileURL: string;
 begin
-  helpFileURL := ExtractFilePath(Application.ExeName) + 'SyncDir.html';
+  helpFileURL := ExtractFilePath(Application.ExeName) + 'SyncDirPas.html';
   //ShowMessage('Help File URL = ' + helpFileURL);
   OpenURL(helpFileURL);
 end;
 
 procedure TSyncDirForm.ButtonShowLogClick(Sender: TObject);
+var
+  message: String;
 begin
-  SyncDirLogForm.Show;
+  if (gLogToFile) then begin
+    gLogFileMessages.SaveToFile(gLogFileName);
+    message := Format('%d log messages have been written to file [%s].', [gLogFileMessages.Count, gLogFileName]);
+    Application.MessageBox(PChar(message), 'SyncDirPas Log', 0);
+  end else begin
+    SyncDirLogForm.Show;
+  end;
 end;
 
 function TSyncDirForm.PerformSynchronizationPass(var options: TOptions): Boolean;
@@ -1065,7 +1087,8 @@ begin
   end;
 
   { TODO : Should we show log form while synchronizing, or only when done? }
-  SyncDirLogForm.Show;
+  //SyncDirLogForm.Show;
+  ButtonShowLogClick(Sender);
 
   ButtonSynchronize.Enabled := true;
 end;
@@ -1078,22 +1101,11 @@ end;
 
 procedure TSyncDirForm.FormCreate(Sender: TObject);
 var
-  currentWorkingDirectory: String = '';
   errorMessage: String;
   iniSection: String;
   iniSectionExists: Boolean;
   iniFileExists: Boolean;
 begin
-  currentWorkingDirectory := GetCurrentDir;
-  //ShowMessage('Current Working Directory = ' + currentWorkingDirectory);
-
-  gIniFileName := paramStr(1);
-  if (gIniFileName = '') then begin
-    gIniFileName := 'SyncDir.ini';
-  end;
-  if (ExtractFilePath(gIniFileName) = '') then begin
-    gIniFileName := currentWorkingDirectory + DirectorySeparator  + gIniFileName;
-  end;
   LabelInitializationFileValue.Caption := gIniFileName;
 
   iniSection := paramStr(2);
@@ -1120,6 +1132,34 @@ begin
            write log to SyncDir.log in current directory when complete.
            Add an initialization option for this?
            If so, write file based on that option rather than the Automatic option. }
+  { TODO : Use TStringList to write log to file instead of Log Window: https://freepascalanswers.wordpress.com/2012/01/14/write-into-a-text-file/ }
+end;
+
+initialization
+begin
+  gCurrentWorkingDirectory := GetCurrentDir;
+  //ShowMessage('Current Working Directory = ' + currentWorkingDirectory);
+
+  gLogFileName := gCurrentWorkingDirectory + DirectorySeparator + 'SyncDirPas.log';
+  gLogToFile := false;
+  gLogFileMessages := TStringList.Create;
+
+  gIniFileName := paramStr(1);
+  if (gIniFileName = '') then begin
+    gIniFileName := 'SyncDir.ini';
+  end;
+  if (ExtractFilePath(gIniFileName) = '') then begin
+    gIniFileName := gcurrentWorkingDirectory + DirectorySeparator  + gIniFileName;
+  end;
+end;
+
+finalization
+begin
+  if (gLogToFile) then begin
+    gLogFileMessages.SaveToFile(gLogFileName);
+  end;
+
+  gLogFileMessages.Free;
 end;
 
 END.

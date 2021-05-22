@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>README</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+/* GitHub stylesheet for MarkdownPad (http://markdownpad.com) */
+/* Author: Nicolas Hery - http://nicolashery.com */
+/* Version: b13fe65ca28d2e568c6ed5d7f06581183df8f2ff */
+/* Source: https://github.com/nicolahery/markdownpad-github */
+
+/* RESET
+=============================================================================*/
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* BODY
+=============================================================================*/
+
+body {
+  font-family: Helvetica, arial, freesans, clean, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #333;
+  background-color: #fff;
+  padding: 20px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+body>*:first-child {
+  margin-top: 0 !important;
+}
+
+body>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* BLOCKS
+=============================================================================*/
+
+p, blockquote, ul, ol, dl, table, pre {
+  margin: 15px 0;
+}
+
+/* HEADERS
+=============================================================================*/
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 20px 0 10px;
+  padding: 0;
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1 tt, h1 code, h2 tt, h2 code, h3 tt, h3 code, h4 tt, h4 code, h5 tt, h5 code, h6 tt, h6 code {
+  font-size: inherit;
+}
+
+h1 {
+  font-size: 28px;
+  color: #000;
+}
+
+h2 {
+  font-size: 24px;
+  border-bottom: 1px solid #ccc;
+  color: #000;
+}
+
+h3 {
+  font-size: 18px;
+}
+
+h4 {
+  font-size: 16px;
+}
+
+h5 {
+  font-size: 14px;
+}
+
+h6 {
+  color: #777;
+  font-size: 14px;
+}
+
+body>h2:first-child, body>h1:first-child, body>h1:first-child+h2, body>h3:first-child, body>h4:first-child, body>h5:first-child, body>h6:first-child {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+h1+p, h2+p, h3+p, h4+p, h5+p, h6+p {
+  margin-top: 10px;
+}
+
+/* LINKS
+=============================================================================*/
+
+a {
+  color: #4183C4;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* LISTS
+=============================================================================*/
+
+ul, ol {
+  padding-left: 30px;
+}
+
+ul li > :first-child, 
+ol li > :first-child, 
+ul li ul:first-of-type, 
+ol li ol:first-of-type, 
+ul li ol:first-of-type, 
+ol li ul:first-of-type {
+  margin-top: 0px;
+}
+
+ul ul, ul ol, ol ol, ol ul {
+  margin-bottom: 0;
+}
+
+dl {
+  padding: 0;
+}
+
+dl dt {
+  font-size: 14px;
+  font-weight: bold;
+  font-style: italic;
+  padding: 0;
+  margin: 15px 0 5px;
+}
+
+dl dt:first-child {
+  padding: 0;
+}
+
+dl dt>:first-child {
+  margin-top: 0px;
+}
+
+dl dt>:last-child {
+  margin-bottom: 0px;
+}
+
+dl dd {
+  margin: 0 0 15px;
+  padding: 0 15px;
+}
+
+dl dd>:first-child {
+  margin-top: 0px;
+}
+
+dl dd>:last-child {
+  margin-bottom: 0px;
+}
+
+/* CODE
+=============================================================================*/
+
+pre, code, tt {
+  font-size: 12px;
+  font-family: Consolas, "Liberation Mono", Courier, monospace;
+}
+
+code, tt {
+  margin: 0 0px;
+  padding: 0px 0px;
+  white-space: nowrap;
+  border: 1px solid #eaeaea;
+  background-color: #f8f8f8;
+  border-radius: 3px;
+}
+
+pre>code {
+  margin: 0;
+  padding: 0;
+  white-space: pre;
+  border: none;
+  background: transparent;
+}
+
+pre {
+  background-color: #f8f8f8;
+  border: 1px solid #ccc;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px;
+}
+
+pre code, pre tt {
+  background-color: transparent;
+  border: none;
+}
+
+kbd {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background-color: #DDDDDD;
+    background-image: linear-gradient(#F1F1F1, #DDDDDD);
+    background-repeat: repeat-x;
+    border-color: #DDDDDD #CCCCCC #CCCCCC #DDDDDD;
+    border-image: none;
+    border-radius: 2px 2px 2px 2px;
+    border-style: solid;
+    border-width: 1px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    line-height: 10px;
+    padding: 1px 4px;
+}
+
+/* QUOTES
+=============================================================================*/
+
+blockquote {
+  border-left: 4px solid #DDD;
+  padding: 0 15px;
+  color: #777;
+}
+
+blockquote>:first-child {
+  margin-top: 0px;
+}
+
+blockquote>:last-child {
+  margin-bottom: 0px;
+}
+
+/* HORIZONTAL RULES
+=============================================================================*/
+
+hr {
+  clear: both;
+  margin: 15px 0;
+  height: 0px;
+  overflow: hidden;
+  border: none;
+  background: transparent;
+  border-bottom: 4px solid #ddd;
+  padding: 0;
+}
+
+/* TABLES
+=============================================================================*/
+
+table th {
+  font-weight: bold;
+}
+
+table th, table td {
+  border: 1px solid #ccc;
+  padding: 6px 13px;
+}
+
+table tr {
+  border-top: 1px solid #ccc;
+  background-color: #fff;
+}
+
+table tr:nth-child(2n) {
+  background-color: #f8f8f8;
+}
+
+/* IMAGES
+=============================================================================*/
+
+img {
+  max-width: 100%
+}
+</style>
+</head>
+<body>
+<h1>Directory Synchronization Utility</h1>
+<p>The Directory Synchronization program, <strong>SyncDirPas</strong>, synchronizes the file contents of directories on a personal computer running Microsoft Window.</p>
+<p>The program compares file names and modification dates for a <a href="#SourceDirectory">source directory</a> and a <a href="#TargetDirectory">target directory</a> (and optionally any <a href="#IncludeSubdirectories">subdirectories</a>).</p>
+<ul>
+<li>
+<p>If a newer file is found in the source directory, the program replaces the matching file in the target directory. (Optionally, <a href="#CopyOlderFiles">older source files</a> may also replace newer target files.)</p>
+</li>
+<li>
+<p>If a file exists only in the source directory, the program copies the file to the target directory.</p>
+</li>
+<li>
+<p>The program will optionally delete any <a href="#DeleteExtraFiles">files</a> or <a href="#DeleteExtraDirectories">directories</a> that exist only in the target directory.</p>
+</li>
+<li>
+<p>An option allows the synchronization to operate in <a href="#SynchronizeBothWays">both directions</a> between the two directories.</p>
+</li>
+<li>
+<p>Prior to copying or deleting any files, the program prompts the user for <a href="#ConfirmationDialog">final confirmation</a>. Upon completion of any copies or deletions, the program displays a <a href="#LogWindow">log window</a> that describes all file actions that were performed. (The confirmation dialog and log window do not appear if the <strong><a href="#Automatic">Automatic</a></strong> option is enabled and the <strong><a href="#NotifyUser">NotifyUser</a></strong> option is disabled.)</p>
+</li>
+<li>
+<p>An option allows the program to <a href="#Automatic">automatically check</a> for any file synchronization, or to wait for the user to complete a <a href="#SynchronizationDialog">synchronization dialog</a>. In this <strong><a href="#Automatic">Automatic</a></strong> mode, the program may also <a href="#RunCommand">launch another application</a> upon completion.</p>
+</li>
+</ul>
+<p>This program may be used for the following purposes:</p>
+<ul>
+<li>
+<p><strong><a href="#ProgramCopyManagement">Program Copy Management</a></strong>: Automatically copy updated files from a shared file server directory to a directory on the computer's hard disk. The user's desktop hard disk is treated only as a local cache for the application programs. The file server contains the single centrally managed official copy of the application.</p>
+</li>
+<li>
+<p><strong><a href="#FileBackup">File Backup</a></strong>: Copy revised files from a working directory to a backup directory on another disk or on a file server.</p>
+</li>
+<li>
+<p><strong><a href="#DualComputerFileCoordination">Dual Computer File Coordination</a></strong>: Use an external USB drive (or diskette) as a transport mechanism to move data files, in both directions, between an office computer and a home computer. (<em>Note</em>: You cannot target a newly formatted diskette. At least one file or empty directory must be present on the diskette.)</p>
+</li>
+</ul>
+<p>The user may also design variations and combinations of these techniques.</p>
+<p>Information about the development history and source code compilation of the <strong>SyncDirPas</strong> program appear at the end of this document in the <a href="#DeveloperInformation">Developer Information</a> section.</p>
+<p><a name="SynchronizationDialog"></a></p>
+<h2>Synchronization Dialog</h2>
+<p>The following dialog box appears when the program is started, and the Automatic option is disabled:</p>
+<p><img src="./img/SynchronizationDialog.png" alt="Synchronization Dialog" /></p>
+<p>The <strong><a href="#SourceDirectory">Source Directory:</a></strong> and <strong><a href="#TargetDirectory">Target Directory:</a></strong> text entry fields default to the settings from the <a href="#InitializationFile">initialization file</a>.</p>
+<ul>
+<li><em><strong>Note:</strong></em> This program allows <em>Universal Naming Convention</em> (UNC) network directory paths to be entered into these directory text entry fields.</li>
+</ul>
+<p>The disk folder icons to the right of these text entry fields open up a file system <em>browse</em> dialog to allow you to navigaTe and select the desired folder.</p>
+<p>The <strong><a href="#IgnoreFileTypes">Ignore File Types:</a></strong> text field can be used to exclude files with one or more extensions from consideration for synchronization. The <strong><a href="#OnlyProcessFileTypes">Only Process File Types:</a></strong> text field can instead be used to restrict the files under consideration to those with specific extensions.</p>
+<p>The <strong><a href="#CopyOlderFiles">Copy older files</a></strong>, <strong><a href="#ProcessHiddenFiles">Process hidden files (and directories)</a></strong>, <strong><a href="#SynchronizeBothWays">Synchronize both ways</a></strong>, <strong><a href="#ShowErrorMessages">Show error messages</a></strong>, <strong><a href="#MinimizeLogMessages">Minimize log messages</a></strong>, <strong><a href="#IncludeSubdirectories">Include subdirectories</a></strong>, <strong><a href="#SkipMissingDirectories">Skip missing directories</a></strong>, <strong><a href="#DeleteExtraDirectories">Delete extra directories</a></strong>, <strong><a href="#DeleteExtraFiles">Delete extra files</a></strong>, and <strong><a href="#SkipReadOnlyTargetFiles">Skip read-only target files</a></strong> check boxes also default to the settings from the initialization file.</p>
+<p>The <strong>Synchronize</strong> button initiates the directory comparison. Before any files are actually copied (or deleted), a final <a href="#ConfirmationDialog">confirmation dialog</a> appears.</p>
+<p>The <strong>Show Log</strong> button opens the <a href="#LogWindow">log window</a> at any time.
+However the log window opens automatically upon the completion of a file synchronization.</p>
+<p>The <strong>Help</strong> button opens this help file in the default web browser.</p>
+<p>The <strong>Exit</strong> button closes the program.</p>
+<p><a name="LogWindow"></a></p>
+<h2>Log Window</h2>
+<p>If the user <a href="#ConfirmationDialog">confirms the synchronization</a>, the following log window appears after the required files are copied or deleted:</p>
+<p><img src="./img/LogWindow.png" alt="Log Window" /></p>
+<p>Click the <strong>Copy Text</strong> button to copy the log text to the Windows clipboard. The text can be pasted into a text editor or word processing document.</p>
+<p>Click the <strong>Clear Log</strong> button to erase the log text.
+This is useful if you want to adjust the <a href="#Options">options</a> and perform another synchronization.</p>
+<p>Click the <strong>Close</strong> button to dismiss the log window.</p>
+<p>If the <strong><a href="#SynchronizeBothWays">SynchronizeBothWays</a></strong> option is enabled, the log window includes synchronizations performed in both directions:</p>
+<p><img src="./img/LogWindowBothWays.png" alt="Log Window SynchronizeBothWays" /></p>
+<p>This window does not appear if the <strong><a href="#Automatic">Automatic</a></strong> option is enabled, and the <strong><a href="#NotifyUser">NotifyUser</a></strong> option is disabled.</p>
+<p><a name="ConfirmationDialog"></a></p>
+<h2>Confirmation Dialog</h2>
+<p>If the <strong><a href="#NotifyUser">NotifyUser</a></strong> option is <a href="#Enabled">enabled</a> this dialog prompt appears after the synchronization performs its initial directory and file scan:</p>
+<p><img src="img/ConfirmationDialog.png" alt="Confirmation Dialog" /></p>
+<p>If the user clicks the <strong>Yes</strong> button, the actual synchronization proceeds.</p>
+<p>Otherwise, if the user clicks the <strong>No</strong> button, the actual synchronization is cancelled.</p>
+<p><a name="Options"></a></p>
+<h2>Options for Program Operation</h2>
+<p>This program reads an <a href="#InitializationFile">initialization file</a> to obtain the settings of various options. These options control how the program runs.</p>
+<p>The name of the initialization file, including a drive and directory path, may be passed to the program as the first <a href="#CommandArgument">command argument</a>.</p>
+<ul>
+<li><em><strong>Note</strong></em> A <a href="#UniversalNamingConvention">Universal Naming Convention</a> (UNC) filename may be given for the initialization file.</li>
+</ul>
+<p>An optional second argument indicates the <a href="#SectionName">section name</a> within the initialization file to process.</p>
+<p>If no initialization file command argument is provided, the program uses the default file name <strong>SyncDir.ini</strong> for the initialization file.</p>
+<p>If the default initialization file cannot be found (in the current working directory), the program sets all options to their default values.</p>
+<p>If no section name command argument is provided, the program uses the default section name <strong>SyncDir</strong></p>
+<p>If the indicated or default section is missing from the initialization file, the program sets all options to their default values.</p>
+<p>The following option parameters are available:</p>
+<p><strong><a href="#SourceDirectory">SourceDirectory</a></strong></p>
+<p><strong><a href="#TargetDirectory">TargetDirectory</a></strong></p>
+<p><strong><a href="#IgnoreFileTypes">IgnoreFileTypes</a></strong></p>
+<p><strong><a href="#OnlyProcessFileTypes">OnlyProcessFileTypes</a></strong></p>
+<p><strong><a href="#Automatic">Automatic</a></strong></p>
+<p><strong><a href="#NotifyUser">NotifyUser</a></strong></p>
+<p><strong><a href="#ShowErrorMessages">ShowErrorMessages</a></strong></p>
+<p><strong><a href="#MinimizeLogMessages">MinimizeLogMessages</a></strong></p>
+<p><strong><a href="#RunCommand">RunCommand</a></strong></p>
+<p><strong><a href="#RunDirectory">RunDirectory</a></strong></p>
+<p><strong><a href="#AlternateRunCommand">AlternateRunCommand</a></strong></p>
+<p><strong><a href="#AlternateRunDirectory">AlternateRunDirectory</a></strong></p>
+<p><strong><a href="#CopyOlderFiles">CopyOlderFiles</a></strong></p>
+<p><strong><a href="#ProcessHiddenFiles">ProcessHiddenFiles</a></strong></p>
+<p><strong><a href="#SynchronizeBothWays">SynchronizeBothWays</a></strong></p>
+<p><strong><a href="#IncludeSubdirectories">IncludeSubdirectories</a></strong></p>
+<p><strong><a href="#SkipMissingDirectories">SkipMissingDirectories</a></strong></p>
+<p><strong><a href="#DeleteExtraDirectories">DeleteExtraDirectories</a></strong></p>
+<p><strong><a href="#DeleteExtraFiles">DeleteExtraFiles</a></strong></p>
+<p><strong><a href="#SkipReadOnlyTargetFiles">SkipReadOnlyTargetFiles</a></strong></p>
+<p><strong><a href="#NextSection">NextSection</a></strong></p>
+<p><a name="SourceDirectory"></a></p>
+<h3>SourceDirectory option</h3>
+<p>Define the <strong>SourceDirectory</strong> option as a directory path string, optionally preceded by a drive designation, in the initialization file:</p>
+<pre><code>SourceDirectory=C:\SyncDir\TestData\Primary
+</code></pre>
+
+<p>This option <a href="#DefaultValues">defaults</a> to the <a href="#CurrentWorkingDirectory">current working directory</a>.</p>
+<p>If the drive designation is omitted, the drive defaults to the same drive that contains the initialization file:</p>
+<pre><code>SourceDirectory=\SyncDir\TestData\Primary
+</code></pre>
+
+<p><em><strong>Note:</strong></em> a <a href="#UniversalNamingConvention">UNC directory name</a> may be used:</p>
+<pre><code>SourceDirectory=\\server\programs
+</code></pre>
+
+<p>You may optionally <a href="#IncludeSubdirectories">include subdirectories</a> for synchronization.</p>
+<p><a name="TargetDirectory"></a></p>
+<h3>TargetDirectory option</h3>
+<p>Define the <strong>TargetDirectory</strong> option as a directory path string, optionally preceded by a drive designation, in the initialization file:</p>
+<pre><code>TargetDirectory=C:\SyncDir\TestData\Secondary
+</code></pre>
+
+<p>This option <a href="#DefaultValues">defaults</a> to the <a href="#CurrentWorkingDirectory">current working directory</a>.</p>
+<p>If the drive designation is omitted, the drive defaults to the same drive that contains the initialization file:</p>
+<pre><code>TargetDirectory=\SyncDir\TestData\Secondary
+</code></pre>
+
+<p><em><strong>Note:</strong></em> a <a href="#UniversalNamingConvention">UNC directory name</a> may be used:</p>
+<pre><code>TargetDirectory=\\server\archive
+</code></pre>
+
+<p>You may optionally <a href="#IncludeSubdirectories">include subdirectories</a> for synchronization.</p>
+<p><a name="IgnoreFileTypes"></a></p>
+<h3>IgnoreFileTypes option</h3>
+<p>The <strong>IgnoreFileTypes</strong> option is a text field in the initialization file that may be left empty, or may contain one or more file types (extensions) separated by commas:</p>
+<pre><code>IgnoreFileTypes=
+IgnoreFileTypes=tmp
+IgnoreFileTypes=log,tmp
+</code></pre>
+
+<p>This option <a href="#DefaultValues">defaults</a> to an empty string.</p>
+<p>Any files in the <strong><a href="#SourceDirectory">Source Directory</a></strong> or <strong><a href="#TargetDirectory">Target Directory</a></strong> that have any of the designated extensions are ignored for the purposes of synchronization.</p>
+<p>To ignore files with an empty type (as in &quot;<strong>myfile</strong>&quot;), provide a single period (<strong>.</strong>) as the file type. For example:</p>
+<pre><code>IgnoreFileTypes=.
+IgnoreFileTypes=tmp,.
+</code></pre>
+
+<p><a name="OnlyProcessFileTypes"></a></p>
+<h3>OnlyProcessFileTypes option</h3>
+<p>The <strong>OnlyProcessFileTypes</strong> option is a text field in the initialization file that may be left empty, or may contain one or more file types (extensions) separated by commas:</p>
+<pre><code>OnlyProcessFileTypes=
+OnlyProcessFileTypes=txt
+OnlyProcessFileTypes=dat,txt
+</code></pre>
+
+<p>This option <a href="#DefaultValues">defaults</a> to an empty string, indicating that all file types will be processed.</p>
+<p>If this option is non-empty, only files in the <strong><a href="#SourceDirectory">Source Directory</a></strong> or <strong><a href="#TargetDirectory">Target Directory</a></strong> that have one of the designated extensions are considered for synchronization.</p>
+<p>To process files with an empty type (as in &quot;<strong>myfile</strong>&quot;), provide a single period (<strong>.</strong>) as the file type. For example:</p>
+<pre><code>OnlyProcessFileTypes=.
+OnlyProcessFileTypes=txt,.
+</code></pre>
+
+<p><a name="Automatic"></a></p>
+<h3>Automatic option</h3>
+<p>Set this option in the initialization file.</p>
+<p>When the <strong>Automatic</strong> option is <a href="#Disabled">disabled</a>, the program starts with the Synchronization Dialog.</p>
+<p>When the <strong>Automatic</strong> option is <a href="#Enabled">enabled</a>, the program proceeds to check for synchronization requirements between the source and target directories. If no synchronization is required, the program immediately exits without any user feedback. If the <strong><a href="#NotifyUser">NotifyUser</a></strong> option is also enabled, the program still requests <a href="#ConfirmationDialog">user confirmation</a> before copying (or deleting) any files.</p>
+<p>When the <strong>Automatic</strong> option is enabled, the <strong><a href="#RunCommand">RunCommand</a></strong> option may also contain a command line to be run after the program exits.</p>
+<p>This option <a href="#DefaultValues">defaults</a> to being disabled.</p>
+<p><a name="NotifyUser"></a></p>
+<h3>NotifyUser option</h3>
+<p>Set this option in the initialization file.</p>
+<p>This option is only relevant when the <strong><a href="#Automatic">Automatic</a></strong> option is <a href="#Enabled">enabled</a>.</p>
+<p>If the <strong>Automatic</strong> and the <strong>NotifyUser</strong> options are both enabled, the program requests <a href="#ConfirmationDialog">user confirmation</a> before copying (or deleting) any files, and displays a log window after copying (or deleting) the files.</p>
+<p>If the <strong>Automatic</strong> option is enabled, but the <strong>NotifyUser</strong> option is <a href="#Disabled">disabled</a>, the program silently copies or deletes the necessary files without involving the user. The program does <em>not</em> display any confirmation dialog, does <em>not</em> display any <a href="#LogWindow">log window</a>.</p>
+<p>The <strong>NotifyUser</strong> option <a href="#DefaultValues">defaults</a> to being enabled.</p>
+<p><a name="ShowErrorMessages"></a></p>
+<h3>ShowErrorMessages option</h3>
+<p>Set this option in the initialization file.</p>
+<p>This option <a href="#DefaultValues">defaults</a> to being <a href="#Enabled">enabled</a>.
+If any error occurs during a file copy or delete operation, a message box appears. The user may click the <strong>OK</strong> button to proceed to the next file; if the user clicks the <strong>Cancel</strong> button, the processing of any remaining files is aborted.</p>
+<p>If this option is <a href="#Disabled">disabled</a>, then error message boxes are suppressed during file copy and delete operations; the operation continues to the next file.
+Any errors are still shown in the <a href="#LogWindow">log window</a> upon completion (if <strong><a href="#NotifyUser">NotifyUser</a></strong> is enabled).</p>
+<p><a name="MinimizeLogMessages"></a></p>
+<h3>MinimizeLogMessages option</h3>
+<p>Set this option in the initialization file.</p>
+<p>This option <a href="#DefaultValues">defaults</a> to being <a href="#Enabled">enabled</a>.
+In this case, the only <a href="#LogWindow">log messages</a> written are for files that are actually copied or deleted.</p>
+<p>If this option is <a href="#Disabled">disabled</a>, the log messages describe all files and directories that were examined for synchronization, regardless whether they were copied or deleted.</p>
+<p><a name="RunCommand"></a></p>
+<h3>RunCommand option</h3>
+<p>Set this option in the initialization file.</p>
+<p>When the <strong><a href="#Automatic">Automatic</a></strong> option is <a href="#Enabled">enabled</a>, the <strong>RunCommand</strong> option may contain a command string to be executed when the program exits, and no files needed to be copied or deleted during the synchronization.
+(If any files were copied or deleted, the <strong><a href="#AlternateRunCommand">AlternateRunCommand</a></strong> is executed instead.)</p>
+<p>The command string consists of an executable program name, optionally followed by command arguments. If the <strong><a href="#RunDirectory">RunDirectory</a></strong> option also contains a value, the <a href="#CurrentWorkingDirectory">working directory</a> is set to that directory before the command string is executed.</p>
+<p>When the <strong>Automatic</strong> option is <a href="#Disabled">disabled</a>, the <a href="#CurrentWorkingDirectory">working directory</a> option is ignored.</p>
+<p>This option <a href="#DefaultValues">defaults</a> to an empty string, meaning no command is executed when the program exits.</p>
+<p><a name="RunDirectory"></a></p>
+<h3>RunDirectory option</h3>
+<p>Set this option in the initialization file.</p>
+<p>When the <strong><a href="#Automatic">Automatic</a></strong> option is <a href="#Enabled">enabled</a> and the <strong><a href="#RunCommand">RunCommand</a></strong> option has a value, the <strong><a href="#RunDirectory">RunDirectory</a></strong> option may contain a value indicating the <a href="#CurrentWorkingDirectory">working directory</a> to use when executing the <strong>RunCommand</strong> command string.</p>
+<p>When the <strong><a href="#Automatic">Automatic</a></strong> option is <a href="#Disabled">disabled</a>, the <strong>RunDirectory</strong> option is ignored.</p>
+<p>This option <a href="#DefaultValues">defaults</a> to an empty string, meaning the current working directory remains the same as when the <strong>SyncDirPas.exe</strong> program was started.</p>
+<p><em><strong>Note:</strong></em> A <a href="#UniversalNamingConvention">UNC directory name</a> may be used:</p>
+<pre><code>RunDirectory=\\server\programs
+</code></pre>
+
+<p><a name="AlternateRunCommand"></a></p>
+<h3>AlternateRunCommand option</h3>
+<p>Set this option in the initialization file.</p>
+<p>When the <strong><a href="#Automatic">Automatic</a></strong> option is <a href="#Enabled">enabled</a>, the <strong>AlternateRunCommand</strong> option may contain a command string to be executed when the program exits, and some files were copied or deleted during the synchronization.
+(If no files needed to be copied or deleted, the <strong><a href="#RunCommand">RunCommand</a></strong> is executed instead.)</p>
+<p>The intention is for the <strong>AlternateRunCommand</strong> to run any registration code needed by an updated system just synchronized from a server directory to a local execution directory on the desktop.
+The normal <strong>RunCommand</strong> simply runs the unmodified application.
+The <strong>AlternateRunCommand</strong> would first register any updated files, then would itself launch the updated application.</p>
+<p>The command string consists of an executable program name, optionally followed by command arguments. If the <strong><a href="#AlternateRunDirectory">AlternateRunDirectory</a></strong> option also contains a value, the <a href="#CurrentWorkingDirectory">working directory</a> is set to that directory before the command string is executed.</p>
+<p>When the <strong>Automatic</strong> option is <a href="#Disabled">disabled</a>, the <strong>AlternateRunCommand</strong> option is ignored.</p>
+<p>This option <a href="#DefaultValues">defaults</a> to the value of the <strong>RunCommand</strong> option.</p>
+<p><A name="AlternateRunDirectory"></a></p>
+<h3>AlternateRunDirectory option</h3>
+<p>Set this option in the initialization file.</p>
+<p>When the <strong><a href="#Automatic">Automatic</a></strong> option is enabled and the <strong><a href="#AlternateRunCommand">AlternateRunCommand</a></strong> option has a value, the <strong>AlternateRunDirectory</strong> option may contain a value indicating the working directory to use when executing the <strong>AlternateRunCommand</strong> command string.</p>
+<p>When the <strong>Automatic</strong> option is <a href="#Disabled">disabled</a>, the <strong>AlternateRunDirectory</strong> option is ignored.</p>
+<p>This option <strong>defaults</strong> to the value of the <strong><a href="#RunDirectory">RunDirectory</a></strong> option.</p>
+<p><em><strong>Note:</strong></em> A <a href="#UniversalNamingConvention">UNC directory name</a> may be used:</p>
+<pre><code>AlternateRunDirectory=\\server\programs
+</code></pre>
+
+<p><a name="CopyOlderFiles"></a></p>
+<h3>CopyOlderFiles option</h3>
+<p>Set this option in the initialization file.</p>
+<p>When the <strong>CopyOlderFiles</strong> option is <a href="#Disabled">disabled</a>, the program only copies source files that are newer than the corresponding target files.</p>
+<p>When the <strong>CopyOlderFiles</strong> option is <a href="#Enabled">enabled</a>, the program copies source files that are either older or newer than the corresponding target files.</p>
+<p>This option <a href="#DefaultValues">defaults</a> to being disabled.</p>
+<p><a name="ProcessHiddenFiles"></a></p>
+<h3>ProcessHiddenFiles option</h3>
+<p>Set this option in the initialization file.</p>
+<p>If <strong>ProcessHiddenFiles</strong> is <a href="#Disabled">disabled</a>, then files with the <em>System</em> attribute or the <em>Hidden</em> attribute are ignored during copy or delete operations.</p>
+<p>If <strong>ProcessHiddenFiles</strong> is <a href="#Enabled">enabled</a>, then files with the <em>System</em> attribute or the <em>Hidden</em> attribute are processed in the same manner as other files.</p>
+<p>This option <a href="#DefaultValues">defaults</a> to being disabled.</p>
+<p><a name="SynchronizeBothWays"></a></p>
+<h3>SynchronizeBothWays option</h3>
+<p>Set this option in the initialization file.</p>
+<p>When the <strong>SynchronizeBothWays</strong> option is <a href="#Disabled">disabled</a>, the program only synchronizes files from the <a href="#SourceDirectory">source directory</a> to the <a href="#TargetDirectory">target directory</a> (and optionally in any <a href="#IncludeSubdirectories">subdirectories</a>).</p>
+<p>When the <strong>SynchronizeBothWays</strong> option is <a href="#Enabled">enabled</a>, the program first synchronizes files from the source directory to the target directory.
+Next, the program reverses the roles of the directories, and synchronizes files from the original target directory to the original source directory.</p>
+<p>This option <a href="#DefaultValues">defaults</a> to being disabled.</p>
+<p>When the <strong>SynchronizeBothWays</strong> option is enabled, the <strong><a href="#DeleteExtraFiles">DeleteExtraFiles</a></strong> and <strong><a href="#DeleteExtraDirectories">DeleteExtraDirectories</a></strong> options must be disabled.</p>
+<p><a name="DeleteExtraDirectories"></a></p>
+<h3>DeleteExtraDirectories option</h3>
+<p>Set this option in the initialization file.</p>
+<p>When the <strong>DeleteExtraDirectories</strong> option is <a href="#Disabled">disabled</a>, the program ignores any extra subdirectories within the specified <a href="#TargetDirectory">target directory</a> that do not have corresponding subdirectories in the <a href="#SourceDirectory">source directory</a>.</p>
+<p>When the <strong>DeleteExtraDirectories</strong> option is <a href="#Enabled">enabled</a>, synchronization includes the deletion of subdirectories from the target directory that do not also exist in the source directory.</p>
+<p>If any files exist within the extra target subdirectories, deletion of the directory will fail unless the <strong><a href="#DeleteExtraFiles">DeleteExtraFiles</a></strong> option is also enabled.</p>
+<p>The <strong>DeleteExtraDirectories</strong> option <a href="#DefaultValues">defaults</a> to being disabled.</p>
+<p>When the <strong>DeleteExtraDirectories</strong> option is enabled, the <strong><a href="#SynchronizeBothWays">SynchronizeBothWays</a></strong> option must be disabled and the <strong><a href="#IncludeSubdirectories">IncludeSubdirectories</a></strong> option must be enabled.</p>
+<p><a name="DeleteExtraFiles"></a></p>
+<h3>DeleteExtraFiles option</h3>
+<p>Set this option in the initialization file.</p>
+<p>When the <strong>DeleteExtraFiles</strong> option is <a href="#Disabled">disabled</a>, synchronization consists only of copying newer files from the <a href="#SourceDirectory">source directory</a> to the <a href="#TargetDirectory">target directory</a> (and optionally any <a href="#IncludeSubdirectories">subdirectories</a>).</p>
+<p>When the <strong>DeleteExtraFiles</strong> option is <a href="#Enabled">enabled</a>, synchronization includes the deletion of files from the target directory that do not also exist in the source directory. Note that files will be deleted regardless of the setting of the <em>Read-Only</em> file attribute.</p>
+<p>This option never causes the deletion of any subdirectories, unless the <strong><a href="#DeleteExtraDirectories">DeleteExtraDirectories</a></strong> option is also enabled.</p>
+<p>This option <a href="#DefaultValues">defaults</a> to being disabled.</p>
+<p>When the <strong>DeleteExtraFiles</strong> option is enabled, the <strong><a href="#SynchronizeBothWays">SynchronizeBothWays</a></strong> option must be disabled.</p>
+<p><a name="SkipReadOnlyTargetFiles"></a></p>
+<h3>SkipReadOnlyTargetFiles option</h3>
+<p>Set this option in the initialization file.</p>
+<p>If <strong>SkipReadOnlyTargetFiles</strong> is <a href="#Disabled">disabled</a>, then files with the <em>Read-Only</em> attribute in the <a href="#TargetDirectory">target directory</a> that need to be copied or deleted will generate errors.
+This allows the user to identify specifically which files could not be copied.</p>
+<p>If <strong>SkipReadOnlyTargetFiles</strong> is <a href="#Enabled">enabled</a>, then files with the <em>Read-Only</em> attribute in the target directory that would otherwise need to be copied or deleted are simply bypassed.</p>
+<p>This option <a href="#DefaultValues">defaults</a> to being disabled.</p>
+<p><a name="NextSection"></a></p>
+<h3>NextSection option</h3>
+<p>Set this option in the initialization file.</p>
+<p>If <strong>NextSection</strong> is blank or omitted, then a single synchronization is performed using the settings of the current <a href="#SectionName">section</a>.</p>
+<p><strong>NextSection</strong> may contain a value that is the name of another section in the initialization file.
+In this case, after the synchronization defined by the current section completes, the program proceeds to execute the synchronization defined by the section named in the <strong>NextSection</strong> option.</p>
+<p>A chain of sections can be defined by appropriately setting the <strong>NextSection</strong> option in multiple sections of the initialization file.</p>
+<p>This allows a sequence of directory trees to be backed up to a network drive or a removable hard disk or USB drive using a single click of the <strong>Synchronize</strong> button.</p>
+<p>(If the <strong><a href="#Automatic">Automatic</a></strong> option is <a href="#Enabled">enabled</a>, and the <strong><a href="#NotifyUser">NotifyUser</a></strong> option is <a href="#Disabled">disabled</a>, the entire chain of synchronizations can be run as an automated scheduled task.)</p>
+<p>This option <a href="#DefaultValues">defaults</a> to being blank.</p>
+<h2>Definitions</h2>
+<p><a name="CommandArgument"></a></p>
+<h3>command argument</h3>
+<p>In Windows, a <em>command argument</em> may be defined for a shortcut icon by right clicking on the  shortcut icon, then selecting the <strong>Properties</strong> menu item.</p>
+<p>· Select the <strong>Shortcut</strong> tab on the resulting dialog box.</p>
+<p>· In the <strong>Target:</strong> field, put a blank after the program name, followed by the command argument.
+Separate multiple command arguments by a blank.</p>
+<p>· Click the <strong>OK</strong> button.</p>
+<p>&lt;a name=&quot;CurrentWorkingDirectory&gt;</a></p>
+<h3>current working directory</h3>
+<p>A <em>current working directory</em> is the location in the file system in which a running application first looks for any files it needs to operate.</p>
+<p>In Windows, a <em>working directory</em> may be defined for a shortcut icon by right clicking on the  shortcut icon, then selecting the <strong>Properties</strong> menu item.</p>
+<p>· Select the <strong>Shortcut</strong> tab on the resulting dialog box.</p>
+<p>· In the <strong>Start in:</strong> field, type the drive letter and directory path.</p>
+<p>· Click the <strong>OK</strong> button.</p>
+<p><a name="InitializationFile"></a></p>
+<h3>initialization file</h3>
+<p>An <em>initialization file</em> has the file extension <strong>.ini</strong> and contains option parameter settings.
+The file can be edited with any text editor, such as the Windows <strong>NotePad</strong>.
+Comments in this file are preceded by a semicolon (;).</p>
+<p>For many of the examples in this help file, the initialization file has the following contents (using the default section name <strong>SyncDir</strong>):</p>
+<pre><code>[SyncDir]
+SourceDirectory=C:\SyncDir\TestData\Primary
+TargetDirectory=C:\SyncDir\TestData\Secondary
+IgnoreFileTypes=
+OnlyProcessFileTypes=
+Automatic=no
+NotifyUser=yes
+ShowErrorMessages=yes
+MinimizeLogMessages=yes
+CopyOlderFiles=no
+ProcessHiddenFiles=no
+SynchronizeBothWays=no
+IncludeSubdirectories=no
+SkipMissingDirectories=no
+DeleteExtraFiles=no
+DeleteExtraDirectories=no
+SkipReadOnlyTargetFiles=no
+NextSection=
+</code></pre>
+
+<p><a name="SectionName"></a></p>
+<h3>section name</h3>
+<p>A <em>section name</em> is defined in an <a href="#InitializationFile">initialization file</a> by enclosing it in square brackets on a line by itself.
+If no section is indicated as a command argument, this program uses the default section name <strong>SyncDir</strong>.
+The following initialization file has two sections called <strong>OneSection</strong> and <strong>AnotherSection</strong>:</p>
+<pre><code>[OneSection]
+SourceDirectory=C:\Data
+TargetDirectory=C:\Files
+
+[AnotherSection]
+SourceDirectory=C:\OldData
+TargetDirectory=C:\OldFiles
+</code></pre>
+
+<p><a name="DefaultValues"></a></p>
+<h3>default values</h3>
+<p>The following default values are used for each option parameter if no value is specified, or if no <a href="#InitializationFile">initialization file</a> is found:</p>
+<pre><code>[SyncDir]
+SourceDirectory=
+; The above command uses the current working directory
+TargetDirectory=
+; The above command uses the current working directory
+RunCommand=
+RunDirectory=
+AlternateRunCommand=
+; The above option defaults to match RunCommand
+AlternateRunDirectory=
+; The above option defaults to match RunDirectory
+IgnoreFileTypes=
+OnlyProcessFileTypes=
+Automatic=no
+NotifyUser=yes
+ShowErrorMessages=yes
+MinimizeLogMessages=yes
+CopyOlderFiles=no
+ProcessHiddenFiles=no
+SynchronizeBothWays=no
+IncludeSubdirectories=no
+SkipMissingDirectories=no
+DeleteExtraFiles=no
+DeleteExtraDirectories=no
+SkipReadOnlyTargetFiles=no
+NextSection=
+</code></pre>
+
+<p><a name="Enabled"></a></p>
+<h3>enabled</h3>
+<p>An option is <em>enabled</em> by setting it to <strong>true</strong>, <strong>t</strong>, <strong>yes</strong>, <strong>y</strong>, or <strong>1</strong>.</p>
+<p>Lowercase should be used.</p>
+<p>For example:</p>
+<pre><code>ThisOption=yes
+AnotherOption=true
+SomeOption=1
+MyOption=t
+YourOption=y
+</code></pre>
+
+<p><a name="Disabled"></a></p>
+<h3>disabled</h3>
+<p>An option is <em>disabled</em> by setting it to <strong>false</strong>, <strong>f</strong>, <strong>no</strong>, <strong>n</strong>, or <strong>0</strong>.</p>
+<p>Lowercase should be used.</p>
+<p>For example:</p>
+<pre><code>ThisOption=no
+AnotherOption=false
+SomeOption=0
+MyOption=f
+YourOption=n
+</code></pre>
+
+<p><a name="UniversalNamingConvention"></a></p>
+<h3>universal naming convention</h3>
+<p>Using <em>Universal Naming Convention</em> (UNC) notation, a directory name does not start with a disk drive letter following by a colon (:). Instead, the name starts with two backslashes (\) followed by a network server node name, followed by another backslash, then a shared service name:</p>
+<pre><code>\\node\service
+</code></pre>
+
+<p>Directory names can also be appended with backslashes:</p>
+<pre><code>\\node\service\dir1\dir2
+</code></pre>
+
+<h2>Program Copy Management</h2>
+<p>This technique is used to maintain separate copies of an application on each user's hard disk.
+A shared file server directory holds the master copies of the application files.</p>
+<p>Whenever one or more application files must be updated, the support team manually copies the new files to the file server master directory.</p>
+<p>Each user's workstation has a shortcut icon defined on the desktop and named for the actual application program to be run.</p>
+<p>This shortcut icon defines its <strong>Target:</strong> property to point to the <strong>SyncDirPas.exe</strong> program on the user's hard disk, followed by <a href="#CommandArgument">command argument</a> that points to an <a href="#InitializationFile">initialization file</a> in the file server master directory.
+Optionally, the shortcut icon includes a second command argument containing an initialization <a href="#SectionName">section name</a>.</p>
+<p>(An administrator may define multiple initialization files with different names in the same master directory, to meet the needs of various application programs.
+Equivalently, the administrator may define a single initialization file with multiple sections, each containing the options for a different application program; use the second command argument in each shortcut icon to indicate the section name to use.)</p>
+<p>The initialization file section defines the <strong><a href="#SourceDirectory">SourceDirectory</a></strong> option to be the file server master directory, and the <strong><a href="#TargetDirectory">TargetDirectory</a></strong> option to be on the user's hard disk.</p>
+<p>The <strong><a href="#Automatic">Automatic</a></strong> option is <a href="#Enabled">enabled</a>, and the <strong><a href="#SynchronizeBothWays">SynchronizeBothWays</a></strong> option is <a href="#Disabled">disabled</a>.</p>
+<p>The <strong><a href="#CopyOlderFiles">CopyOlderFiles</a></strong> option will typically be enabled; this allows the administrator to back out an installation by replacing the older files into the file server master directory.</p>
+<p>The <strong><a href="#DeleteExtraFiles">DeleteExtraFiles</a></strong> and <strong><a href="#DeleteExtraDirectories">DeleteExtraDirectories</a></strong> options might also be enabled, to remove obsolete files and subdirectories from the target directory on the user's hard disk.</p>
+<p>(Typically, the <strong><a href="#IncludeSubdirectories">IncludeSubdirectories</a></strong> option is disabled, unless the application requires the presence of subdirectories within its main directory.)</p>
+<p>The <strong><a href="#RunDirectory">RunDirectory</a></strong> and <strong><a href="#RunCommand">RunCommand</a></strong> options in the initialization file define the actual application program (and any optional command arguments) to be run after the synchronization completes.</p>
+<p>If special registration code must be run whenever the application is updated with new executable files, use the <strong><a href="#AlternateRunDirectory">AlternateRunDirectory</a></strong> and <strong><a href="#AlternateRunCommand">AlternateRunCommand</a></strong> options.</p>
+<p>The intention is for the <strong>AlternateRunCommand</strong> to run any registration code needed by an updated system just synchronized from a server directory to a local execution directory on the desktop.
+The normal <strong>RunCommand</strong> simply runs the unmodified application.
+The <strong>AlternateRunCommand</strong> would first register any updated files, then would itself launch the updated application.</p>
+<p>If no distinction needs to be made, simply omit the declarations for <strong>AlternateRunCommand</strong> and <strong>AlternateRunDirectory</strong>.
+They will then default to match the values for <strong>RunCommand</strong> and <strong>RunDirectory</strong>.</p>
+<p>Whenever the user clicks on the shortcut icon in the <strong>Start</strong> menu or on the desktip, the <strong>SyncDirPas.exe</strong> program runs and compares the file server master files with the application files on the user's hard disk.</p>
+<p>Most of the time, no changes are needed, and the program launches the unmodified <strong>RunDirectory\RunCommand</strong> application program.</p>
+<p>Suppose an administrator needs to update some application files on the file server.
+Since application users are referencing the files on their own hard disks, no locks are being held on the files in the file server master directory.
+Thus, the master files can be updated at the administrator's convenience.</p>
+<p>The next time the user clicks the application shortcut icon, the <strong>SyncDirPas.exe</strong> program detects that files must be copied (and possibly deleted).
+After updating the user's local hard disk, the synchronization program launches the <strong>AlternateRunDirectory\AlternateRunCommand</strong> application program. </p>
+<p><a name="FileBackup"></a></p>
+<h2>File Backup</h2>
+<p>This technique is used to periodically copy updated files from a project on the user's hard disk to a backup directory.
+A shared file server directory or external USB drive holds the backup copies of the project files.</p>
+<p>The user's workstation has a <strong>SyncDir</strong> shortcut icon defined the <strong>Start</strong> menu or on the desktop that runs the <strong>SyncDirPas.exe</strong> program.
+This <strong>SyncDir</strong> icon includes a command argument that points to an <a href="#InitializationFile">initialization file</a> somewhere on the user's hard disk, optionally followed by an argument indicating the <a href="#SectionName">section name</a> to use.</p>
+<p>The initialization file defines the <strong><a href="#SourceDirectory">SourceDirectory</a></strong> option to be the project directory on the hard disk, and the <strong><a href="#TargetDirectory">TargetDirectory</a></strong> option to be the project backup directory on the file server or USB drive.
+The <strong><a href="#Automatic">Automatic</a></strong>, <strong><a href="#CopyOlderFiles">CopyOlderFiles</a></strong>, <strong><a href="#SynchronizeBothWays">SynchronizeBothWays</a></strong>,  <strong><a href="#DeleteExtraFiles">DeleteExtraFiles</a></strong>, and <strong><a href="#DeleteExtraDirectories">DeleteExtraDirectories</a></strong> options are <a href="#Disabled">disabled</a>.
+The <strong><a href="#IncludeSubdirectories">IncludeSubdirectories</a></strong> option may optionally be <a href="#Enabled">enabled</a>.</p>
+<p>Periodically, the user clicks the <strong>SyncDir</strong> icon to run the program. The program starts with the <strong><a href="#SynchronizationDialog">Synchronization Dialog</a></strong> initialized to match the option parameters.
+The user simply clicks the <strong>Synchronize</strong> button to proceed with the backup.</p>
+<p><a name="DualComputerFileCoordination"></a></p>
+<h2>Dual Computer File Coordination</h2>
+<p>This technique is used to periodically copy updated files for a project between the hard disks of two separate computers, such as a work computer and a home computer.</p>
+<p>A USB drive is used as the transfer medium. </p>
+<p>The user's workstation has a <strong>SyncDir</strong> icon defined the <strong>Start</strong> menu or on the desktop that runs the <strong>SyncDirPas.exe</strong> program.
+This <strong>SyncDir</strong> icon includes a command argument that normally points to an <a href="#InitializationFile">initialization file</a> somewhere on the user's hard disk.
+The option parameters receive their <a href="#DefaultValues">default values</a>.</p>
+<p>Whenever the user is leaving one computer, they insert the  USB drive.
+The user starts the <strong>SyncDirPas.exe</strong> program by clicking on its shortcut icon.
+This displays the **<a href="#SynchronizationDialog">Synchronization Dialog</a>.</p>
+<p>The user selects the project directory on the hard disk as the <a href="#SourceDirectory">Source Directory:</a>, and the USB drive as the <a href="#TargetDirectory">Target directory:</a>.
+The user may toggle the <strong><a href="#SynchronizeBothWays">Synchronize both ways</a></strong>, <strong><a href="#DeleteExtraFiles">Delete extra files</a></strong>, <strong><a href="#DeleteExtraDirectories">Delete extra directories</a></strong>, or <strong><a href="#IncludeSubdirectories">Include subdirectories</a></strong> check boxes.
+The user then clicks the <strong>Synchronize</strong> button.</p>
+<p>The USB drive is removed and carried to the other computer, where the process is repeated. This time, the user selects the USB drive as the <strong>Source directory:</strong>, and the project directory on the hard disk as the <strong>Target directory:</strong>.</p>
+<p>When the user is ready to return to the first computer, they synchronize the second computer's directory onto the USB drive, then synchronize the USB drive onto the first computer's directory.</p>
+<p><a name="DeveloperInformation"></a></p>
+<h2>Developer Information</h2>
+<h3>Background and History</h3>
+<h3>Source Code Compilation Note</h3>
+<p>Using the debugger in the Lazarus IDE on Windows 10 requires the following configuration adjustment:</p>
+<p><strong><a href="https://www.tweaking4all.com/forum/delphi-lazarus-free-pascal/lazarus-windows-debugger-crashing-on-opendialog/">Lazarus - Windows - Debugger crashing on OpenDialog</a></strong></p>
+
+</body>
+</html>
+<!-- This document was created with MarkdownPad, the Markdown editor for Windows (http://markdownpad.com) -->
