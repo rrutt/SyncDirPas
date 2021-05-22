@@ -20,8 +20,8 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="1134"/>
-        <CursorPos X="17" Y="1144"/>
+        <TopLine Value="1121"/>
+        <CursorPos X="20" Y="1136"/>
         <UsageCount Value="262"/>
         <Loaded Value="True"/>
       </Unit1>
@@ -39,118 +39,118 @@
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
         <Filename Value="SyncDir.pas"/>
-        <Caret Line="1007" Column="7" TopLine="982"/>
+        <Caret Line="1130" TopLine="1114"/>
       </Position1>
       <Position2>
         <Filename Value="SyncDir.pas"/>
+        <Caret Line="1092" TopLine="1076"/>
       </Position2>
       <Position3>
         <Filename Value="SyncDir.pas"/>
-        <Caret Line="914" TopLine="887"/>
+        <Caret Line="1130" TopLine="1114"/>
       </Position3>
       <Position4>
         <Filename Value="SyncDir.pas"/>
-        <Caret Line="1009" Column="82" TopLine="991"/>
+        <Caret Line="1093" Column="49" TopLine="1076"/>
       </Position4>
       <Position5>
         <Filename Value="SyncDir.pas"/>
-        <Caret Line="1158" TopLine="1132"/>
+        <Caret Line="95" Column="40" TopLine="74"/>
       </Position5>
       <Position6>
         <Filename Value="SyncDir.pas"/>
-        <Caret Line="1007" TopLine="991"/>
+        <Caret Line="1040" Column="56" TopLine="1013"/>
       </Position6>
       <Position7>
         <Filename Value="SyncDir.pas"/>
-        <Caret Line="1010" Column="108" TopLine="991"/>
       </Position7>
       <Position8>
         <Filename Value="SyncDir.pas"/>
-        <Caret Line="1016" Column="55" TopLine="991"/>
+        <Caret Line="1082" Column="55" TopLine="1056"/>
       </Position8>
       <Position9>
         <Filename Value="SyncDir.pas"/>
-        <Caret Line="1160" Column="46" TopLine="1133"/>
+        <Caret Line="1127" Column="51" TopLine="1100"/>
       </Position9>
       <Position10>
         <Filename Value="SyncDir.pas"/>
       </Position10>
       <Position11>
         <Filename Value="SyncDir.pas"/>
-        <Caret Line="146" Column="19" TopLine="119"/>
+        <Caret Line="1024" Column="122" TopLine="1008"/>
       </Position11>
       <Position12>
         <Filename Value="SyncDir.pas"/>
-        <Caret Line="156" Column="21" TopLine="129"/>
+        <Caret Line="1026" Column="43" TopLine="1008"/>
       </Position12>
       <Position13>
         <Filename Value="SyncDir.pas"/>
-        <Caret Line="1013" Column="19" TopLine="986"/>
       </Position13>
       <Position14>
         <Filename Value="SyncDir.pas"/>
-        <Caret Line="1090" Column="17" TopLine="1064"/>
+        <Caret Line="37" Column="19" TopLine="10"/>
       </Position14>
       <Position15>
         <Filename Value="SyncDir.pas"/>
+        <Caret Line="1024" Column="122" TopLine="1008"/>
       </Position15>
       <Position16>
         <Filename Value="SyncDir.pas"/>
-        <Caret Line="146" Column="19" TopLine="119"/>
+        <Caret Line="1027" Column="23" TopLine="1008"/>
       </Position16>
       <Position17>
         <Filename Value="SyncDir.pas"/>
-        <Caret Line="156" Column="21" TopLine="129"/>
+        <Caret Line="1135" TopLine="1117"/>
       </Position17>
       <Position18>
         <Filename Value="SyncDir.pas"/>
-        <Caret Line="1013" Column="19" TopLine="986"/>
+        <Caret Line="1171" TopLine="1145"/>
       </Position18>
       <Position19>
         <Filename Value="SyncDir.pas"/>
-        <Caret Line="1090" Column="17" TopLine="1064"/>
       </Position19>
       <Position20>
         <Filename Value="SyncDir.pas"/>
+        <Caret Line="203" Column="22" TopLine="176"/>
       </Position20>
       <Position21>
         <Filename Value="SyncDir.pas"/>
-        <Caret Line="146" Column="19" TopLine="119"/>
+        <Caret Line="1094" Column="36" TopLine="1068"/>
       </Position21>
       <Position22>
         <Filename Value="SyncDir.pas"/>
-        <Caret Line="156" Column="21" TopLine="129"/>
+        <Caret Line="1136" Column="34" TopLine="1121"/>
       </Position22>
       <Position23>
         <Filename Value="SyncDir.pas"/>
-        <Caret Line="1013" Column="19" TopLine="986"/>
+        <Caret Line="1138" Column="39" TopLine="1120"/>
       </Position23>
       <Position24>
         <Filename Value="SyncDir.pas"/>
-        <Caret Line="1090" Column="17" TopLine="1052"/>
+        <Caret Line="1136" Column="20" TopLine="1120"/>
       </Position24>
       <Position25>
         <Filename Value="SyncDir.pas"/>
       </Position25>
       <Position26>
         <Filename Value="SyncDir.pas"/>
-        <Caret Line="146" Column="19" TopLine="119"/>
+        <Caret Line="203" Column="22" TopLine="176"/>
       </Position26>
       <Position27>
         <Filename Value="SyncDir.pas"/>
-        <Caret Line="156" Column="21" TopLine="129"/>
+        <Caret Line="1094" Column="36" TopLine="1068"/>
       </Position27>
       <Position28>
         <Filename Value="SyncDir.pas"/>
-        <Caret Line="1004" Column="42" TopLine="986"/>
+        <Caret Line="1136" Column="26" TopLine="1121"/>
       </Position28>
       <Position29>
         <Filename Value="SyncDir.pas"/>
-        <Caret Line="1013" Column="19" TopLine="986"/>
+        <Caret Line="1140" Column="55" TopLine="1120"/>
       </Position29>
       <Position30>
         <Filename Value="SyncDir.pas"/>
-        <Caret Line="1084" Column="29" TopLine="1070"/>
+        <Caret Line="103" Column="33" TopLine="80"/>
       </Position30>
     </JumpHistory>
     <RunParams>

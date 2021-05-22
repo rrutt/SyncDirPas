@@ -1,9 +1,0 @@
-Synchronization started ...
-Synchronizing [C:\SyncDir\TestData\Primary\] into [C:\SyncDir\TestData\Secondary\] ...
-Finished search. Found 0 directories and 4 files.
-In order to synchronize Source Directory [C:\SyncDir\TestData\Primary\] into Target Directory [C:\SyncDir\TestData\Secondary\], 0 file(s) will be copied, and 4 file(s) will be skipped based on file timestamps.
-User chose to proceed with synchronization.
-  Successfully copied 0 file(s).
-  Skipped copying 4 file(s).
-Synchronization of [C:\SyncDir\TestData\Primary\] into [C:\SyncDir\TestData\Secondary\] completed.
-ERROR: Initialization file section [BadSection] does not exist in file [C:\SyncDir\SyncDir.ini].

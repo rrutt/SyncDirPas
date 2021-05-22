@@ -18,6 +18,7 @@ type
     SourceDirectory: String;
     TargetDirectory: String;
 
+    Automatic: Boolean;
     CopyOlderFiles: Boolean;
     DeleteExtraFiles: Boolean;
     DeleteExtraDirectories: Boolean;
@@ -199,6 +200,7 @@ begin
     options.SourceDirectory := LoadInitializationFileSettingString(iniFile, iniSection, 'SourceDirectory', '.');
     options.TargetDirectory := LoadInitializationFileSettingString(iniFile, iniSection, 'TargetDirectory', '.');
 
+    options.Automatic := LoadInitializationFileSettingBoolean(iniFile, iniSection, 'Automatic', false);
     options.CopyOlderFiles := LoadInitializationFileSettingBoolean(iniFile, iniSection, 'CopyOlderFiles', false);
     options.DeleteExtraFiles := LoadInitializationFileSettingBoolean(iniFile, iniSection, 'DeleteExtraFiles', false);
     options.DeleteExtraDirectories := LoadInitializationFileSettingBoolean(iniFile, iniSection, 'DeleteExtraDirectories', false);
@@ -1019,6 +1021,8 @@ var
   context: TProgressContext;
   isSuccessful: Boolean;
 begin
+  AppendLogMessage(Format('Processing initialization section [%s] in file [%s].', [options.CurrentSection, gIniFileName]));
+
   if (options.AreValid) then begin
     ValidateSourceAndTargetDirectories(options);
   end;
@@ -1075,7 +1079,7 @@ begin
       if (iniSectionExists) then begin
         LoadFormControlsFromOptions(currentOptions);
       end else begin
-        errorMessage := Format('ERROR: Initialization file section [%s] does not exist in file [%s].', [iniSection, gIniFileName]);
+        errorMessage := Format('ERROR: Initialization section [%s] does not exist in file [%s].', [iniSection, gIniFileName]);
         AppendLogMessage(errorMessage);
         if (currentOptions.ShowErrorMessages) then begin
           Application.MessageBox(PChar(errorMessage), 'SyncDirPas Error', 0);
@@ -1087,8 +1091,9 @@ begin
   end;
 
   { TODO : Should we show log form while synchronizing, or only when done? }
-  //SyncDirLogForm.Show;
-  ButtonShowLogClick(Sender);
+  if (not gInitialOptions.Automatic) then begin
+    ButtonShowLogClick(Sender);
+  end;
 
   ButtonSynchronize.Enabled := true;
 end;
@@ -1119,10 +1124,19 @@ begin
     errorMessage := Format('ERROR: Initialization file [%s] does not exist.', [gIniFileName]);
     Application.MessageBox(PChar(errorMessage), 'SyncDirPas Error', 0);
   end else if (not iniSectionExists) then begin
-    errorMessage := Format('ERROR: Initialization file section [%s] does not exist in file [%s].', [iniSection, gIniFileName]);
+    errorMessage := Format('ERROR: Initialization section [%s] does not exist in file [%s].', [iniSection, gIniFileName]);
     Application.MessageBox(PChar(errorMessage), 'SyncDirPas Error', 0);
   end;
   LoadFormControlsFromOptions(gInitialOptions);
+
+  if (gInitialOptions.Automatic) then begin
+    gLogToFile := true;
+    ButtonSynchronizeClick(Sender);
+    if (gInitialOptions.NotifyUser) then begin
+      ButtonShowLogClick(Sender);
+    end;
+    Halt(1)
+  end;
 
   { TODO : If Automatic option is selected in initialization settings,
            hide forms and start processing primary section,
