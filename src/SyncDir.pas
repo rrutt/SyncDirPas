@@ -1042,11 +1042,6 @@ begin
     options.AreValid := false;
     AppendLogMessage('Error: When SynchronizeBothWays is enabled, both DeleteExtraFiles and DeleteExtraDirectories must be disabled.');
   end;
-
-  if (options.DeleteExtraDirectories and (not options.IncludeSubdirectories)) then begin
-    options.AreValid := false;
-    AppendLogMessage('Error: When DeleteExtraDirectories is enabled, IncludeSubdirectories must be enabled.');
-  end;
 end;
 
 procedure TSyncDirForm.ButtonExitClick(Sender: TObject);

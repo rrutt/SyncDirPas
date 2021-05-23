@@ -506,9 +506,9 @@ In this case, the only <a href="#LogWindow">log messages</a> written are for fil
 <p>Set this option in the initialization file.</p>
 <p>When the <strong>DeleteExtraDirectories</strong> option is <a href="#Disabled">disabled</a>, the program ignores any extra subdirectories within the specified <a href="#TargetDirectory">target directory</a> that do not have corresponding subdirectories in the <a href="#SourceDirectory">source directory</a>.</p>
 <p>When the <strong>DeleteExtraDirectories</strong> option is <a href="#Enabled">enabled</a>, synchronization includes the deletion of subdirectories from the target directory that do not also exist in the source directory.</p>
-<p>If any files exist within the extra target subdirectories, deletion of the directory will fail unless the <strong><a href="#DeleteExtraFiles">DeleteExtraFiles</a></strong> option is also enabled.</p>
+<p>If any files exist within an extra target subdirectory, deletion of the directory will fail unless the <strong><a href="#DeleteExtraFiles">DeleteExtraFiles</a></strong> and <strong><a href="#IncludeSubdirectories">IncludeSubdirectories</a></strong> options are also enabled.</p>
 <p>The <strong>DeleteExtraDirectories</strong> option <a href="#DefaultValues">defaults</a> to being disabled.</p>
-<p>When the <strong>DeleteExtraDirectories</strong> option is enabled, the <strong><a href="#SynchronizeBothWays">SynchronizeBothWays</a></strong> option must be disabled and the <strong><a href="#IncludeSubdirectories">IncludeSubdirectories</a></strong> option must be enabled.</p>
+<p>When the <strong>DeleteExtraDirectories</strong> option is enabled, the <strong><a href="#SynchronizeBothWays">SynchronizeBothWays</a></strong> option must be disabled.</p>
 <p><a name="DeleteExtraFiles"></a></p>
 <h3>DeleteExtraFiles option</h3>
 <p>Set this option in the initialization file.</p>
@@ -842,6 +842,7 @@ Then rebuild the executable using the <strong>Run | Build</strong> menu item (or
 <ol>
 <li>Corrected defaulting of omitted <strong><a href="#SourceDirectory">SourceDirectory</a></strong> and <strong><a href="#TargetDirectory">TargetDirectory</a></strong> options in the initialization file to use the <a href="#CurrentWorkingDirectory">current working directory</a>, as already documented.</li>
 <li>Added notes to the <a href="#InitializationFile">initialization file</a> section in this document on use of a unique file type configured to <em>Open With</em> the <strong>SyncDirPas.exe</strong> program.</li>
+<li>Removed the restriction that enabling <strong><a href="#DeleteExtraDirectories">DeleteExtraDirectories</a></strong> would also require enabling <strong><a href="#IncludeSubdirectories">IncludeSubdirectories</a></strong>.</li>
 </ol>
 <h3>Version 4.0.0</h3>
 <p>Initial Pascal release.</p>

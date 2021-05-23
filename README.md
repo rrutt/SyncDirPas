@@ -317,11 +317,11 @@ When the **DeleteExtraDirectories** option is [disabled](#Disabled), the program
 
 When the **DeleteExtraDirectories** option is [enabled](#Enabled), synchronization includes the deletion of subdirectories from the target directory that do not also exist in the source directory.
 
-If any files exist within the extra target subdirectories, deletion of the directory will fail unless the **[DeleteExtraFiles](#DeleteExtraFiles)** option is also enabled.
+If any files exist within an extra target subdirectory, deletion of the directory will fail unless the **[DeleteExtraFiles](#DeleteExtraFiles)** and **[IncludeSubdirectories](#IncludeSubdirectories)** options are also enabled.
 
 The **DeleteExtraDirectories** option [defaults](#DefaultValues) to being disabled.
 
-When the **DeleteExtraDirectories** option is enabled, the **[SynchronizeBothWays](#SynchronizeBothWays)** option must be disabled and the **[IncludeSubdirectories](#IncludeSubdirectories)** option must be enabled.
+When the **DeleteExtraDirectories** option is enabled, the **[SynchronizeBothWays](#SynchronizeBothWays)** option must be disabled.
 
 
 <a name="DeleteExtraFiles"></a>
@@ -811,6 +811,7 @@ Minor refinements:
 
 1. Corrected defaulting of omitted **[SourceDirectory](#SourceDirectory)** and **[TargetDirectory](#TargetDirectory)** options in the initialization file to use the [current working directory](#CurrentWorkingDirectory), as already documented.
 2. Added notes to the [initialization file](#InitializationFile) section in this document on use of a unique file type configured to _Open With_ the **SyncDirPas.exe** program.
+3. Removed the restriction that enabling **[DeleteExtraDirectories](#DeleteExtraDirectories)** would also require enabling **[IncludeSubdirectories](#IncludeSubdirectories)**.
 
 ### Version 4.0.0
 
