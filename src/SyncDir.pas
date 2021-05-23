@@ -1090,7 +1090,7 @@ begin
     AppendLogMessage(message);
     Application.MessageBox(PChar(message), 'SyncDirPas Log', 0);
   end else begin
-    AppendLogMessage('Synchronization started ...');
+    AppendLogMessage(Format('Synchronization started at %s ...', [FormatDateTime('yyyy-mm-dd hh:nn:ss', Now)]));
     context := InitializeProgressContext(options);
     SynchronizeSourceToTarget(context, options);
     isSuccessful := context.SynchronizationSucceeded;

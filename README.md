@@ -36,6 +36,14 @@ Information about the development history and source code compilation of the **S
 <a name="DownloadingAndInstalling"></a>
 ## Downloading and Installing the Program
 
+1. Download the **SyncDirPas-_version_.zip** file from the root folder of the GitHub.com repository **<https://github.com/rrutt/SyncDirPas>** (where _**version**_ represents the current release version).
+2. Open the ZIP file.  In Windows 10, simply double-click on the ZIP file to open it in the file explorer.
+3. Drag and drop the **SyncDirPas** folder from within the ZIP file to copy it to another location on your hard disk (or a USB drive).
+4. Open your local copy of the **SyncDirPas** folder in the file explorer.
+5. Double-click the **SyncDirPas.exe** file to run the program.
+
+To uninstall the program, simply delete your local **SyncDirPas** folder.
+
 
 <a name="SynchronizationDialog"></a>
 ## Synchronization Dialog
@@ -371,6 +379,8 @@ When the **Automatic** option is [enabled](#Enabled), the program proceeds to ch
 
 When the **Automatic** option is enabled, the **[RunCommand](#RunCommand)** option may also contain a command line to be run after the program exits.
 
+_**Note:**_ If the **Automatic** option is enabled, the **[NextSection](#NextSection)** value is ignored.
+
 This option [defaults](#DefaultValues) to being disabled.
 
 
@@ -458,7 +468,7 @@ A chain of sections can be defined by appropriately setting the **NextSection** 
 
 This allows a sequence of directory trees to be backed up to a network drive or a removable hard disk or USB drive using a single click of the **Synchronize** button.
 
-(If the **[Automatic](#Automatic)** option is [enabled](#Enabled), and the **[NotifyUser](#NotifyUser)** option is [disabled](#Disabled), the entire chain of synchronizations can be run as an automated scheduled task.)
+_**Note:**_ If the **[Automatic](#Automatic)** option is [enabled](#Enabled), the **NextSection** value is ignored.
 
 This option [defaults](#DefaultValues) to being blank.
 
@@ -712,17 +722,69 @@ When the user is ready to return to the first computer, they synchronize the sec
 
 ### Background and History
 
-**[SyncDir3 program on SourceForge.com](https://sourceforge.net/projects/syncdir3/)**
+#### Visual Basic version
 
-**[Support Statement for Visual Basic 6.0 on Windows](https://docs.microsoft.com/en-us/previous-versions/visualstudio/visual-basic-6/visual-basic-6-support-policy)**
+The original version 1 of the Directory Synchronization program was written as a 16-bit program in Visual Basic in 1997 and was known simply as **SyncDir**.
 
-### Source Code Compilation Note
+A version 2 was created in 2002 with various improvements.
 
-**[Free Pascal](https://www.freepascal.org/)**
+A 32-bit version 3 was created in 2005 using Visual Basic 6.0 and renamed **SyncDir3** to allow both the 16-bit version 2 and 32-bit version 3 to co-exist.
 
-**[Lazarus IDE for Free Pascal](https://www.lazarus-ide.org/)**
+Programs created in Visual Basic 6.0 are still supported for execution in Windows 10.
+However the Visual Basic 6.0 integrated development environment (IDE) is no longer supported:
 
-Using the debugger in the Lazarus IDE on Windows 10 requires the following configuration adjustment:
+- **[Support Statement for Visual Basic 6.0 on Windows](https://docs.microsoft.com/en-us/previous-versions/visualstudio/visual-basic-6/visual-basic-6-support-policy)**
 
-**[Lazarus - Windows - Debugger crashing on OpenDialog](https://www.tweaking4all.com/forum/delphi-lazarus-free-pascal/lazarus-windows-debugger-crashing-on-opendialog/)**
+The **SyncDir3** program is still available from the following SourceForge repository:
+
+- **[SyncDir3 program on SourceForge.net](https://sourceforge.net/projects/syncdir3/)**
+
+The Visual Basic source code for **SyncDir3** is also available in the **SyncDir3** sub-folder of this GitHub.com repository.
+
+#### Free Pascal version
+
+In 2020 the decision was made to re-implement the Directory Synchronization program for Windows 10 using a supported programming language and development environment.
+
+The **[Free Pascal](https://www.freepascal.org/)** implementation of the Object Pascal programming language was chosen.
+One benefit of this decision is that a single self-contained executable file, **SyncDirPas.exe** can be produced, without requiring any separate run-time library files.
+
+The integrated development environment for Free Pascal is the **[Lazarus IDE for Free Pascal](https://www.lazarus-ide.org/)**.
+
+#### Source code compilation notes
+
+Download the **Lazarus IDE**, including **Free Pascal**, from  here:
+
+- **<https://www.lazarus-ide.org/index.php?page=downloads>**
+
+After installing the **Lazarus IDE**, clone this GitHub repository to you local disk.
+Then double-click on the **src\SyncDirPas.lpr** project file to open it in **Lazarus**. 
+
+_**Note:**_ Using the debugger in the **Lazarus IDE** on Windows 10 _**might**_ require the following configuration adjustment:
+
+- **[Lazarus - Windows - Debugger crashing on OpenDialog](https://www.tweaking4all.com/forum/delphi-lazarus-free-pascal/lazarus-windows-debugger-crashing-on-opendialog/)**
+
+When **Lazarus** includes debugging information the executable file is relatively large.
+When ready to create a release executable, the file size can be significantly reduced by selecting the menu item **Project | Project Options ...** and navigating to the **Compile Options | Debugging** tab in the resulting dialog window.
+Clear the check-mark from the **Generate info for the debugger** option and then click the **OK** button.
+Then rebuild the executable using the **Run | Build** menu item (or using the shortcut key-stroke _**Shift-F9**_).
+
+#### Generating the SyncDirPas.html help file
+
+The **README.md** file can be edited in **MarkdownPas 2**, which can be downloaded from here:
+
+- **<http://markdownpad.com/>**
+
+After making any changes to the **README.md** file, select the menu item **File | Export | Export HTML**.
+
+In the resulting file save dialog, rename the result file to **SyncDirPas.html** and save it to the **src* sub-folder.
+
+#### Creating a release ZIP file
+
+1. Set the desired release version by selecting the menu item **Project | Project Options ...** and navigating to the **Project Options | Version Info** tab in the resulting dialog window.  Click the **OK** button after making any changes.
+2. Build the **SyncDirPas.exe** executable file _without_ any debug information (as described in a previous section).
+3. Double click the **PrepareZipFileFolder.bat** script file in the root folder of your locally cloned copy of this GitHub repository.
+4. The script will perform some file operations, along with a few **pause** steps.  Dismiss each **pause** step by pressing the space bar.
+5. An extra **SyncDirPas** sub-folder will be created (if it does not already exist) containing the desired release files for download.
+6. Right-click the extra **SyncDirPas** sub-folder and select **Send to | Compressed (zipped) folder** in the context menu.
+7. Optionally rename the resulting ZIP file by appending the version information to the file name.
 
