@@ -5,7 +5,6 @@ REM Navigate to the folder containing this "bat shell" file.
 pushd %~dp0
 pause
 
-rem robocopy ./LICENSE.txt ./SyncDirPas /MIR
 copy .\MIT-License.html .\SyncDirPas
 copy .\src\SyncDirPas.exe .\SyncDirPas 
 copy .\src\SyncDirPas.html .\SyncDirPas

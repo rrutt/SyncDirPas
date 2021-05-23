@@ -1128,6 +1128,11 @@ begin
     end;
 
     iniSection := currentOptions.NextSection;
+    if (currentOptions.Automatic) then begin
+      AppendLogMessage(Format('Ignoring NextSection=%s since Automatic option is enabled.', [iniSection]));
+      iniSection := '';
+    end;
+
     if (synchronizationSucceeded and (Length(iniSection) > 0)) then begin
       iniSectionExists := LoadInitializationFileSettings(gIniFileName, iniSection, currentOptions);
       if (iniSectionExists) then begin

@@ -1,6 +1,8 @@
 # Directory Synchronization Utility
 
-The Directory Synchronization program, **SyncDirPas**, synchronizes the file contents of directories on a personal computer running Microsoft Window.
+_Version 4.0.0+20210523_
+
+The Directory Synchronization program, **SyncDirPas**, synchronizes the file contents of directories on a personal computer running Microsoft Windows.
 
 This program is free open source software licensed under the [./MIT-License.html](./MIT-License.html "MIT License"), Copyright © 2021 Rick Rutt.
 
@@ -29,6 +31,10 @@ This program may be used for the following purposes:
 The user may also design variations and combinations of these techniques.
 
 Information about the development history and source code compilation of the **SyncDirPas** program appear at the end of this document in the [Developer Information](#DeveloperInformation) section.
+
+
+<a name="DownloadingAndInstalling"></a>
+## Downloading and Installing the Program
 
 
 <a name="SynchronizationDialog"></a>
@@ -120,27 +126,15 @@ The following option parameters are available:
 
 **[OnlyProcessFileTypes](#OnlyProcessFileTypes)**
 
-**[Automatic](#Automatic)**
-
 **[NotifyUser](#NotifyUser)**
 
 **[ShowErrorMessages](#ShowErrorMessages)**
 
 **[MinimizeLogMessages](#MinimizeLogMessages)**
 
-**[RunCommand](#RunCommand)**
-
-**[RunDirectory](#RunDirectory)**
-
-**[AlternateRunCommand](#AlternateRunCommand)**
-
-**[AlternateRunDirectory](#AlternateRunDirectory)**
-
 **[CopyOlderFiles](#CopyOlderFiles)**
 
 **[ProcessHiddenFiles](#ProcessHiddenFiles)**
-
-**[SynchronizeBothWays](#SynchronizeBothWays)**
 
 **[IncludeSubdirectories](#IncludeSubdirectories)**
 
@@ -151,6 +145,18 @@ The following option parameters are available:
 **[DeleteExtraFiles](#DeleteExtraFiles)**
 
 **[SkipReadOnlyTargetFiles](#SkipReadOnlyTargetFiles)**
+
+**[SynchronizeBothWays](#SynchronizeBothWays)**
+
+**[Automatic](#Automatic)**
+
+**[RunCommand](#RunCommand)**
+
+**[RunDirectory](#RunDirectory)**
+
+**[AlternateRunCommand](#AlternateRunCommand)**
+
+**[AlternateRunDirectory](#AlternateRunDirectory)**
 
 **[NextSection](#NextSection)**
 
@@ -233,20 +239,6 @@ To process files with an empty type (as in "**myfile**"), provide a single perio
     OnlyProcessFileTypes=txt,.
 
 
-<a name="Automatic"></a>
-### Automatic option
-
-Set this option in the initialization file.
-
-When the **Automatic** option is [disabled](#Disabled), the program starts with the Synchronization Dialog.
-
-When the **Automatic** option is [enabled](#Enabled), the program proceeds to check for synchronization requirements between the source and target directories. If no synchronization is required, the program immediately exits without any user feedback. If the **[NotifyUser](#NotifyUser)** option is also enabled, the program still requests [user confirmation](#ConfirmationDialog) before copying (or deleting) any files.
-
-When the **Automatic** option is enabled, the **[RunCommand](#RunCommand)** option may also contain a command line to be run after the program exits.
-
-This option [defaults](#DefaultValues) to being disabled.
-
-
 <a name="NotifyUser"></a>
 ### NotifyUser option
 
@@ -284,72 +276,6 @@ In this case, the only [log messages](#LogWindow) written are for files that are
 If this option is [disabled](#Disabled), the log messages describe all files and directories that were examined for synchronization, regardless whether they were copied or deleted.
 
 
-<a name="RunCommand"></a>
-### RunCommand option
-
-Set this option in the initialization file.
-
-When the **[Automatic](#Automatic)** option is [enabled](#Enabled), the **RunCommand** option may contain a command string to be executed when the program exits, and no files needed to be copied or deleted during the synchronization.
-(If any files were copied or deleted, the **[AlternateRunCommand](#AlternateRunCommand)** is executed instead.)
-
-The command string consists of an executable program name, optionally followed by command arguments. If the **[RunDirectory](#RunDirectory)** option also contains a value, the [working directory](#CurrentWorkingDirectory) is set to that directory before the command string is executed.
-
-When the **Automatic** option is [disabled](#Disabled), the [working directory](#CurrentWorkingDirectory) option is ignored.
-
-This option [defaults](#DefaultValues) to an empty string, meaning no command is executed when the program exits.
-
-
-<a name="RunDirectory"></a>
-### RunDirectory option
-
-Set this option in the initialization file.
-
-When the **[Automatic](#Automatic)** option is [enabled](#Enabled) and the **[RunCommand](#RunCommand)** option has a value, the **[RunDirectory](#RunDirectory)** option may contain a value indicating the [working directory](#CurrentWorkingDirectory) to use when executing the **RunCommand** command string.
-
-When the **[Automatic](#Automatic)** option is [disabled](#Disabled), the **RunDirectory** option is ignored.
-
-This option [defaults](#DefaultValues) to an empty string, meaning the current working directory remains the same as when the **SyncDirPas.exe** program was started.
-
-_**Note:**_ A [UNC directory name](#UniversalNamingConvention) may be used:
-
-    RunDirectory=\\server\programs
-
-
-<a name="AlternateRunCommand"></a>
-### AlternateRunCommand option
-
-Set this option in the initialization file.
-
-When the **[Automatic](#Automatic)** option is [enabled](#Enabled), the **AlternateRunCommand** option may contain a command string to be executed when the program exits, and some files were copied or deleted during the synchronization.
-(If no files needed to be copied or deleted, the **[RunCommand](#RunCommand)** is executed instead.)
-
-The intention is for the **AlternateRunCommand** to run any registration code needed by an updated system just synchronized from a server directory to a local execution directory on the desktop.
-The normal **RunCommand** simply runs the unmodified application.
-The **AlternateRunCommand** would first register any updated files, then would itself launch the updated application.
-
-The command string consists of an executable program name, optionally followed by command arguments. If the **[AlternateRunDirectory](#AlternateRunDirectory)** option also contains a value, the [working directory](#CurrentWorkingDirectory) is set to that directory before the command string is executed.
-
-When the **Automatic** option is [disabled](#Disabled), the **AlternateRunCommand** option is ignored.
-
-This option [defaults](#DefaultValues) to the value of the **RunCommand** option.
-
-
-<A name="AlternateRunDirectory"></a>
-### AlternateRunDirectory option
-
-Set this option in the initialization file.
-
-When the **[Automatic](#Automatic)** option is enabled and the **[AlternateRunCommand](#AlternateRunCommand)** option has a value, the **AlternateRunDirectory** option may contain a value indicating the working directory to use when executing the **AlternateRunCommand** command string.
-
-When the **Automatic** option is [disabled](#Disabled), the **AlternateRunDirectory** option is ignored.
-
-This option **defaults** to the value of the **[RunDirectory](#RunDirectory)** option.
-
-_**Note:**_ A [UNC directory name](#UniversalNamingConvention) may be used:
-
-    AlternateRunDirectory=\\server\programs
-
-
 <a name="CopyOlderFiles"></a>
 ### CopyOlderFiles option
 
@@ -372,21 +298,6 @@ If **ProcessHiddenFiles** is [disabled](#Disabled), then files with the _System_
 If **ProcessHiddenFiles** is [enabled](#Enabled), then files with the _System_ attribute or the _Hidden_ attribute are processed in the same manner as other files.
 
 This option [defaults](#DefaultValues) to being disabled.
-
-
-<a name="SynchronizeBothWays"></a>
-### SynchronizeBothWays option
-
-Set this option in the initialization file.
-
-When the **SynchronizeBothWays** option is [disabled](#Disabled), the program only synchronizes files from the [source directory](#SourceDirectory) to the [target directory](#TargetDirectory) (and optionally in any [subdirectories](#IncludeSubdirectories)).
-
-When the **SynchronizeBothWays** option is [enabled](#Enabled), the program first synchronizes files from the source directory to the target directory.
-Next, the program reverses the roles of the directories, and synchronizes files from the original target directory to the original source directory.
-
-This option [defaults](#DefaultValues) to being disabled.
-
-When the **SynchronizeBothWays** option is enabled, the **[DeleteExtraFiles](#DeleteExtraFiles)** and **[DeleteExtraDirectories](#DeleteExtraDirectories)** options must be disabled.
 
 
 <a name="DeleteExtraDirectories"></a>
@@ -432,6 +343,105 @@ This allows the user to identify specifically which files could not be copied.
 If **SkipReadOnlyTargetFiles** is [enabled](#Enabled), then files with the _Read-Only_ attribute in the target directory that would otherwise need to be copied or deleted are simply bypassed.
 
 This option [defaults](#DefaultValues) to being disabled.
+
+
+<a name="SynchronizeBothWays"></a>
+### SynchronizeBothWays option
+
+Set this option in the initialization file.
+
+When the **SynchronizeBothWays** option is [disabled](#Disabled), the program only synchronizes files from the [source directory](#SourceDirectory) to the [target directory](#TargetDirectory) (and optionally in any [subdirectories](#IncludeSubdirectories)).
+
+When the **SynchronizeBothWays** option is [enabled](#Enabled), the program first synchronizes files from the source directory to the target directory.
+Next, the program reverses the roles of the directories, and synchronizes files from the original target directory to the original source directory.
+
+This option [defaults](#DefaultValues) to being disabled.
+
+When the **SynchronizeBothWays** option is enabled, the **[DeleteExtraFiles](#DeleteExtraFiles)** and **[DeleteExtraDirectories](#DeleteExtraDirectories)** options must be disabled.
+
+
+<a name="Automatic"></a>
+### Automatic option
+
+Set this option in the initialization file.
+
+When the **Automatic** option is [disabled](#Disabled), the program starts with the Synchronization Dialog.
+
+When the **Automatic** option is [enabled](#Enabled), the program proceeds to check for synchronization requirements between the source and target directories. If no synchronization is required, the program immediately exits without any user feedback. If the **[NotifyUser](#NotifyUser)** option is also enabled, the program still requests [user confirmation](#ConfirmationDialog) before copying (or deleting) any files.
+
+When the **Automatic** option is enabled, the **[RunCommand](#RunCommand)** option may also contain a command line to be run after the program exits.
+
+This option [defaults](#DefaultValues) to being disabled.
+
+
+<a name="RunCommand"></a>
+### RunCommand option
+
+Set this option in the initialization file.
+
+When the **[Automatic](#Automatic)** option is [enabled](#Enabled), the **RunCommand** option may contain a command string to be executed when the program exits, and no files needed to be copied or deleted during the synchronization.
+(If any files were copied or deleted, the **[AlternateRunCommand](#AlternateRunCommand)** is executed instead.)
+
+The command string consists of an executable program name, optionally followed by command arguments. If the **[RunDirectory](#RunDirectory)** option also contains a value, the [working directory](#CurrentWorkingDirectory) is set to that directory before the command string is executed.
+
+If the executable program name or any of the arguments contains any spaces it should be enclosed in quotes (**"**).
+
+When the **Automatic** option is [disabled](#Disabled), the **RunCommand** option is ignored.
+
+This option [defaults](#DefaultValues) to an empty string, meaning no command is executed when the program exits.
+
+
+<a name="RunDirectory"></a>
+### RunDirectory option
+
+Set this option in the initialization file.
+
+When the **[Automatic](#Automatic)** option is [enabled](#Enabled) and the **[RunCommand](#RunCommand)** option has a value, the **[RunDirectory](#RunDirectory)** option may contain a value indicating the [working directory](#CurrentWorkingDirectory) to use when executing the **RunCommand** command string.
+
+When the **[Automatic](#Automatic)** option is [disabled](#Disabled), the **RunDirectory** option is ignored.
+
+This option [defaults](#DefaultValues) to an empty string, meaning the current working directory remains the same as when the **SyncDirPas.exe** program was started.
+
+_**Note:**_ A [UNC directory name](#UniversalNamingConvention) may be used:
+
+    RunDirectory=\\server\programs
+
+
+<a name="AlternateRunCommand"></a>
+### AlternateRunCommand option
+
+Set this option in the initialization file.
+
+When the **[Automatic](#Automatic)** option is [enabled](#Enabled), the **AlternateRunCommand** option may contain a command string to be executed when the program exits, and some files were copied or deleted during the synchronization.
+(If no files needed to be copied or deleted, the **[RunCommand](#RunCommand)** is executed instead.)
+
+The intention is for the **AlternateRunCommand** to run any registration code needed by an updated system just synchronized from a server directory to a local execution directory on the desktop.
+The normal **RunCommand** simply runs the unmodified application.
+The **AlternateRunCommand** would first register any updated files, then would itself launch the updated application.
+
+The command string consists of an executable program name, optionally followed by command arguments. If the **[AlternateRunDirectory](#AlternateRunDirectory)** option also contains a value, the [working directory](#CurrentWorkingDirectory) is set to that directory before the command string is executed.
+
+If the executable program name or any of the arguments contains any spaces it should be enclosed in quotes (**"**).
+
+When the **Automatic** option is [disabled](#Disabled), the **AlternateRunCommand** option is ignored.
+
+This option [defaults](#DefaultValues) to the value of the **RunCommand** option.
+
+
+<A name="AlternateRunDirectory"></a>
+### AlternateRunDirectory option
+
+Set this option in the initialization file.
+
+When the **[Automatic](#Automatic)** option is enabled and the **[AlternateRunCommand](#AlternateRunCommand)** option has a value, the **AlternateRunDirectory** option may contain a value indicating the working directory to use when executing the **AlternateRunCommand** command string.
+
+When the **Automatic** option is [disabled](#Disabled), the **AlternateRunDirectory** option is ignored.
+
+This option **defaults** to the value of the **[RunDirectory](#RunDirectory)** option.
+
+_**Note:**_ A [UNC directory name](#UniversalNamingConvention) may be used:
+
+    AlternateRunDirectory=\\server\programs
 
 
 <a name="NextSection"></a>
@@ -496,7 +506,6 @@ For many of the examples in this help file, the initialization file has the foll
 	TargetDirectory=C:\SyncDir\TestData\Secondary
 	IgnoreFileTypes=
 	OnlyProcessFileTypes=
-	Automatic=no
 	NotifyUser=yes
 	ShowErrorMessages=yes
 	MinimizeLogMessages=yes
@@ -508,6 +517,11 @@ For many of the examples in this help file, the initialization file has the foll
 	DeleteExtraFiles=no
 	DeleteExtraDirectories=no
 	SkipReadOnlyTargetFiles=no
+	Automatic=no
+	RunCommand=
+	RunDirectory=
+	AlternateRunCommand=
+	AlternateRunDirectory=
 	NextSection=
 
 
@@ -534,18 +548,11 @@ The following default values are used for each option parameter if no value is s
 
 	[SyncDir]
 	SourceDirectory=
-	; The above command uses the current working directory
+	; The above command uses the current working directory.
 	TargetDirectory=
-	; The above command uses the current working directory
-	RunCommand=
-	RunDirectory=
-	AlternateRunCommand=
-	; The above option defaults to match RunCommand
-	AlternateRunDirectory=
-	; The above option defaults to match RunDirectory
+	; The above command uses the current working directory.
 	IgnoreFileTypes=
 	OnlyProcessFileTypes=
-	Automatic=no
 	NotifyUser=yes
 	ShowErrorMessages=yes
 	MinimizeLogMessages=yes
@@ -557,6 +564,14 @@ The following default values are used for each option parameter if no value is s
 	DeleteExtraFiles=no
 	DeleteExtraDirectories=no
 	SkipReadOnlyTargetFiles=no
+	Automatic=no
+	RunCommand=
+	RunDirectory=
+	; The above command defaults to the current working directory.
+	AlternateRunCommand=
+	; The above option defaults to match RunCommand.
+	AlternateRunDirectory=
+	; The above option defaults to match RunDirectory.
 	NextSection=
 
 
@@ -697,7 +712,15 @@ When the user is ready to return to the first computer, they synchronize the sec
 
 ### Background and History
 
+**[SyncDir3 program on SourceForge.com](https://sourceforge.net/projects/syncdir3/)**
+
+**[Support Statement for Visual Basic 6.0 on Windows](https://docs.microsoft.com/en-us/previous-versions/visualstudio/visual-basic-6/visual-basic-6-support-policy)**
+
 ### Source Code Compilation Note
+
+**[Free Pascal](https://www.freepascal.org/)**
+
+**[Lazarus IDE for Free Pascal](https://www.lazarus-ide.org/)**
 
 Using the debugger in the Lazarus IDE on Windows 10 requires the following configuration adjustment:
 
