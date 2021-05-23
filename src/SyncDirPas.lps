@@ -8,9 +8,8 @@
       <Unit0>
         <Filename Value="SyncDirPas.lpr"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
-        <CursorPos X="44" Y="25"/>
+        <CursorPos X="29" Y="3"/>
         <UsageCount Value="262"/>
         <Loaded Value="True"/>
       </Unit0>
@@ -20,7 +19,8 @@
         <ComponentName Value="SyncDirForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <CursorPos Y="6"/>
+        <IsVisibleTab Value="True"/>
+        <CursorPos X="40" Y="6"/>
         <UsageCount Value="262"/>
         <Loaded Value="True"/>
       </Unit1>
