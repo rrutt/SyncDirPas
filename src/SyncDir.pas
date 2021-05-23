@@ -883,16 +883,21 @@ var
   proc: TProcess;
   message: String;
 begin
-  proc := TProcess.Create(nil);
-  proc.CurrentDirectory := directory;
-  proc.{%H-}CommandLine {%H-}:= command;
-  proc.Execute;
-  proc.Free;
+  if (Length(command) > 0) then begin
+    proc := TProcess.Create(nil);
+    try
+      proc.CurrentDirectory := directory;
+      proc.{%H-}CommandLine {%H-}:= command;
+      proc.Execute;
+    finally
+      proc.Free;
+    end;
 
-  message := Format('Launched external program [%s] with working directory [%s].', [command, directory]);
-  AppendLogMessage(message);
-  if (notify) then begin
-    Application.MessageBox(PChar(message), 'SyncDirPas', 0);
+    message := Format('Launched external program [%s] with working directory [%s].', [command, directory]);
+    AppendLogMessage(message);
+    if (notify) then begin
+      Application.MessageBox(PChar(message), 'SyncDirPas', 0);
+    end;
   end;
 end;
 

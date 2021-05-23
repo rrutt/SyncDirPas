@@ -537,7 +537,7 @@ Next, the program reverses the roles of the directories, and synchronizes files 
 <p>Set this option in the initialization file.</p>
 <p>When the <strong>Automatic</strong> option is <a href="#Disabled">disabled</a>, the program starts with the Synchronization Dialog.</p>
 <p>When the <strong>Automatic</strong> option is <a href="#Enabled">enabled</a>, the program proceeds to check for synchronization requirements between the source and target directories. If no synchronization is required, the program immediately exits without any user feedback. If the <strong><a href="#NotifyUser">NotifyUser</a></strong> option is also enabled, the program still requests <a href="#ConfirmationDialog">user confirmation</a> before copying (or deleting) any files.</p>
-<p>When the <strong>Automatic</strong> option is enabled, the <strong><a href="#RunCommand">RunCommand</a></strong> option may also contain a command line to be run after the program exits.</p>
+<p>When the <strong>Automatic</strong> option is enabled, the <strong><a href="#RunCommand">RunCommand</a></strong> option may also contain a command line to be run after the program exits, if no synchronization was required; the <strong><a href="#AlternateRunCommand">AlternateRunCommand</a></strong> option may also contain a command line to be run if any synchronization actually occurred.</p>
 <p><em><strong>Note:</strong></em> If the <strong>Automatic</strong> option is enabled, the <strong><a href="#NextSection">NextSection</a></strong> value is ignored.</p>
 <p>This option <a href="#DefaultValues">defaults</a> to being disabled.</p>
 <p><a name="RunCommand"></a></p>
@@ -843,6 +843,7 @@ Then rebuild the executable using the <strong>Run | Build</strong> menu item (or
 <li>Corrected defaulting of omitted <strong><a href="#SourceDirectory">SourceDirectory</a></strong> and <strong><a href="#TargetDirectory">TargetDirectory</a></strong> options in the initialization file to use the <a href="#CurrentWorkingDirectory">current working directory</a>, as already documented.</li>
 <li>Added notes to the <a href="#InitializationFile">initialization file</a> section in this document on use of a unique file type configured to <em>Open With</em> the <strong>SyncDirPas.exe</strong> program.</li>
 <li>Removed the restriction that enabling <strong><a href="#DeleteExtraDirectories">DeleteExtraDirectories</a></strong> would also require enabling <strong><a href="#IncludeSubdirectories">IncludeSubdirectories</a></strong>.</li>
+<li>Avoided a run-time exception if no value is given for <strong><a href="#RunCommand">RunCommand</a></strong> (or <strong><a href="#AlternateRunCommand">AlternateRunCommand</a></strong>.  Instead, no extra action is performed.</li>
 </ol>
 <h3>Version 4.0.0</h3>
 <p>Initial Pascal release.</p>

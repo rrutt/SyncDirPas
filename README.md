@@ -377,7 +377,7 @@ When the **Automatic** option is [disabled](#Disabled), the program starts with 
 
 When the **Automatic** option is [enabled](#Enabled), the program proceeds to check for synchronization requirements between the source and target directories. If no synchronization is required, the program immediately exits without any user feedback. If the **[NotifyUser](#NotifyUser)** option is also enabled, the program still requests [user confirmation](#ConfirmationDialog) before copying (or deleting) any files.
 
-When the **Automatic** option is enabled, the **[RunCommand](#RunCommand)** option may also contain a command line to be run after the program exits.
+When the **Automatic** option is enabled, the **[RunCommand](#RunCommand)** option may also contain a command line to be run after the program exits, if no synchronization was required; the **[AlternateRunCommand](#AlternateRunCommand)** option may also contain a command line to be run if any synchronization actually occurred.
 
 _**Note:**_ If the **Automatic** option is enabled, the **[NextSection](#NextSection)** value is ignored.
 
@@ -812,6 +812,7 @@ Minor refinements:
 1. Corrected defaulting of omitted **[SourceDirectory](#SourceDirectory)** and **[TargetDirectory](#TargetDirectory)** options in the initialization file to use the [current working directory](#CurrentWorkingDirectory), as already documented.
 2. Added notes to the [initialization file](#InitializationFile) section in this document on use of a unique file type configured to _Open With_ the **SyncDirPas.exe** program.
 3. Removed the restriction that enabling **[DeleteExtraDirectories](#DeleteExtraDirectories)** would also require enabling **[IncludeSubdirectories](#IncludeSubdirectories)**.
+4. Avoided a run-time exception if no value is given for **[RunCommand](#RunCommand)** (or **[AlternateRunCommand](#AlternateRunCommand)**.  Instead, no extra action is performed.
 
 ### Version 4.0.0
 
