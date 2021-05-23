@@ -292,8 +292,8 @@ img {
 </head>
 <body>
 <h1>Directory Synchronization Utility</h1>
-<p><em>Version 4.0.0+20210523</em></p>
-<p>The Directory Synchronization program, <strong>SyncDirPas</strong>, synchronizes the file contents of directories on a personal computer running Microsoft Windows.</p>
+<p><em>Version 4.0.1+202105dd  (<a href="#ReleaseNotes">Version Release Notes</a>)</em> </p>
+<p>The <em>Directory Synchronization Utility</em>, <strong>SyncDirPas</strong>, synchronizes the file contents of directories on a personal computer running Microsoft Windows.</p>
 <p>This program is free open source software licensed under the <a href="./MIT-License.html" title="MIT License">./MIT-License.html</a>, Copyright © 2021 Rick Rutt.</p>
 <p>The program compares file names and modification dates for a <a href="#SourceDirectory">source directory</a> and a <a href="#TargetDirectory">target directory</a> (and optionally any <a href="#IncludeSubdirectories">subdirectories</a>).</p>
 <ul>
@@ -636,6 +636,17 @@ AlternateRunDirectory=
 NextSection=
 </code></pre>
 
+<p><em><strong>Note:</strong></em> How to associate initialization files to <em>Open With</em> the <strong>SyncDirPas.exe</strong> program in Windows 10:</p>
+<ol>
+<li>Create (or rename) an initialization file as a text file with the file type <strong>.syncdir</strong> (or some other unique file type not already in use).</li>
+<li>Right-click the <strong>.syncdir</strong> file and select the <strong>Open with...</strong> item from the context menu.</li>
+<li>A prompt dialog <strong>How do you want to open this file?</strong> appears.</li>
+<li>Make sure the <strong>Always use this app to open .syncdir files</strong> check-box is enabled.</li>
+<li>Click on the <strong>More apps</strong> link.</li>
+<li>Scroll the list of applications to the bottom and click <strong>&quot;Look for another app on this PC</strong>.</li>
+<li>An <strong>Open with</strong> file dialog appears.  Browse to your local copy of <strong>SyncDirPas.exe</strong> and click <strong>Open</strong>.</li>
+<li>Double-click your <strong>.syncdir</strong> file to confirm that the <strong>SyncDirPass</strong> program opens and is set to the options in that file. </li>
+</ol>
 <p><a name="SectionName"></a></p>
 <h3>section name</h3>
 <p>A <em>section name</em> is defined in an <a href="#InitializationFile">initialization file</a> by enclosing it in square brackets on a line by itself.
@@ -824,6 +835,16 @@ Then rebuild the executable using the <strong>Run | Build</strong> menu item (or
 <li>Right-click the extra <strong>SyncDirPas</strong> sub-folder and select <strong>Send to | Compressed (zipped) folder</strong> in the context menu.</li>
 <li>Optionally rename the resulting ZIP file by appending the version information to the file name.</li>
 </ol>
+<p><a name="ReleaseNotes"></a></p>
+<h2>Release Notes</h2>
+<h3>Version 4.0.1</h3>
+<p>Minor refinements:</p>
+<ol>
+<li>Corrected defaulting of omitted <strong><a href="#SourceDirectory">SourceDirectory</a></strong> and <strong><a href="#TargetDirectory">TargetDirectory</a></strong> options in the initialization file to use the <a href="#CurrentWorkingDirectory">current working directory</a>, as already documented.</li>
+<li>Added notes to the <a href="#InitializationFile">initialization file</a> section in this document on use of a unique file type configured to <em>Open With</em> the <strong>SyncDirPas.exe</strong> program.</li>
+</ol>
+<h3>Version 4.0.0</h3>
+<p>Initial Pascal release.</p>
 
 </body>
 </html>

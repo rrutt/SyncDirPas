@@ -1,8 +1,6 @@
 [SyncDir]
-SourceDirectory=.
-; The above command uses the current working directory
-TargetDirectory=./target
-; The above command uses the current working directory
+SourceDirectory=..\src
+TargetDirectory=..\src\target
 IgnoreFileTypes=log,res
 OnlyProcessFileTypes=
 NotifyUser=yes
@@ -26,10 +24,8 @@ AlternateRunCommand=C:\Windows\System32\notepad.exe "AlternateRunCommand Execute
 NextSection=SubDirs
 
 [SubDirs]
-SourceDirectory=.
-; The above command uses the current working directory
-TargetDirectory=../TestTarget
-; The above command uses the current working directory
+SourceDirectory=..\src
+TargetDirectory=..\TestTarget
 IgnoreFileTypes=lpi,lfm,lps
 OnlyProcessFileTypes=
 Automatic=no
@@ -47,10 +43,8 @@ SkipReadOnlyTargetFiles=no
 NextSection=ExtraFilesAndDirs
 
 [ExtraFilesAndDirs]
-SourceDirectory=backup
-; The above command uses the current working directory
-TargetDirectory=../TestTarget
-; The above command uses the current working directory
+SourceDirectory=..\src\backup
+TargetDirectory=..\TestTarget
 IgnoreFileTypes=
 OnlyProcessFileTypes=
 Automatic=no
@@ -68,10 +62,8 @@ SkipReadOnlyTargetFiles=no
 NextSection=BothWays
 
 [BothWays]
-SourceDirectory=../TestTarget
-; The above command uses the current working directory
-TargetDirectory=../TestTargetTwo
-; The above command uses the current working directory
+SourceDirectory=..\TestTarget
+TargetDirectory=..\TestTargetTwo
 IgnoreFileTypes=
 OnlyProcessFileTypes=
 Automatic=no
@@ -89,8 +81,8 @@ SkipReadOnlyTargetFiles=no
 NextSection=NonExistentSection
 
 [Automatic]
-SourceDirectory=.
-TargetDirectory=./target
+SourceDirectory=..\src
+TargetDirectory=..\src\target
 IgnoreFileTypes=log,res
 OnlyProcessFileTypes=
 NotifyUser=no

@@ -171,6 +171,10 @@ var
   settingValue: String;
 begin
   settingValue := iniFile.ReadString(sectionName, settingName, defaultValue);
+  if (Length(settingValue) = 0) then begin
+    settingValue := defaultValue;
+  end;
+
   result := settingValue;
 end;
 

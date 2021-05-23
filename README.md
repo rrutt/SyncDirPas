@@ -1,8 +1,8 @@
 # Directory Synchronization Utility
 
-_Version 4.0.0+20210523_
+_Version 4.0.1+202105dd  ([Version Release Notes](#ReleaseNotes))_ 
 
-The Directory Synchronization program, **SyncDirPas**, synchronizes the file contents of directories on a personal computer running Microsoft Windows.
+The _Directory Synchronization Utility_, **SyncDirPas**, synchronizes the file contents of directories on a personal computer running Microsoft Windows.
 
 This program is free open source software licensed under the [./MIT-License.html](./MIT-License.html "MIT License"), Copyright © 2021 Rick Rutt.
 
@@ -534,6 +534,18 @@ For many of the examples in this help file, the initialization file has the foll
 	AlternateRunDirectory=
 	NextSection=
 
+_**Note:**_ How to associate initialization files to _Open With_ the **SyncDirPas.exe** program in Windows 10:
+
+1. Create (or rename) an initialization file as a text file with the file type **.syncdir** (or some other unique file type not already in use).
+2. Right-click the **.syncdir** file and select the **Open with...** item from the context menu.
+3. A prompt dialog **How do you want to open this file?** appears.
+4. Make sure the **Always use this app to open .syncdir files** check-box is enabled.
+5. Click on the **More apps** link.
+6. Scroll the list of applications to the bottom and click **"Look for another app on this PC**.
+7. An **Open with** file dialog appears.  Browse to your local copy of **SyncDirPas.exe** and click **Open**.
+8. Double-click your **.syncdir** file to confirm that the **SyncDirPass** program opens and is set to the options in that file. 
+
+
 
 <a name="SectionName"></a>
 ### section name
@@ -788,3 +800,18 @@ In the resulting file save dialog, rename the result file to **SyncDirPas.html**
 6. Right-click the extra **SyncDirPas** sub-folder and select **Send to | Compressed (zipped) folder** in the context menu.
 7. Optionally rename the resulting ZIP file by appending the version information to the file name.
 
+
+
+<a name="ReleaseNotes"></a>
+## Release Notes
+
+### Version 4.0.1
+
+Minor refinements:
+
+1. Corrected defaulting of omitted **[SourceDirectory](#SourceDirectory)** and **[TargetDirectory](#TargetDirectory)** options in the initialization file to use the [current working directory](#CurrentWorkingDirectory), as already documented.
+2. Added notes to the [initialization file](#InitializationFile) section in this document on use of a unique file type configured to _Open With_ the **SyncDirPas.exe** program.
+
+### Version 4.0.0
+
+Initial Pascal release.
