@@ -1,0 +1,204 @@
+[Root]
+Most Recent Package=Setup without VB6 runtime
+
+
+[Package|Setup without VB6 runtime|Root]
+SubWizProgID=PDWizard.SetupPkgSubWiz
+BuildFolder=C:\Work\VB6_stuff\SyncDir3\Setup_without_VB6_runtime
+
+[Package|Setup without VB6 runtime|Configure DAO ISAMs]
+Applicable=No
+
+[Package|Setup without VB6 runtime|Configure DAO ODBC]
+JetWorkspace=
+ODBCDirect=
+
+[Package|Setup without VB6 runtime|Files Found]
+SyncDir3.hlp=C:\Work\VB6_stuff\SyncDir3\SyncDir3.hlp
+
+[Package|Setup without VB6 runtime|Files Released]
+
+[Package|Setup without VB6 runtime|Missing Dependency Information]
+
+[Package|Setup without VB6 runtime|Out-of-Date Dependency Information]
+
+[Package|Setup without VB6 runtime|Files Added]
+c:\work\vb6_stuff\syncdir3\syncdir.ini=
+
+[Package|Setup without VB6 runtime|Files Removed]
+c:\windows\system32\msvbvm60.dll=
+c:\windows\system32\oleaut32.dll=
+c:\windows\system32\olepro32.dll=
+c:\windows\system32\asycfilt.dll=
+c:\windows\system32\stdole2.tlb=
+c:\program files\microsoft visual studio\vb98\wizards\pdwizard\redist\comcat.dll=
+c:\program files\microsoft visual studio\vb98\wizards\pdwizard\redist\oleaut32.dll=
+c:\program files\microsoft visual studio\vb98\wizards\pdwizard\redist\olepro32.dll=
+c:\program files\microsoft visual studio\vb98\wizards\pdwizard\redist\asycfilt.dll=
+c:\program files\microsoft visual studio\vb98\wizards\pdwizard\redist\stdole2.tlb=
+
+[Package|Setup without VB6 runtime|Files In Project]
+C:\Work\VB6_stuff\SyncDir3\SyncDir3.exe=Yes
+C:\WINDOWS\system32\msvbvm60.dll=No
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\COMCAT.DLL=No
+C:\Work\VB6_stuff\SyncDir3\SyncDir3.hlp=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP.EXE=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP1.EXE=Yes
+C:\WINDOWS\system32\VB6STKIT.DLL=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\ST6UNST.EXE=Yes
+C:\Work\VB6_stuff\SyncDir3\SyncDir.ini=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\OLEAUT32.DLL=No
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\OLEPRO32.DLL=No
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\ASYCFILT.DLL=No
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\STDOLE2.TLB=No
+
+[Package|Setup without VB6 runtime|Configure Registry Files]
+Applicable=No
+
+[Package|Setup without VB6 runtime|Configure Remote Servers]
+Applicable=No
+
+[Package|Setup without VB6 runtime|Install Locations]
+C:\Work\VB6_stuff\SyncDir3\SyncDir3.exe=$(AppPath)
+C:\Work\VB6_stuff\SyncDir3\SyncDir3.hlp=$(AppPath)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP.EXE=$(AppPath)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP1.EXE=$(WinPath)
+C:\WINDOWS\system32\VB6STKIT.DLL=$(WinSysPathSysFile)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\ST6UNST.EXE=$(WinPath)
+C:\Work\VB6_stuff\SyncDir3\SyncDir.ini=$(AppPath)
+C:\WINDOWS\system32\msvbvm60.dll=$(WinSysPathSysFile)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\OLEAUT32.DLL=$(WinSysPathSysFile)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\OLEPRO32.DLL=$(WinSysPathSysFile)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\ASYCFILT.DLL=$(WinSysPathSysFile)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\STDOLE2.TLB=$(WinSysPathSysFile)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\COMCAT.DLL=$(WinSysPathSysFile)
+
+[Package|Setup without VB6 runtime|Configure Shared Files]
+Applicable=Yes
+C:\Work\VB6_stuff\SyncDir3\SyncDir3.exe=No
+C:\Work\VB6_stuff\SyncDir3\SyncDir3.hlp=No
+C:\Work\VB6_stuff\SyncDir3\SyncDir.ini=No
+
+[Package|Setup without VB6 runtime|Distribution]
+Type=single
+Size=
+Title=Directory Synchronization Utility 3.0
+
+[Package|Setup without VB6 runtime|IconGroups]
+Group0=Directory Synchronization Utility
+PrivateGroup0=0
+Parent0=$(Programs)
+
+[Package|Setup without VB6 runtime|Directory Synchronization Utility]
+Icon1=SyncDir3.exe
+Title1=SyncDir 3.0
+StartIn1=$(AppPath)
+Key1=Icon1
+
+[Package|Setup without VB6 runtime|Package]
+PackageFolder=C:\Work\VB6_stuff\SyncDir3\Setup_without_VB6_runtime
+ProjectFolder=C:\Work\VB6_stuff\SyncDir3\Source
+ServerSideCab=
+File1=C:\Work\VB6_stuff\SyncDir3\Setup_without_VB6_runtime\setup.exe
+File2=C:\Work\VB6_stuff\SyncDir3\Setup_without_VB6_runtime\Setup.Lst
+File3=C:\Work\VB6_stuff\SyncDir3\Setup_without_VB6_runtime\SyncDir3.CAB
+Handler1=PDWizard.FolderDplySubWiz
+Handler2=PDWizard.WebPostDplySubWiz
+
+
+[Package|Setup with VB6 runtime|Root]
+SubWizProgID=PDWizard.SetupPkgSubWiz
+BuildFolder=C:\Work\VB6_stuff\SyncDir3\Setup_with_VB6_runtime
+
+[Package|Setup with VB6 runtime|Configure DAO ISAMs]
+Applicable=No
+
+[Package|Setup with VB6 runtime|Configure DAO ODBC]
+JetWorkspace=
+ODBCDirect=
+
+[Package|Setup with VB6 runtime|Files Found]
+SyncDir3.hlp=C:\Work\VB6_stuff\SyncDir3\SyncDir3.hlp
+
+[Package|Setup with VB6 runtime|Files Released]
+
+[Package|Setup with VB6 runtime|Missing Dependency Information]
+
+[Package|Setup with VB6 runtime|Out-of-Date Dependency Information]
+
+[Package|Setup with VB6 runtime|Files Added]
+c:\work\vb6_stuff\syncdir3\syncdir.ini=
+
+[Package|Setup with VB6 runtime|Files Removed]
+
+[Package|Setup with VB6 runtime|Files In Project]
+C:\Work\VB6_stuff\SyncDir3\SyncDir3.exe=Yes
+C:\WINDOWS\system32\msvbvm60.dll=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\COMCAT.DLL=Yes
+C:\Work\VB6_stuff\SyncDir3\SyncDir3.hlp=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP.EXE=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP1.EXE=Yes
+C:\WINDOWS\system32\VB6STKIT.DLL=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\ST6UNST.EXE=Yes
+C:\Work\VB6_stuff\SyncDir3\SyncDir.ini=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\OLEAUT32.DLL=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\OLEPRO32.DLL=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\ASYCFILT.DLL=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\STDOLE2.TLB=Yes
+
+[Package|Setup with VB6 runtime|Configure Registry Files]
+Applicable=No
+
+[Package|Setup with VB6 runtime|Configure Remote Servers]
+Applicable=No
+
+[Package|Setup with VB6 runtime|Install Locations]
+C:\Work\VB6_stuff\SyncDir3\SyncDir3.exe=$(AppPath)
+C:\WINDOWS\system32\msvbvm60.dll=$(WinSysPathSysFile)
+C:\WINDOWS\system32\oleaut32.dll=$(WinSysPathSysFile)
+C:\WINDOWS\system32\olepro32.dll=$(WinSysPathSysFile)
+C:\WINDOWS\system32\asycfilt.dll=$(WinSysPathSysFile)
+C:\WINDOWS\system32\stdole2.tlb=$(WinSysPathSysFile)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\COMCAT.DLL=$(WinSysPathSysFile)
+C:\Work\VB6_stuff\SyncDir3\SyncDir3.hlp=$(AppPath)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP.EXE=$(AppPath)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP1.EXE=$(WinPath)
+C:\WINDOWS\system32\VB6STKIT.DLL=$(WinSysPathSysFile)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\ST6UNST.EXE=$(WinPath)
+C:\Work\VB6_stuff\SyncDir3\SyncDir.ini=$(AppPath)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\OLEAUT32.DLL=$(WinSysPathSysFile)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\OLEPRO32.DLL=$(WinSysPathSysFile)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\ASYCFILT.DLL=$(WinSysPathSysFile)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\STDOLE2.TLB=$(WinSysPathSysFile)
+
+[Package|Setup with VB6 runtime|Configure Shared Files]
+Applicable=Yes
+C:\Work\VB6_stuff\SyncDir3\SyncDir3.exe=No
+C:\Work\VB6_stuff\SyncDir3\SyncDir3.hlp=No
+C:\Work\VB6_stuff\SyncDir3\SyncDir.ini=No
+
+[Package|Setup with VB6 runtime|Distribution]
+Type=single
+Size=
+Title=Directory Synchronization Utility 3.0
+
+[Package|Setup with VB6 runtime|Package]
+PackageFolder=C:\Work\VB6_stuff\SyncDir3\Setup_with_VB6_runtime
+ProjectFolder=C:\Work\VB6_stuff\SyncDir3\Source
+ServerSideCab=
+File1=C:\Work\VB6_stuff\SyncDir3\Setup_with_VB6_runtime\setup.exe
+File2=C:\Work\VB6_stuff\SyncDir3\Setup_with_VB6_runtime\Setup.Lst
+File3=C:\Work\VB6_stuff\SyncDir3\Setup_with_VB6_runtime\SyncDir3.CAB
+Handler1=PDWizard.FolderDplySubWiz
+Handler2=PDWizard.WebPostDplySubWiz
+
+[Package|Setup with VB6 runtime|IconGroups]
+Group0=Directory Synchronization Utility
+PrivateGroup0=0
+Parent0=$(Programs)
+
+[Package|Setup with VB6 runtime|Directory Synchronization Utility]
+Icon1=SyncDir3.exe
+Title1=SyncDir 3.0
+StartIn1=$(AppPath)
+Key1=Icon1

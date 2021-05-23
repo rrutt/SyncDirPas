@@ -1,0 +1,87 @@
+object SyncDirLog: TSyncDirLog
+  Left = 50
+  Height = 432
+  Top = 70
+  Width = 780
+  BorderWidth = 1
+  Caption = 'Directory Synchronization Log'
+  ClientHeight = 432
+  ClientWidth = 780
+  LCLVersion = '2.0.10.0'
+  object ButtonCopyText: TButton
+    Left = 16
+    Height = 25
+    Top = 394
+    Width = 107
+    Anchors = [akLeft, akBottom]
+    Caption = 'Copy Text'
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clBlack
+    Font.Height = -15
+    Font.Name = 'Segoe UI'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsBold]
+    OnClick = ButtonCopyTextClick
+    ParentFont = False
+    TabOrder = 0
+  end
+  object ButtonClose: TButton
+    Left = 670
+    Height = 25
+    Top = 394
+    Width = 91
+    Anchors = [akRight, akBottom]
+    Caption = 'Close'
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clBlack
+    Font.Height = -15
+    Font.Name = 'Segoe UI'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsBold]
+    OnClick = ButtonCloseClick
+    ParentFont = False
+    TabOrder = 2
+  end
+  object MemoLog: TMemo
+    Left = 16
+    Height = 376
+    Top = 10
+    Width = 745
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clBlack
+    Font.Height = -15
+    Font.Name = 'Lucida Sans Unicode'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsBold]
+    Lines.Strings = (
+      'Directory Synchronization Log'
+    )
+    ParentFont = False
+    ReadOnly = True
+    ScrollBars = ssVertical
+    TabOrder = 3
+    TabStop = False
+  end
+  object ButtonClearLog: TButton
+    Left = 152
+    Height = 25
+    Top = 394
+    Width = 96
+    Anchors = [akLeft, akBottom]
+    Caption = 'Clear Log'
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clBlack
+    Font.Height = -15
+    Font.Name = 'Segoe UI'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsBold]
+    OnClick = ButtonClearLogClick
+    ParentFont = False
+    TabOrder = 1
+  end
+end
