@@ -9,7 +9,7 @@
         <Filename Value="SyncDirPas.lpr"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="2"/>
-        <CursorPos X="29" Y="3"/>
+        <CursorPos X="67" Y="12"/>
         <UsageCount Value="262"/>
         <Loaded Value="True"/>
       </Unit0>
@@ -20,7 +20,6 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <IsVisibleTab Value="True"/>
-        <CursorPos X="40" Y="6"/>
         <UsageCount Value="262"/>
         <Loaded Value="True"/>
       </Unit1>
@@ -39,129 +38,123 @@
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
         <Filename Value="SyncDir.pas"/>
-        <Caret Line="1070" Column="39" TopLine="1045"/>
+        <Caret Line="47" Column="16" TopLine="20"/>
       </Position1>
       <Position2>
         <Filename Value="SyncDir.pas"/>
+        <Caret Line="93" Column="21" TopLine="66"/>
       </Position2>
       <Position3>
         <Filename Value="SyncDir.pas"/>
-        <Caret Line="106" Column="49" TopLine="80"/>
+        <Caret Line="94" Column="21" TopLine="67"/>
       </Position3>
       <Position4>
         <Filename Value="SyncDir.pas"/>
-        <Caret Line="1033" Column="50" TopLine="1014"/>
+        <Caret Line="232" Column="97" TopLine="206"/>
       </Position4>
       <Position5>
         <Filename Value="SyncDir.pas"/>
-        <Caret Line="106" Column="30" TopLine="89"/>
+        <Caret Line="262" Column="42" TopLine="235"/>
       </Position5>
       <Position6>
         <Filename Value="SyncDir.pas"/>
-        <Caret Line="986" Column="39" TopLine="959"/>
+        <Caret Line="286" Column="26" TopLine="259"/>
       </Position6>
       <Position7>
         <Filename Value="SyncDir.pas"/>
-        <Caret Line="1075" Column="20" TopLine="1054"/>
+        <Caret Line="287" Column="57" TopLine="260"/>
       </Position7>
       <Position8>
         <Filename Value="SyncDir.pas"/>
+        <Caret Line="288" Column="21" TopLine="261"/>
       </Position8>
       <Position9>
         <Filename Value="SyncDir.pas"/>
-        <Caret Line="106" Column="30" TopLine="80"/>
+        <Caret Line="290" Column="21" TopLine="263"/>
       </Position9>
       <Position10>
         <Filename Value="SyncDir.pas"/>
-        <Caret Line="986" Column="39" TopLine="959"/>
+        <Caret Line="291" Column="21" TopLine="264"/>
       </Position10>
       <Position11>
         <Filename Value="SyncDir.pas"/>
-        <Caret Line="106" Column="15" TopLine="91"/>
+        <Caret Line="1135" TopLine="1110"/>
       </Position11>
       <Position12>
         <Filename Value="SyncDir.pas"/>
-        <Caret Line="1034" Column="15" TopLine="1016"/>
       </Position12>
       <Position13>
         <Filename Value="SyncDir.pas"/>
+        <Caret Line="914" Column="56" TopLine="893"/>
       </Position13>
       <Position14>
         <Filename Value="SyncDir.pas"/>
-        <Caret Line="241" Column="19" TopLine="214"/>
       </Position14>
       <Position15>
         <Filename Value="SyncDir.pas"/>
-        <Caret Line="988" Column="19" TopLine="961"/>
+        <Caret Line="696" Column="57" TopLine="681"/>
       </Position15>
       <Position16>
         <Filename Value="SyncDir.pas"/>
-        <Caret Line="991" Column="21" TopLine="964"/>
+        <Caret Line="24" Column="35"/>
       </Position16>
       <Position17>
         <Filename Value="SyncDir.pas"/>
-        <Caret Line="994" Column="21" TopLine="967"/>
       </Position17>
       <Position18>
         <Filename Value="SyncDir.pas"/>
-        <Caret Line="999" Column="21" TopLine="972"/>
+        <Caret Line="1078" Column="44" TopLine="1054"/>
       </Position18>
       <Position19>
         <Filename Value="SyncDir.pas"/>
-        <Caret Line="1002" Column="21" TopLine="975"/>
       </Position19>
       <Position20>
         <Filename Value="SyncDir.pas"/>
-        <Caret Line="1006" Column="23" TopLine="979"/>
+        <Caret Line="682" Column="63" TopLine="660"/>
       </Position20>
       <Position21>
         <Filename Value="SyncDir.pas"/>
-        <Caret Line="1011" Column="23" TopLine="984"/>
       </Position21>
       <Position22>
         <Filename Value="SyncDir.pas"/>
-        <Caret Line="1018" Column="23" TopLine="992"/>
+        <Caret Line="1093" Column="45" TopLine="1075"/>
       </Position22>
       <Position23>
         <Filename Value="SyncDir.pas"/>
-        <Caret Line="1020" Column="23" TopLine="994"/>
+        <Caret Line="1096" Column="44" TopLine="1075"/>
       </Position23>
       <Position24>
         <Filename Value="SyncDir.pas"/>
-        <Caret Line="1027" Column="23" TopLine="1001"/>
+        <Caret Line="1106" Column="18" TopLine="1079"/>
       </Position24>
       <Position25>
         <Filename Value="SyncDir.pas"/>
-        <Caret Line="1075" Column="23" TopLine="1048"/>
+        <Caret Line="1119" Column="55" TopLine="1092"/>
       </Position25>
       <Position26>
         <Filename Value="SyncDir.pas"/>
-        <Caret Line="1079" Column="27" TopLine="1064"/>
+        <Caret Line="1121" Column="24" TopLine="1094"/>
       </Position26>
       <Position27>
         <Filename Value="SyncDir.pas"/>
+        <Caret Line="1127" Column="57" TopLine="1125"/>
       </Position27>
       <Position28>
         <Filename Value="SyncDir.pas"/>
-        <Caret Line="106" Column="30" TopLine="80"/>
+        <Caret Line="1136" Column="24" TopLine="1125"/>
       </Position28>
       <Position29>
         <Filename Value="SyncDir.pas"/>
-        <Caret Line="986" Column="39" TopLine="980"/>
       </Position29>
       <Position30>
         <Filename Value="SyncDir.pas"/>
-        <Caret Line="1078" Column="62" TopLine="1065"/>
+        <Caret Line="973" Column="72" TopLine="959"/>
       </Position30>
     </JumpHistory>
     <RunParams>
       <FormatVersion Value="2"/>
       <Modes Count="1" ActiveMode="default">
-        <Mode0 Name="default">
-          <local>
-            <CommandLineParams Value="C:\SyncDir\SyncDir.ini"/>
-          </local>
-        </Mode0>
+        <Mode0 Name="default"/>
       </Modes>
     </RunParams>
   </ProjectSession>

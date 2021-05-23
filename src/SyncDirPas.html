@@ -292,7 +292,8 @@ img {
 </head>
 <body>
 <h1>Directory Synchronization Utility</h1>
-<p>The Directory Synchronization program, <strong>SyncDirPas</strong>, synchronizes the file contents of directories on a personal computer running Microsoft Window.</p>
+<p><em>Version 4.0.0+20210523</em></p>
+<p>The Directory Synchronization program, <strong>SyncDirPas</strong>, synchronizes the file contents of directories on a personal computer running Microsoft Windows.</p>
 <p>This program is free open source software licensed under the <a href="./MIT-License.html" title="MIT License">./MIT-License.html</a>, Copyright © 2021 Rick Rutt.</p>
 <p>The program compares file names and modification dates for a <a href="#SourceDirectory">source directory</a> and a <a href="#TargetDirectory">target directory</a> (and optionally any <a href="#IncludeSubdirectories">subdirectories</a>).</p>
 <ul>
@@ -329,6 +330,16 @@ img {
 </ul>
 <p>The user may also design variations and combinations of these techniques.</p>
 <p>Information about the development history and source code compilation of the <strong>SyncDirPas</strong> program appear at the end of this document in the <a href="#DeveloperInformation">Developer Information</a> section.</p>
+<p><a name="DownloadingAndInstalling"></a></p>
+<h2>Downloading and Installing the Program</h2>
+<ol>
+<li>Download the <strong>SyncDirPas-<em>version</em>.zip</strong> file from the root folder of the GitHub.com repository <strong><a href="https://github.com/rrutt/SyncDirPas">https://github.com/rrutt/SyncDirPas</a></strong> (where <em><strong>version</strong></em> represents the current release version).</li>
+<li>Open the ZIP file.  In Windows 10, simply double-click on the ZIP file to open it in the file explorer.</li>
+<li>Drag and drop the <strong>SyncDirPas</strong> folder from within the ZIP file to copy it to another location on your hard disk (or a USB drive).</li>
+<li>Open your local copy of the <strong>SyncDirPas</strong> folder in the file explorer.</li>
+<li>Double-click the <strong>SyncDirPas.exe</strong> file to run the program.</li>
+</ol>
+<p>To uninstall the program, simply delete your local <strong>SyncDirPas</strong> folder.</p>
 <p><a name="SynchronizationDialog"></a></p>
 <h2>Synchronization Dialog</h2>
 <p>The following dialog box appears when the program is started, and the Automatic option is disabled:</p>
@@ -379,22 +390,22 @@ This is useful if you want to adjust the <a href="#Options">options</a> and perf
 <p><strong><a href="#TargetDirectory">TargetDirectory</a></strong></p>
 <p><strong><a href="#IgnoreFileTypes">IgnoreFileTypes</a></strong></p>
 <p><strong><a href="#OnlyProcessFileTypes">OnlyProcessFileTypes</a></strong></p>
-<p><strong><a href="#Automatic">Automatic</a></strong></p>
 <p><strong><a href="#NotifyUser">NotifyUser</a></strong></p>
 <p><strong><a href="#ShowErrorMessages">ShowErrorMessages</a></strong></p>
 <p><strong><a href="#MinimizeLogMessages">MinimizeLogMessages</a></strong></p>
-<p><strong><a href="#RunCommand">RunCommand</a></strong></p>
-<p><strong><a href="#RunDirectory">RunDirectory</a></strong></p>
-<p><strong><a href="#AlternateRunCommand">AlternateRunCommand</a></strong></p>
-<p><strong><a href="#AlternateRunDirectory">AlternateRunDirectory</a></strong></p>
 <p><strong><a href="#CopyOlderFiles">CopyOlderFiles</a></strong></p>
 <p><strong><a href="#ProcessHiddenFiles">ProcessHiddenFiles</a></strong></p>
-<p><strong><a href="#SynchronizeBothWays">SynchronizeBothWays</a></strong></p>
 <p><strong><a href="#IncludeSubdirectories">IncludeSubdirectories</a></strong></p>
 <p><strong><a href="#SkipMissingDirectories">SkipMissingDirectories</a></strong></p>
 <p><strong><a href="#DeleteExtraDirectories">DeleteExtraDirectories</a></strong></p>
 <p><strong><a href="#DeleteExtraFiles">DeleteExtraFiles</a></strong></p>
 <p><strong><a href="#SkipReadOnlyTargetFiles">SkipReadOnlyTargetFiles</a></strong></p>
+<p><strong><a href="#SynchronizeBothWays">SynchronizeBothWays</a></strong></p>
+<p><strong><a href="#Automatic">Automatic</a></strong></p>
+<p><strong><a href="#RunCommand">RunCommand</a></strong></p>
+<p><strong><a href="#RunDirectory">RunDirectory</a></strong></p>
+<p><strong><a href="#AlternateRunCommand">AlternateRunCommand</a></strong></p>
+<p><strong><a href="#AlternateRunDirectory">AlternateRunDirectory</a></strong></p>
 <p><strong><a href="#NextSection">NextSection</a></strong></p>
 <p><a name="SourceDirectory"></a></p>
 <h3>SourceDirectory option</h3>
@@ -458,13 +469,6 @@ OnlyProcessFileTypes=dat,txt
 OnlyProcessFileTypes=txt,.
 </code></pre>
 
-<p><a name="Automatic"></a></p>
-<h3>Automatic option</h3>
-<p>Set this option in the initialization file.</p>
-<p>When the <strong>Automatic</strong> option is <a href="#Disabled">disabled</a>, the program starts with the Synchronization Dialog.</p>
-<p>When the <strong>Automatic</strong> option is <a href="#Enabled">enabled</a>, the program proceeds to check for synchronization requirements between the source and target directories. If no synchronization is required, the program immediately exits without any user feedback. If the <strong><a href="#NotifyUser">NotifyUser</a></strong> option is also enabled, the program still requests <a href="#ConfirmationDialog">user confirmation</a> before copying (or deleting) any files.</p>
-<p>When the <strong>Automatic</strong> option is enabled, the <strong><a href="#RunCommand">RunCommand</a></strong> option may also contain a command line to be run after the program exits.</p>
-<p>This option <a href="#DefaultValues">defaults</a> to being disabled.</p>
 <p><a name="NotifyUser"></a></p>
 <h3>NotifyUser option</h3>
 <p>Set this option in the initialization file.</p>
@@ -485,45 +489,6 @@ Any errors are still shown in the <a href="#LogWindow">log window</a> upon compl
 <p>This option <a href="#DefaultValues">defaults</a> to being <a href="#Enabled">enabled</a>.
 In this case, the only <a href="#LogWindow">log messages</a> written are for files that are actually copied or deleted.</p>
 <p>If this option is <a href="#Disabled">disabled</a>, the log messages describe all files and directories that were examined for synchronization, regardless whether they were copied or deleted.</p>
-<p><a name="RunCommand"></a></p>
-<h3>RunCommand option</h3>
-<p>Set this option in the initialization file.</p>
-<p>When the <strong><a href="#Automatic">Automatic</a></strong> option is <a href="#Enabled">enabled</a>, the <strong>RunCommand</strong> option may contain a command string to be executed when the program exits, and no files needed to be copied or deleted during the synchronization.
-(If any files were copied or deleted, the <strong><a href="#AlternateRunCommand">AlternateRunCommand</a></strong> is executed instead.)</p>
-<p>The command string consists of an executable program name, optionally followed by command arguments. If the <strong><a href="#RunDirectory">RunDirectory</a></strong> option also contains a value, the <a href="#CurrentWorkingDirectory">working directory</a> is set to that directory before the command string is executed.</p>
-<p>When the <strong>Automatic</strong> option is <a href="#Disabled">disabled</a>, the <a href="#CurrentWorkingDirectory">working directory</a> option is ignored.</p>
-<p>This option <a href="#DefaultValues">defaults</a> to an empty string, meaning no command is executed when the program exits.</p>
-<p><a name="RunDirectory"></a></p>
-<h3>RunDirectory option</h3>
-<p>Set this option in the initialization file.</p>
-<p>When the <strong><a href="#Automatic">Automatic</a></strong> option is <a href="#Enabled">enabled</a> and the <strong><a href="#RunCommand">RunCommand</a></strong> option has a value, the <strong><a href="#RunDirectory">RunDirectory</a></strong> option may contain a value indicating the <a href="#CurrentWorkingDirectory">working directory</a> to use when executing the <strong>RunCommand</strong> command string.</p>
-<p>When the <strong><a href="#Automatic">Automatic</a></strong> option is <a href="#Disabled">disabled</a>, the <strong>RunDirectory</strong> option is ignored.</p>
-<p>This option <a href="#DefaultValues">defaults</a> to an empty string, meaning the current working directory remains the same as when the <strong>SyncDirPas.exe</strong> program was started.</p>
-<p><em><strong>Note:</strong></em> A <a href="#UniversalNamingConvention">UNC directory name</a> may be used:</p>
-<pre><code>RunDirectory=\\server\programs
-</code></pre>
-
-<p><a name="AlternateRunCommand"></a></p>
-<h3>AlternateRunCommand option</h3>
-<p>Set this option in the initialization file.</p>
-<p>When the <strong><a href="#Automatic">Automatic</a></strong> option is <a href="#Enabled">enabled</a>, the <strong>AlternateRunCommand</strong> option may contain a command string to be executed when the program exits, and some files were copied or deleted during the synchronization.
-(If no files needed to be copied or deleted, the <strong><a href="#RunCommand">RunCommand</a></strong> is executed instead.)</p>
-<p>The intention is for the <strong>AlternateRunCommand</strong> to run any registration code needed by an updated system just synchronized from a server directory to a local execution directory on the desktop.
-The normal <strong>RunCommand</strong> simply runs the unmodified application.
-The <strong>AlternateRunCommand</strong> would first register any updated files, then would itself launch the updated application.</p>
-<p>The command string consists of an executable program name, optionally followed by command arguments. If the <strong><a href="#AlternateRunDirectory">AlternateRunDirectory</a></strong> option also contains a value, the <a href="#CurrentWorkingDirectory">working directory</a> is set to that directory before the command string is executed.</p>
-<p>When the <strong>Automatic</strong> option is <a href="#Disabled">disabled</a>, the <strong>AlternateRunCommand</strong> option is ignored.</p>
-<p>This option <a href="#DefaultValues">defaults</a> to the value of the <strong>RunCommand</strong> option.</p>
-<p><A name="AlternateRunDirectory"></a></p>
-<h3>AlternateRunDirectory option</h3>
-<p>Set this option in the initialization file.</p>
-<p>When the <strong><a href="#Automatic">Automatic</a></strong> option is enabled and the <strong><a href="#AlternateRunCommand">AlternateRunCommand</a></strong> option has a value, the <strong>AlternateRunDirectory</strong> option may contain a value indicating the working directory to use when executing the <strong>AlternateRunCommand</strong> command string.</p>
-<p>When the <strong>Automatic</strong> option is <a href="#Disabled">disabled</a>, the <strong>AlternateRunDirectory</strong> option is ignored.</p>
-<p>This option <strong>defaults</strong> to the value of the <strong><a href="#RunDirectory">RunDirectory</a></strong> option.</p>
-<p><em><strong>Note:</strong></em> A <a href="#UniversalNamingConvention">UNC directory name</a> may be used:</p>
-<pre><code>AlternateRunDirectory=\\server\programs
-</code></pre>
-
 <p><a name="CopyOlderFiles"></a></p>
 <h3>CopyOlderFiles option</h3>
 <p>Set this option in the initialization file.</p>
@@ -536,14 +501,6 @@ The <strong>AlternateRunCommand</strong> would first register any updated files,
 <p>If <strong>ProcessHiddenFiles</strong> is <a href="#Disabled">disabled</a>, then files with the <em>System</em> attribute or the <em>Hidden</em> attribute are ignored during copy or delete operations.</p>
 <p>If <strong>ProcessHiddenFiles</strong> is <a href="#Enabled">enabled</a>, then files with the <em>System</em> attribute or the <em>Hidden</em> attribute are processed in the same manner as other files.</p>
 <p>This option <a href="#DefaultValues">defaults</a> to being disabled.</p>
-<p><a name="SynchronizeBothWays"></a></p>
-<h3>SynchronizeBothWays option</h3>
-<p>Set this option in the initialization file.</p>
-<p>When the <strong>SynchronizeBothWays</strong> option is <a href="#Disabled">disabled</a>, the program only synchronizes files from the <a href="#SourceDirectory">source directory</a> to the <a href="#TargetDirectory">target directory</a> (and optionally in any <a href="#IncludeSubdirectories">subdirectories</a>).</p>
-<p>When the <strong>SynchronizeBothWays</strong> option is <a href="#Enabled">enabled</a>, the program first synchronizes files from the source directory to the target directory.
-Next, the program reverses the roles of the directories, and synchronizes files from the original target directory to the original source directory.</p>
-<p>This option <a href="#DefaultValues">defaults</a> to being disabled.</p>
-<p>When the <strong>SynchronizeBothWays</strong> option is enabled, the <strong><a href="#DeleteExtraFiles">DeleteExtraFiles</a></strong> and <strong><a href="#DeleteExtraDirectories">DeleteExtraDirectories</a></strong> options must be disabled.</p>
 <p><a name="DeleteExtraDirectories"></a></p>
 <h3>DeleteExtraDirectories option</h3>
 <p>Set this option in the initialization file.</p>
@@ -567,6 +524,63 @@ Next, the program reverses the roles of the directories, and synchronizes files 
 This allows the user to identify specifically which files could not be copied.</p>
 <p>If <strong>SkipReadOnlyTargetFiles</strong> is <a href="#Enabled">enabled</a>, then files with the <em>Read-Only</em> attribute in the target directory that would otherwise need to be copied or deleted are simply bypassed.</p>
 <p>This option <a href="#DefaultValues">defaults</a> to being disabled.</p>
+<p><a name="SynchronizeBothWays"></a></p>
+<h3>SynchronizeBothWays option</h3>
+<p>Set this option in the initialization file.</p>
+<p>When the <strong>SynchronizeBothWays</strong> option is <a href="#Disabled">disabled</a>, the program only synchronizes files from the <a href="#SourceDirectory">source directory</a> to the <a href="#TargetDirectory">target directory</a> (and optionally in any <a href="#IncludeSubdirectories">subdirectories</a>).</p>
+<p>When the <strong>SynchronizeBothWays</strong> option is <a href="#Enabled">enabled</a>, the program first synchronizes files from the source directory to the target directory.
+Next, the program reverses the roles of the directories, and synchronizes files from the original target directory to the original source directory.</p>
+<p>This option <a href="#DefaultValues">defaults</a> to being disabled.</p>
+<p>When the <strong>SynchronizeBothWays</strong> option is enabled, the <strong><a href="#DeleteExtraFiles">DeleteExtraFiles</a></strong> and <strong><a href="#DeleteExtraDirectories">DeleteExtraDirectories</a></strong> options must be disabled.</p>
+<p><a name="Automatic"></a></p>
+<h3>Automatic option</h3>
+<p>Set this option in the initialization file.</p>
+<p>When the <strong>Automatic</strong> option is <a href="#Disabled">disabled</a>, the program starts with the Synchronization Dialog.</p>
+<p>When the <strong>Automatic</strong> option is <a href="#Enabled">enabled</a>, the program proceeds to check for synchronization requirements between the source and target directories. If no synchronization is required, the program immediately exits without any user feedback. If the <strong><a href="#NotifyUser">NotifyUser</a></strong> option is also enabled, the program still requests <a href="#ConfirmationDialog">user confirmation</a> before copying (or deleting) any files.</p>
+<p>When the <strong>Automatic</strong> option is enabled, the <strong><a href="#RunCommand">RunCommand</a></strong> option may also contain a command line to be run after the program exits.</p>
+<p><em><strong>Note:</strong></em> If the <strong>Automatic</strong> option is enabled, the <strong><a href="#NextSection">NextSection</a></strong> value is ignored.</p>
+<p>This option <a href="#DefaultValues">defaults</a> to being disabled.</p>
+<p><a name="RunCommand"></a></p>
+<h3>RunCommand option</h3>
+<p>Set this option in the initialization file.</p>
+<p>When the <strong><a href="#Automatic">Automatic</a></strong> option is <a href="#Enabled">enabled</a>, the <strong>RunCommand</strong> option may contain a command string to be executed when the program exits, and no files needed to be copied or deleted during the synchronization.
+(If any files were copied or deleted, the <strong><a href="#AlternateRunCommand">AlternateRunCommand</a></strong> is executed instead.)</p>
+<p>The command string consists of an executable program name, optionally followed by command arguments. If the <strong><a href="#RunDirectory">RunDirectory</a></strong> option also contains a value, the <a href="#CurrentWorkingDirectory">working directory</a> is set to that directory before the command string is executed.</p>
+<p>If the executable program name or any of the arguments contains any spaces it should be enclosed in quotes (<strong>&quot;</strong>).</p>
+<p>When the <strong>Automatic</strong> option is <a href="#Disabled">disabled</a>, the <strong>RunCommand</strong> option is ignored.</p>
+<p>This option <a href="#DefaultValues">defaults</a> to an empty string, meaning no command is executed when the program exits.</p>
+<p><a name="RunDirectory"></a></p>
+<h3>RunDirectory option</h3>
+<p>Set this option in the initialization file.</p>
+<p>When the <strong><a href="#Automatic">Automatic</a></strong> option is <a href="#Enabled">enabled</a> and the <strong><a href="#RunCommand">RunCommand</a></strong> option has a value, the <strong><a href="#RunDirectory">RunDirectory</a></strong> option may contain a value indicating the <a href="#CurrentWorkingDirectory">working directory</a> to use when executing the <strong>RunCommand</strong> command string.</p>
+<p>When the <strong><a href="#Automatic">Automatic</a></strong> option is <a href="#Disabled">disabled</a>, the <strong>RunDirectory</strong> option is ignored.</p>
+<p>This option <a href="#DefaultValues">defaults</a> to an empty string, meaning the current working directory remains the same as when the <strong>SyncDirPas.exe</strong> program was started.</p>
+<p><em><strong>Note:</strong></em> A <a href="#UniversalNamingConvention">UNC directory name</a> may be used:</p>
+<pre><code>RunDirectory=\\server\programs
+</code></pre>
+
+<p><a name="AlternateRunCommand"></a></p>
+<h3>AlternateRunCommand option</h3>
+<p>Set this option in the initialization file.</p>
+<p>When the <strong><a href="#Automatic">Automatic</a></strong> option is <a href="#Enabled">enabled</a>, the <strong>AlternateRunCommand</strong> option may contain a command string to be executed when the program exits, and some files were copied or deleted during the synchronization.
+(If no files needed to be copied or deleted, the <strong><a href="#RunCommand">RunCommand</a></strong> is executed instead.)</p>
+<p>The intention is for the <strong>AlternateRunCommand</strong> to run any registration code needed by an updated system just synchronized from a server directory to a local execution directory on the desktop.
+The normal <strong>RunCommand</strong> simply runs the unmodified application.
+The <strong>AlternateRunCommand</strong> would first register any updated files, then would itself launch the updated application.</p>
+<p>The command string consists of an executable program name, optionally followed by command arguments. If the <strong><a href="#AlternateRunDirectory">AlternateRunDirectory</a></strong> option also contains a value, the <a href="#CurrentWorkingDirectory">working directory</a> is set to that directory before the command string is executed.</p>
+<p>If the executable program name or any of the arguments contains any spaces it should be enclosed in quotes (<strong>&quot;</strong>).</p>
+<p>When the <strong>Automatic</strong> option is <a href="#Disabled">disabled</a>, the <strong>AlternateRunCommand</strong> option is ignored.</p>
+<p>This option <a href="#DefaultValues">defaults</a> to the value of the <strong>RunCommand</strong> option.</p>
+<p><A name="AlternateRunDirectory"></a></p>
+<h3>AlternateRunDirectory option</h3>
+<p>Set this option in the initialization file.</p>
+<p>When the <strong><a href="#Automatic">Automatic</a></strong> option is enabled and the <strong><a href="#AlternateRunCommand">AlternateRunCommand</a></strong> option has a value, the <strong>AlternateRunDirectory</strong> option may contain a value indicating the working directory to use when executing the <strong>AlternateRunCommand</strong> command string.</p>
+<p>When the <strong>Automatic</strong> option is <a href="#Disabled">disabled</a>, the <strong>AlternateRunDirectory</strong> option is ignored.</p>
+<p>This option <strong>defaults</strong> to the value of the <strong><a href="#RunDirectory">RunDirectory</a></strong> option.</p>
+<p><em><strong>Note:</strong></em> A <a href="#UniversalNamingConvention">UNC directory name</a> may be used:</p>
+<pre><code>AlternateRunDirectory=\\server\programs
+</code></pre>
+
 <p><a name="NextSection"></a></p>
 <h3>NextSection option</h3>
 <p>Set this option in the initialization file.</p>
@@ -575,7 +589,7 @@ This allows the user to identify specifically which files could not be copied.</
 In this case, after the synchronization defined by the current section completes, the program proceeds to execute the synchronization defined by the section named in the <strong>NextSection</strong> option.</p>
 <p>A chain of sections can be defined by appropriately setting the <strong>NextSection</strong> option in multiple sections of the initialization file.</p>
 <p>This allows a sequence of directory trees to be backed up to a network drive or a removable hard disk or USB drive using a single click of the <strong>Synchronize</strong> button.</p>
-<p>(If the <strong><a href="#Automatic">Automatic</a></strong> option is <a href="#Enabled">enabled</a>, and the <strong><a href="#NotifyUser">NotifyUser</a></strong> option is <a href="#Disabled">disabled</a>, the entire chain of synchronizations can be run as an automated scheduled task.)</p>
+<p><em><strong>Note:</strong></em> If the <strong><a href="#Automatic">Automatic</a></strong> option is <a href="#Enabled">enabled</a>, the <strong>NextSection</strong> value is ignored.</p>
 <p>This option <a href="#DefaultValues">defaults</a> to being blank.</p>
 <h2>Definitions</h2>
 <p><a name="CommandArgument"></a></p>
@@ -603,7 +617,6 @@ SourceDirectory=C:\SyncDir\TestData\Primary
 TargetDirectory=C:\SyncDir\TestData\Secondary
 IgnoreFileTypes=
 OnlyProcessFileTypes=
-Automatic=no
 NotifyUser=yes
 ShowErrorMessages=yes
 MinimizeLogMessages=yes
@@ -615,6 +628,11 @@ SkipMissingDirectories=no
 DeleteExtraFiles=no
 DeleteExtraDirectories=no
 SkipReadOnlyTargetFiles=no
+Automatic=no
+RunCommand=
+RunDirectory=
+AlternateRunCommand=
+AlternateRunDirectory=
 NextSection=
 </code></pre>
 
@@ -637,18 +655,11 @@ TargetDirectory=C:\OldFiles
 <p>The following default values are used for each option parameter if no value is specified, or if no <a href="#InitializationFile">initialization file</a> is found:</p>
 <pre><code>[SyncDir]
 SourceDirectory=
-; The above command uses the current working directory
+; The above command uses the current working directory.
 TargetDirectory=
-; The above command uses the current working directory
-RunCommand=
-RunDirectory=
-AlternateRunCommand=
-; The above option defaults to match RunCommand
-AlternateRunDirectory=
-; The above option defaults to match RunDirectory
+; The above command uses the current working directory.
 IgnoreFileTypes=
 OnlyProcessFileTypes=
-Automatic=no
 NotifyUser=yes
 ShowErrorMessages=yes
 MinimizeLogMessages=yes
@@ -660,6 +671,14 @@ SkipMissingDirectories=no
 DeleteExtraFiles=no
 DeleteExtraDirectories=no
 SkipReadOnlyTargetFiles=no
+Automatic=no
+RunCommand=
+RunDirectory=
+; The above command defaults to the current working directory.
+AlternateRunCommand=
+; The above option defaults to match RunCommand.
+AlternateRunDirectory=
+; The above option defaults to match RunDirectory.
 NextSection=
 </code></pre>
 
@@ -754,9 +773,57 @@ The user then clicks the <strong>Synchronize</strong> button.</p>
 <p><a name="DeveloperInformation"></a></p>
 <h2>Developer Information</h2>
 <h3>Background and History</h3>
-<h3>Source Code Compilation Note</h3>
-<p>Using the debugger in the Lazarus IDE on Windows 10 requires the following configuration adjustment:</p>
-<p><strong><a href="https://www.tweaking4all.com/forum/delphi-lazarus-free-pascal/lazarus-windows-debugger-crashing-on-opendialog/">Lazarus - Windows - Debugger crashing on OpenDialog</a></strong></p>
+<h4>Visual Basic version</h4>
+<p>The original version 1 of the Directory Synchronization program was written as a 16-bit program in Visual Basic in 1997 and was known simply as <strong>SyncDir</strong>.</p>
+<p>A version 2 was created in 2002 with various improvements.</p>
+<p>A 32-bit version 3 was created in 2005 using Visual Basic 6.0 and renamed <strong>SyncDir3</strong> to allow both the 16-bit version 2 and 32-bit version 3 to co-exist.</p>
+<p>Programs created in Visual Basic 6.0 are still supported for execution in Windows 10.
+However the Visual Basic 6.0 integrated development environment (IDE) is no longer supported:</p>
+<ul>
+<li><strong><a href="https://docs.microsoft.com/en-us/previous-versions/visualstudio/visual-basic-6/visual-basic-6-support-policy">Support Statement for Visual Basic 6.0 on Windows</a></strong></li>
+</ul>
+<p>The <strong>SyncDir3</strong> program is still available from the following SourceForge repository:</p>
+<ul>
+<li><strong><a href="https://sourceforge.net/projects/syncdir3/">SyncDir3 program on SourceForge.net</a></strong></li>
+</ul>
+<p>The Visual Basic source code for <strong>SyncDir3</strong> is also available in the <strong>SyncDir3</strong> sub-folder of this GitHub.com repository.</p>
+<h4>Free Pascal version</h4>
+<p>In 2020 the decision was made to re-implement the Directory Synchronization program for Windows 10 using a supported programming language and development environment.</p>
+<p>The <strong><a href="https://www.freepascal.org/">Free Pascal</a></strong> implementation of the Object Pascal programming language was chosen.
+One benefit of this decision is that a single self-contained executable file, <strong>SyncDirPas.exe</strong> can be produced, without requiring any separate run-time library files.</p>
+<p>The integrated development environment for Free Pascal is the <strong><a href="https://www.lazarus-ide.org/">Lazarus IDE for Free Pascal</a></strong>.</p>
+<h4>Source code compilation notes</h4>
+<p>Download the <strong>Lazarus IDE</strong>, including <strong>Free Pascal</strong>, from  here:</p>
+<ul>
+<li><strong><a href="https://www.lazarus-ide.org/index.php?page=downloads">https://www.lazarus-ide.org/index.php?page=downloads</a></strong></li>
+</ul>
+<p>After installing the <strong>Lazarus IDE</strong>, clone this GitHub repository to you local disk.
+Then double-click on the <strong>src\SyncDirPas.lpr</strong> project file to open it in <strong>Lazarus</strong>. </p>
+<p><em><strong>Note:</strong></em> Using the debugger in the <strong>Lazarus IDE</strong> on Windows 10 <em><strong>might</strong></em> require the following configuration adjustment:</p>
+<ul>
+<li><strong><a href="https://www.tweaking4all.com/forum/delphi-lazarus-free-pascal/lazarus-windows-debugger-crashing-on-opendialog/">Lazarus - Windows - Debugger crashing on OpenDialog</a></strong></li>
+</ul>
+<p>When <strong>Lazarus</strong> includes debugging information the executable file is relatively large.
+When ready to create a release executable, the file size can be significantly reduced by selecting the menu item <strong>Project | Project Options ...</strong> and navigating to the <strong>Compile Options | Debugging</strong> tab in the resulting dialog window.
+Clear the check-mark from the <strong>Generate info for the debugger</strong> option and then click the <strong>OK</strong> button.
+Then rebuild the executable using the <strong>Run | Build</strong> menu item (or using the shortcut key-stroke <em><strong>Shift-F9</strong></em>).</p>
+<h4>Generating the SyncDirPas.html help file</h4>
+<p>The <strong>README.md</strong> file can be edited in <strong>MarkdownPas 2</strong>, which can be downloaded from here:</p>
+<ul>
+<li><strong><a href="http://markdownpad.com/">http://markdownpad.com/</a></strong></li>
+</ul>
+<p>After making any changes to the <strong>README.md</strong> file, select the menu item <strong>File | Export | Export HTML</strong>.</p>
+<p>In the resulting file save dialog, rename the result file to <strong>SyncDirPas.html</strong> and save it to the *<em>src</em> sub-folder.</p>
+<h4>Creating a release ZIP file</h4>
+<ol>
+<li>Set the desired release version by selecting the menu item <strong>Project | Project Options ...</strong> and navigating to the <strong>Project Options | Version Info</strong> tab in the resulting dialog window.  Click the <strong>OK</strong> button after making any changes.</li>
+<li>Build the <strong>SyncDirPas.exe</strong> executable file <em>without</em> any debug information (as described in a previous section).</li>
+<li>Double click the <strong>PrepareZipFileFolder.bat</strong> script file in the root folder of your locally cloned copy of this GitHub repository.</li>
+<li>The script will perform some file operations, along with a few <strong>pause</strong> steps.  Dismiss each <strong>pause</strong> step by pressing the space bar.</li>
+<li>An extra <strong>SyncDirPas</strong> sub-folder will be created (if it does not already exist) containing the desired release files for download.</li>
+<li>Right-click the extra <strong>SyncDirPas</strong> sub-folder and select <strong>Send to | Compressed (zipped) folder</strong> in the context menu.</li>
+<li>Optionally rename the resulting ZIP file by appending the version information to the file name.</li>
+</ol>
 
 </body>
 </html>

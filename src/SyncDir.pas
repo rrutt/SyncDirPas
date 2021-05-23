@@ -1090,7 +1090,7 @@ begin
     AppendLogMessage(message);
     Application.MessageBox(PChar(message), 'SyncDirPas Log', 0);
   end else begin
-    AppendLogMessage('Synchronization started ...');
+    AppendLogMessage(Format('Synchronization started at %s ...', [FormatDateTime('yyyy-mm-dd hh:nn:ss', Now)]));
     context := InitializeProgressContext(options);
     SynchronizeSourceToTarget(context, options);
     isSuccessful := context.SynchronizationSucceeded;
@@ -1128,6 +1128,11 @@ begin
     end;
 
     iniSection := currentOptions.NextSection;
+    if (currentOptions.Automatic) then begin
+      AppendLogMessage(Format('Ignoring NextSection=%s since Automatic option is enabled.', [iniSection]));
+      iniSection := '';
+    end;
+
     if (synchronizationSucceeded and (Length(iniSection) > 0)) then begin
       iniSectionExists := LoadInitializationFileSettings(gIniFileName, iniSection, currentOptions);
       if (iniSectionExists) then begin

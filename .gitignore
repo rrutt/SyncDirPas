@@ -2,6 +2,7 @@ src/lib/
 src/backup/
 src/target/
 SyncDirPas/
+TestShortcuts/
 TestTarget/
 TestTargetTwo/
 *.exe
