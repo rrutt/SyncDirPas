@@ -1,10 +1,10 @@
 # Directory Synchronization Utility
 
-_Version 4.0.0+20210523_
+_Version 4.0.1+20210524  ([Version Release Notes](#ReleaseNotes))_ 
 
-The Directory Synchronization program, **SyncDirPas**, synchronizes the file contents of directories on a personal computer running Microsoft Windows.
+The _Directory Synchronization Utility_, **SyncDirPas**, synchronizes the file contents of directories on a personal computer running Microsoft Windows.
 
-This program is free open source software licensed under the [./MIT-License.html](./MIT-License.html "MIT License"), Copyright © 2021 Rick Rutt.
+This program is free open source software licensed under the [MIT License](./MIT-License.html), Copyright © 2021 Rick Rutt.
 
 The program compares file names and modification dates for a [source directory](#SourceDirectory) and a [target directory](#TargetDirectory) (and optionally any [subdirectories](#IncludeSubdirectories)).
 
@@ -317,11 +317,11 @@ When the **DeleteExtraDirectories** option is [disabled](#Disabled), the program
 
 When the **DeleteExtraDirectories** option is [enabled](#Enabled), synchronization includes the deletion of subdirectories from the target directory that do not also exist in the source directory.
 
-If any files exist within the extra target subdirectories, deletion of the directory will fail unless the **[DeleteExtraFiles](#DeleteExtraFiles)** option is also enabled.
+If any files exist within an extra target subdirectory, deletion of the directory will fail unless the **[DeleteExtraFiles](#DeleteExtraFiles)** and **[IncludeSubdirectories](#IncludeSubdirectories)** options are also enabled.
 
 The **DeleteExtraDirectories** option [defaults](#DefaultValues) to being disabled.
 
-When the **DeleteExtraDirectories** option is enabled, the **[SynchronizeBothWays](#SynchronizeBothWays)** option must be disabled and the **[IncludeSubdirectories](#IncludeSubdirectories)** option must be enabled.
+When the **DeleteExtraDirectories** option is enabled, the **[SynchronizeBothWays](#SynchronizeBothWays)** option must be disabled.
 
 
 <a name="DeleteExtraFiles"></a>
@@ -377,7 +377,7 @@ When the **Automatic** option is [disabled](#Disabled), the program starts with 
 
 When the **Automatic** option is [enabled](#Enabled), the program proceeds to check for synchronization requirements between the source and target directories. If no synchronization is required, the program immediately exits without any user feedback. If the **[NotifyUser](#NotifyUser)** option is also enabled, the program still requests [user confirmation](#ConfirmationDialog) before copying (or deleting) any files.
 
-When the **Automatic** option is enabled, the **[RunCommand](#RunCommand)** option may also contain a command line to be run after the program exits.
+When the **Automatic** option is enabled, the **[RunCommand](#RunCommand)** option may also contain a command line to be run after the program exits, if no synchronization was required; the **[AlternateRunCommand](#AlternateRunCommand)** option may also contain a command line to be run if any synchronization actually occurred.
 
 _**Note:**_ If the **Automatic** option is enabled, the **[NextSection](#NextSection)** value is ignored.
 
@@ -533,6 +533,18 @@ For many of the examples in this help file, the initialization file has the foll
 	AlternateRunCommand=
 	AlternateRunDirectory=
 	NextSection=
+
+_**Note:**_ How to associate initialization files to _Open With_ the **SyncDirPas.exe** program in Windows 10:
+
+1. Create (or rename) an initialization file as a text file with the file type **.syncdir** (or some other unique file type not already in use).
+2. Right-click the **.syncdir** file and select the **Open with...** item from the context menu.
+3. A prompt dialog **How do you want to open this file?** appears.
+4. Make sure the **Always use this app to open .syncdir files** check-box is enabled.
+5. Click on the **More apps** link.
+6. Scroll the list of applications to the bottom and click **"Look for another app on this PC**.
+7. An **Open with** file dialog appears.  Browse to your local copy of **SyncDirPas.exe** and click **Open**.
+8. Double-click your **.syncdir** file to confirm that the **SyncDirPass** program opens and is set to the options in that file. 
+
 
 
 <a name="SectionName"></a>
@@ -788,3 +800,20 @@ In the resulting file save dialog, rename the result file to **SyncDirPas.html**
 6. Right-click the extra **SyncDirPas** sub-folder and select **Send to | Compressed (zipped) folder** in the context menu.
 7. Optionally rename the resulting ZIP file by appending the version information to the file name.
 
+
+
+<a name="ReleaseNotes"></a>
+## Release Notes
+
+### Version 4.0.1
+
+Minor refinements:
+
+1. Corrected defaulting of omitted **[SourceDirectory](#SourceDirectory)** and **[TargetDirectory](#TargetDirectory)** options in the initialization file to use the [current working directory](#CurrentWorkingDirectory), as already documented.
+2. Added notes to the [initialization file](#InitializationFile) section in this document on use of a unique file type configured to _Open With_ the **SyncDirPas.exe** program.
+3. Removed the restriction that enabling **[DeleteExtraDirectories](#DeleteExtraDirectories)** would also require enabling **[IncludeSubdirectories](#IncludeSubdirectories)**.
+4. Avoided a run-time exception if no value is given for **[RunCommand](#RunCommand)** (or **[AlternateRunCommand](#AlternateRunCommand)**.  Instead, no extra action is performed.
+
+### Version 4.0.0
+
+Initial Pascal release.

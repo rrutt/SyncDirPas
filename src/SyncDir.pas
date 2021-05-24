@@ -171,6 +171,10 @@ var
   settingValue: String;
 begin
   settingValue := iniFile.ReadString(sectionName, settingName, defaultValue);
+  if (Length(settingValue) = 0) then begin
+    settingValue := defaultValue;
+  end;
+
   result := settingValue;
 end;
 
@@ -879,16 +883,29 @@ var
   proc: TProcess;
   message: String;
 begin
-  proc := TProcess.Create(nil);
-  proc.CurrentDirectory := directory;
-  proc.{%H-}CommandLine {%H-}:= command;
-  proc.Execute;
-  proc.Free;
+  if (Length(command) > 0) then begin
+    proc := TProcess.Create(nil);
+    try
+      try
+        proc.CurrentDirectory := directory;
+        proc.{%H-}CommandLine {%H-}:= command;
+        proc.Execute;
 
-  message := Format('Launched external program [%s] with working directory [%s].', [command, directory]);
-  AppendLogMessage(message);
-  if (notify) then begin
-    Application.MessageBox(PChar(message), 'SyncDirPas', 0);
+        message := Format('Launched external program [%s] with working directory [%s].', [command, directory]);
+        AppendLogMessage(message);
+        if (notify) then begin
+          Application.MessageBox(PChar(message), 'SyncDirPas', 0);
+        end;
+      except
+        message := Format('Error: Failed to launch external program [%s] with working directory [%s].', [command, directory]);
+        AppendLogMessage(message);
+        if (notify) then begin
+          Application.MessageBox(PChar(message), 'SyncDirPas Error', 0);
+        end;
+      end;
+    finally
+      proc.Free;
+    end;
   end;
 end;
 
@@ -1037,11 +1054,6 @@ begin
   if (options.SynchronizeBothWays and (options.DeleteExtraFiles or options.DeleteExtraDirectories)) then begin
     options.AreValid := false;
     AppendLogMessage('Error: When SynchronizeBothWays is enabled, both DeleteExtraFiles and DeleteExtraDirectories must be disabled.');
-  end;
-
-  if (options.DeleteExtraDirectories and (not options.IncludeSubdirectories)) then begin
-    options.AreValid := false;
-    AppendLogMessage('Error: When DeleteExtraDirectories is enabled, IncludeSubdirectories must be enabled.');
   end;
 end;
 
