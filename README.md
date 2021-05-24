@@ -1,10 +1,10 @@
 # Directory Synchronization Utility
 
-_Version 4.0.1+202105dd  ([Version Release Notes](#ReleaseNotes))_ 
+_Version 4.0.1+20210524  ([Version Release Notes](#ReleaseNotes))_ 
 
 The _Directory Synchronization Utility_, **SyncDirPas**, synchronizes the file contents of directories on a personal computer running Microsoft Windows.
 
-This program is free open source software licensed under the [./MIT-License.html](./MIT-License.html "MIT License"), Copyright © 2021 Rick Rutt.
+This program is free open source software licensed under the [MIT License](./MIT-License.html), Copyright © 2021 Rick Rutt.
 
 The program compares file names and modification dates for a [source directory](#SourceDirectory) and a [target directory](#TargetDirectory) (and optionally any [subdirectories](#IncludeSubdirectories)).
 
