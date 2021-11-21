@@ -782,7 +782,7 @@ Then rebuild the executable using the **Run | Build** menu item (or using the sh
 
 #### Generating the SyncDirPas.html help file
 
-The **README.md** file can be edited in **MarkdownPas 2**, which can be downloaded from here:
+The **README.md** file can be edited in **MarkdownPad 2**, which can be downloaded from here:
 
 - **<http://markdownpad.com/>**
 
