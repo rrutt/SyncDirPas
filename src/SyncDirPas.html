@@ -292,7 +292,7 @@ img {
 </head>
 <body>
 <h1>Directory Synchronization Utility</h1>
-<p><em>Version 4.0.1+20210524  (<a href="#ReleaseNotes">Version Release Notes</a>)</em> </p>
+<p><em>Version 4.0.2+20211121  (<a href="#ReleaseNotes">Version Release Notes</a>)</em> </p>
 <p>The <em>Directory Synchronization Utility</em>, <strong>SyncDirPas</strong>, synchronizes the file contents of directories on a personal computer running Microsoft Windows.</p>
 <p>This program is free open source software licensed under the <a href="./MIT-License.html">MIT License</a>, Copyright © 2021 Rick Rutt.</p>
 <p>The program compares file names and modification dates for a <a href="#SourceDirectory">source directory</a> and a <a href="#TargetDirectory">target directory</a> (and optionally any <a href="#IncludeSubdirectories">subdirectories</a>).</p>
@@ -808,7 +808,7 @@ One benefit of this decision is that a single self-contained executable file, <s
 <ul>
 <li><strong><a href="https://www.lazarus-ide.org/index.php?page=downloads">https://www.lazarus-ide.org/index.php?page=downloads</a></strong></li>
 </ul>
-<p>After installing the <strong>Lazarus IDE</strong>, clone this GitHub repository to you local disk.
+<p>After installing the <strong>Lazarus IDE</strong>, clone this GitHub repository to your local disk.
 Then double-click on the <strong>src\SyncDirPas.lpr</strong> project file to open it in <strong>Lazarus</strong>. </p>
 <p><em><strong>Note:</strong></em> Using the debugger in the <strong>Lazarus IDE</strong> on Windows 10 <em><strong>might</strong></em> require the following configuration adjustment:</p>
 <ul>
@@ -819,7 +819,7 @@ When ready to create a release executable, the file size can be significantly re
 Clear the check-mark from the <strong>Generate info for the debugger</strong> option and then click the <strong>OK</strong> button.
 Then rebuild the executable using the <strong>Run | Build</strong> menu item (or using the shortcut key-stroke <em><strong>Shift-F9</strong></em>).</p>
 <h4>Generating the SyncDirPas.html help file</h4>
-<p>The <strong>README.md</strong> file can be edited in <strong>MarkdownPas 2</strong>, which can be downloaded from here:</p>
+<p>The <strong>README.md</strong> file can be edited in <strong>MarkdownPad 2</strong>, which can be downloaded from here:</p>
 <ul>
 <li><strong><a href="http://markdownpad.com/">http://markdownpad.com/</a></strong></li>
 </ul>
@@ -837,6 +837,12 @@ Then rebuild the executable using the <strong>Run | Build</strong> menu item (or
 </ol>
 <p><a name="ReleaseNotes"></a></p>
 <h2>Release Notes</h2>
+<h3>Version 4.0.2</h3>
+<p>Minor refinement:</p>
+<ul>
+<li>Write a final log message upon ultimate completion of all synchronizations to provide final feedback if the Log Window is already open.
+Indicate the number of initialization sections successfully processed.</li>
+</ul>
 <h3>Version 4.0.1</h3>
 <p>Minor refinements:</p>
 <ol>
