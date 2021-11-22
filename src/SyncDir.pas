@@ -1118,6 +1118,7 @@ var
   synchronizationSucceeded: Boolean;
   iniSectionExists: Boolean;
   iniSection: String;
+  numberOfSectionsProcessed: LongInt;
   swapDirectory: String;
   errorMessage: String;
 begin
@@ -1126,6 +1127,7 @@ begin
   LoadInitialOptionsFromFormControls(gInitialOptions);
   currentOptions := gInitialOptions;
 
+  numberOfSectionsProcessed := 0;
   iniSectionExists := true;
   while (iniSectionExists) do begin
     synchronizationSucceeded := PerformSynchronizationPass(currentOptions);
@@ -1145,6 +1147,10 @@ begin
       iniSection := '';
     end;
 
+    if (synchronizationSucceeded) then begin
+      inc(numberOfSectionsProcessed);
+    end;
+
     if (synchronizationSucceeded and (Length(iniSection) > 0)) then begin
       iniSectionExists := LoadInitializationFileSettings(gIniFileName, iniSection, currentOptions);
       if (iniSectionExists) then begin
@@ -1160,6 +1166,8 @@ begin
       iniSectionExists := false;
     end;
   end;
+
+  AppendLogMessage(Format('Completed processing %d initialization section(s).', [numberOfSectionsProcessed]));
 
   if (not gInitialOptions.Automatic) then begin
     ButtonShowLogClick(Sender);

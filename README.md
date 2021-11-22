@@ -1,6 +1,6 @@
 # Directory Synchronization Utility
 
-_Version 4.0.1+20210524  ([Version Release Notes](#ReleaseNotes))_ 
+_Version 4.0.2+20211121  ([Version Release Notes](#ReleaseNotes))_ 
 
 The _Directory Synchronization Utility_, **SyncDirPas**, synchronizes the file contents of directories on a personal computer running Microsoft Windows.
 
@@ -782,7 +782,7 @@ Then rebuild the executable using the **Run | Build** menu item (or using the sh
 
 #### Generating the SyncDirPas.html help file
 
-The **README.md** file can be edited in **MarkdownPas 2**, which can be downloaded from here:
+The **README.md** file can be edited in **MarkdownPad 2**, which can be downloaded from here:
 
 - **<http://markdownpad.com/>**
 
@@ -804,6 +804,13 @@ In the resulting file save dialog, rename the result file to **SyncDirPas.html**
 
 <a name="ReleaseNotes"></a>
 ## Release Notes
+
+### Version 4.0.2
+
+Minor refinement:
+
+- Write a final log message upon ultimate completion of all synchronizations to provide final feedback if the Log Window is already open.
+Indicate the number of initialization sections successfully processed.
 
 ### Version 4.0.1
 
