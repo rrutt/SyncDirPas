@@ -768,7 +768,7 @@ Download the **Lazarus IDE**, including **Free Pascal**, from  here:
 
 - **<https://www.lazarus-ide.org/index.php?page=downloads>**
 
-After installing the **Lazarus IDE**, clone this GitHub repository to you local disk.
+After installing the **Lazarus IDE**, clone this GitHub repository to your local disk.
 Then double-click on the **src\SyncDirPas.lpr** project file to open it in **Lazarus**. 
 
 _**Note:**_ Using the debugger in the **Lazarus IDE** on Windows 10 _**might**_ require the following configuration adjustment:
