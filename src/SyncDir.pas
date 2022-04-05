@@ -180,11 +180,14 @@ end;
 
 function LoadInitializationFileSettingBoolean(iniFile: TINIFile; sectionName: String; settingName: String; defaultValue: Boolean): Boolean;
 var
+  settingString: String;
   settingValue: Boolean;
 begin
-  // https://www.freepascal.org/docs-html/fcl/inifiles/tcustominifile.booltruestrings.html
-  //https://www.freepascal.org/docs-html/fcl/inifiles/tcustominifile.boolfalsestrings.html}
-  settingValue := iniFile.ReadBool(sectionName, settingName, defaultValue);
+  settingValue := defaultValue;
+  settingString := LowerCase(iniFile.ReadString(sectionName, settingName, ''));
+  if (settingString <> '') then begin
+    settingValue := (settingString = 'true') or (settingString = 't') or (settingString = 'yes') or (settingString = 'y') or (settingString = '1');
+  end;
   result := settingValue;
 end;
 
@@ -196,17 +199,10 @@ begin
   // https://wiki.freepascal.org/Using_INI_Files
   // https://www.freepascal.org/docs-html/fcl/inifiles/tinifile-3.html
   // https://www.freepascal.org/docs-html/fcl/inifiles/tcustominifile.sectionexists.html
-  // https://www.freepascal.org/docs-html/fcl/inifiles/tcustominifile.booltruestrings.html
-  // https://www.freepascal.org/docs-html/fcl/inifiles/tcustominifile.boolfalsestrings.html}
 
   iniFile := TINIFile.Create(iniFileFullPath);
   try
     iniSectionExists := iniFile.SectionExists(iniSection);
-
-    // https://www.freepascal.org/docs-html/fcl/inifiles/tcustominifile.booltruestrings.html
-    // https://www.freepascal.org/docs-html/fcl/inifiles/tcustominifile.boolfalsestrings.html}
-    iniFile.BoolTrueStrings := ['true', 't', 'yes', 'y', '1'];
-    iniFile.BoolFalseStrings := ['false', 'f', 'no', 'n', '0'];
 
     options.SourceDirectory := LoadInitializationFileSettingString(iniFile, iniSection, 'SourceDirectory', '.');
     options.TargetDirectory := LoadInitializationFileSettingString(iniFile, iniSection, 'TargetDirectory', '.');
@@ -396,7 +392,7 @@ var
   isReadOnly: Boolean;
   searchInfo: TSearchRec;
 begin
-  fileIsReadOnly := false;
+  isReadOnly := false;
 
   if (FindFirst(fileFullPath, faAnyFile, searchInfo) = 0) then begin
     isReadOnly := ((searchInfo.Attr and faReadOnly) = faReadOnly);
@@ -1221,7 +1217,7 @@ end;
 initialization
 begin
   gCurrentWorkingDirectory := GetCurrentDir;
-  //ShowMessage('Current Working Directory = ' + currentWorkingDirectory);
+  //ShowMessage('Current Working Directory = ' + gCurrentWorkingDirectory);
 
   gLogFileName := gCurrentWorkingDirectory + DirectorySeparator + 'SyncDirPas.log';
   gLogToFile := false;

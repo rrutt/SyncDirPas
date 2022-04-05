@@ -7,4 +7,5 @@ TestTarget/
 TestTargetTwo/
 *.exe
 *.log
+src/SyncDirPas
 README.html
