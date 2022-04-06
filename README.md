@@ -1,6 +1,6 @@
 # Directory Synchronization Utility
 
-_Version 4.0.3+20220406  ([Version Release Notes](#ReleaseNotes))_ 
+_Version 4.0.4+20220406  ([Version Release Notes](#ReleaseNotes))_ 
 
 The _Directory Synchronization Utility_, **SyncDirPas**, synchronizes the file contents of directories on a personal computer running Microsoft Windows or Ubuntu Linux (and presumably other Linux distributions).
 
@@ -858,6 +858,10 @@ In the resulting file save dialog, rename the result file to **SyncDirPas.html**
 
 <a name="ReleaseNotes"></a>
 ## Release Notes
+
+### Version 4.0.4
+
+Corrected adaptive control alignments for Microsoft Windows to compensate for different label font metrics vs Linux.
 
 ### Version 4.0.3
 
