@@ -14,6 +14,9 @@ uses
   Process,
   SyncDirLog;
 
+const
+  PRODUCT_VERSION = '4.0.3+20220406';
+
 type
 
   TOptions = record
@@ -180,11 +183,14 @@ end;
 
 function LoadInitializationFileSettingBoolean(iniFile: TINIFile; sectionName: String; settingName: String; defaultValue: Boolean): Boolean;
 var
+  settingString: String;
   settingValue: Boolean;
 begin
-  // https://www.freepascal.org/docs-html/fcl/inifiles/tcustominifile.booltruestrings.html
-  //https://www.freepascal.org/docs-html/fcl/inifiles/tcustominifile.boolfalsestrings.html}
-  settingValue := iniFile.ReadBool(sectionName, settingName, defaultValue);
+  settingValue := defaultValue;
+  settingString := LowerCase(iniFile.ReadString(sectionName, settingName, ''));
+  if (settingString <> '') then begin
+    settingValue := (settingString = 'true') or (settingString = 't') or (settingString = 'yes') or (settingString = 'y') or (settingString = '1');
+  end;
   result := settingValue;
 end;
 
@@ -196,17 +202,10 @@ begin
   // https://wiki.freepascal.org/Using_INI_Files
   // https://www.freepascal.org/docs-html/fcl/inifiles/tinifile-3.html
   // https://www.freepascal.org/docs-html/fcl/inifiles/tcustominifile.sectionexists.html
-  // https://www.freepascal.org/docs-html/fcl/inifiles/tcustominifile.booltruestrings.html
-  // https://www.freepascal.org/docs-html/fcl/inifiles/tcustominifile.boolfalsestrings.html}
 
   iniFile := TINIFile.Create(iniFileFullPath);
   try
     iniSectionExists := iniFile.SectionExists(iniSection);
-
-    // https://www.freepascal.org/docs-html/fcl/inifiles/tcustominifile.booltruestrings.html
-    // https://www.freepascal.org/docs-html/fcl/inifiles/tcustominifile.boolfalsestrings.html}
-    iniFile.BoolTrueStrings := ['true', 't', 'yes', 'y', '1'];
-    iniFile.BoolFalseStrings := ['false', 'f', 'no', 'n', '0'];
 
     options.SourceDirectory := LoadInitializationFileSettingString(iniFile, iniSection, 'SourceDirectory', '.');
     options.TargetDirectory := LoadInitializationFileSettingString(iniFile, iniSection, 'TargetDirectory', '.');
@@ -396,7 +395,7 @@ var
   isReadOnly: Boolean;
   searchInfo: TSearchRec;
 begin
-  fileIsReadOnly := false;
+  isReadOnly := false;
 
   if (FindFirst(fileFullPath, faAnyFile, searchInfo) = 0) then begin
     isReadOnly := ((searchInfo.Attr and faReadOnly) = faReadOnly);
@@ -1066,7 +1065,11 @@ procedure TSyncDirForm.ButtonHelpClick(Sender: TObject);
 var
   helpFileURL: string;
 begin
+  {$IFDEF WINDOWS}
   helpFileURL := ExtractFilePath(Application.ExeName) + 'SyncDirPas.html';
+  {$ELSE}
+  helpFileURL := 'https://github.com/rrutt/SyncDirPas#readme';
+  {$ENDIF}
   //ShowMessage('Help File URL = ' + helpFileURL);
   OpenURL(helpFileURL);
 end;
@@ -1182,6 +1185,32 @@ begin
   DirectoryEditTarget.ShowHidden := CheckBoxProcessHiddenFiles.Checked;
 end;
 
+{$IFDEF WINDOWS}
+procedure PositionTEditAfterLabel(var theControl: TEdit; const theLabel: TLabel);
+const
+  CONTROL_GAP = 10;
+var
+  labelRight: Integer;
+  controlRight: Integer;
+begin
+  labelRight := theLabel.Left + theLabel.Width;
+  controlRight := theControl.Left + theControl.Width;
+
+  theControl.Left := labelRight + CONTROL_GAP;
+  theControl.Width := controlRight - theControl.Left;
+end;
+
+procedure PositionTLabelAfterLabel(var theControl: TLabel; const theLabel: TLabel);
+const
+  CONTROL_GAP = 10;
+var
+  labelRight: Integer;
+begin
+  labelRight := theLabel.Left + theLabel.Width;
+  theControl.Left := labelRight + CONTROL_GAP;
+end;
+{$ENDIF}
+
 procedure TSyncDirForm.FormCreate(Sender: TObject);
 var
   errorMessage: String;
@@ -1189,6 +1218,17 @@ var
   iniSectionExists: Boolean;
   iniFileExists: Boolean;
 begin
+  Caption := Caption + '  (Version ' + PRODUCT_VERSION + ')';
+
+  {$IFDEF WINDOWS}
+  // Compensate for different font metrics on Windows vs. Linux.
+  PositionTEditAfterLabel(EditOnlyProcessFileTypes, LabelIgnoreFileTypes);
+  PositionTEditAfterLabel(EditOnlyProcessFileTypes, LabelOnlyProcessFileTypes);
+  PositionTLabelAfterLabel(LabelInitializationFileValue, LabelInitializationFile);
+  PositionTLabelAfterLabel(LabelInitializationSectionValue, LabelInitializationSection);
+  PositionTLabelAfterLabel(LabelNextSectionValue, LabelNextSection);
+  {$ENDIF}
+
   LabelInitializationFileValue.Caption := gIniFileName;
 
   iniSection := paramStr(2);
@@ -1221,7 +1261,7 @@ end;
 initialization
 begin
   gCurrentWorkingDirectory := GetCurrentDir;
-  //ShowMessage('Current Working Directory = ' + currentWorkingDirectory);
+  //ShowMessage('Current Working Directory = ' + gCurrentWorkingDirectory);
 
   gLogFileName := gCurrentWorkingDirectory + DirectorySeparator + 'SyncDirPas.log';
   gLogToFile := false;

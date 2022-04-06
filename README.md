@@ -1,8 +1,8 @@
 # Directory Synchronization Utility
 
-_Version 4.0.2+20211121  ([Version Release Notes](#ReleaseNotes))_ 
+_Version 4.0.3+20220406  ([Version Release Notes](#ReleaseNotes))_ 
 
-The _Directory Synchronization Utility_, **SyncDirPas**, synchronizes the file contents of directories on a personal computer running Microsoft Windows.
+The _Directory Synchronization Utility_, **SyncDirPas**, synchronizes the file contents of directories on a personal computer running Microsoft Windows or Ubuntu Linux (and presumably other Linux distributions).
 
 This program is free open source software licensed under the [MIT License](./MIT-License.html), Copyright © 2021 Rick Rutt.
 
@@ -36,6 +36,8 @@ Information about the development history and source code compilation of the **S
 <a name="DownloadingAndInstalling"></a>
 ## Downloading and Installing the Program
 
+### Microsoft Windows
+
 1. Download the **SyncDirPas-_version_.zip** file from the root folder of the GitHub.com repository **<https://github.com/rrutt/SyncDirPas>** (where _**version**_ represents the current release version).
 2. Open the ZIP file.  In Windows 10, simply double-click on the ZIP file to open it in the file explorer.
 3. Drag and drop the **SyncDirPas** folder from within the ZIP file to copy it to another location on your hard disk (or a USB drive).
@@ -44,11 +46,29 @@ Information about the development history and source code compilation of the **S
 
 To uninstall the program, simply delete your local **SyncDirPas** folder.
 
+### Ubuntu Linux
+
+1. Download these 2 files from the **bin** sub-folder of the GitHub.com repository **<https://github.com/rrutt/SyncDirPas/tree/main/bin>** to a folder on your hard disk:
+
+  - **SyncDirPas**
+  - **SyncDir.ini**
+
+2. Ensure the **SyncDirPas** file has the executable permission.  From a Files window, right-click the file, select Properties, and use the Permissions tab to enable the Execute permission.  To do this in a Terminal window, use the following command:
+  
+    chmod +x SyncDirPas
+
+3. To uninstall the program, simply delete the above 2 files.
+
+
+### Running the Program
+
+Double-click the downloaded copy of **SyncDirPas.exe** (on Windows) or **SyncDirPas** (on Linux) to start the simulation.
+
 
 <a name="SynchronizationDialog"></a>
 ## Synchronization Dialog
 
-The following dialog box appears when the program is started, and the Automatic option is disabled:
+The following dialog box appears when the program is started, and the **[Automatic](#Automatic)** option is disabled:
 
 ![Synchronization Dialog](./img/SynchronizationDialog.png)
 
@@ -304,6 +324,40 @@ Set this option in the initialization file.
 If **ProcessHiddenFiles** is [disabled](#Disabled), then files with the _System_ attribute or the _Hidden_ attribute are ignored during copy or delete operations.
 
 If **ProcessHiddenFiles** is [enabled](#Enabled), then files with the _System_ attribute or the _Hidden_ attribute are processed in the same manner as other files.
+
+This option [defaults](#DefaultValues) to being disabled.
+
+
+<a name="IncludeSubdirectories"></a>
+### IncludeSubdirectories option
+
+Set this option in the initialization file.
+
+When the **IncludeSubdirectories** option is [disabled](#Disabled), the program only synchronizes the specified source directory with the specified target directory.
+
+When the **IncludeSubdirectories** option is [enabled](#Enabled), the program also synchronizes all subdirectories of the source directory with corresponding subdirectories of the target directory.
+
+During the analysis pass, the program creates any missing target subdirectories that are needed to correspond to source subdirectories (provided the **[SkipMissingDirectories](#SkipMissingDirectories)** option is disabled). These created target subdirectories will remain as empty directories, even if the user cancels the actual synchronization.
+
+The program simply ignores any subdirectories of the target directory that do not have corresponding subdirectories of the source directory. (Note that the role of source directory and target directory are swapped when the **[SynchronizeBothWays](#SynchronizeBothWays)** option is enabled. In such a case, the extra subdirectories of the original target directory will be processed as source subdirectories during the reverse synchronization.)
+
+The **[DeleteExtraFiles](#DeleteExtraFiles)** option does not cause any subdirectories to be deleted, unless the **[DeleteExtraDirectories](#DeleteExtraDirectories)** option is also enabled.
+
+This option [defaults](#DefaultValues) to being disabled.
+
+
+<a name="SkipMissingDirectories"></a>
+### SkipMissingDirectories option
+
+Set this option in the initialization file.
+
+(This option is only relevant if the **[Include subdirectories](#IncludeSubdirectories)** option is enabled.)
+
+When the **SkipMissingDirectories** option is [disabled](#Disabled), the program skips any subdirectories of the specified source directory which do not have corresponding subdirectories already existing in specified target directory.
+
+When the **SkipMissingDirectories** option is [enabled](#Enabled), the program creates any missing target subdirectories that are needed to correspond to source subdirectories.
+
+The **[DeleteExtraFiles](#DeleteExtraFiles)** option does not cause any subdirectories to be deleted. The **[DeleteExtraDirectories](#DeleteExtraDirectories)** option must be enabled for extra target subdirectories to be deleted.
 
 This option [defaults](#DefaultValues) to being disabled.
 
@@ -602,7 +656,7 @@ The following default values are used for each option parameter if no value is s
 
 An option is _enabled_ by setting it to **true**, **t**, **yes**, **y**, or **1**.
 
-Lowercase should be used.
+Lowercase, uppercase, or mixed case can be used.
 
 For example:
 
@@ -618,7 +672,7 @@ For example:
 
 An option is _disabled_ by setting it to **false**, **f**, **no**, **n**, or **0**.
 
-Lowercase should be used.
+Lowercase, uppercase, or mixed case can be used.
 
 For example:
 
@@ -788,7 +842,7 @@ The **README.md** file can be edited in **MarkdownPad 2**, which can be download
 
 After making any changes to the **README.md** file, select the menu item **File | Export | Export HTML**.
 
-In the resulting file save dialog, rename the result file to **SyncDirPas.html** and save it to the **src* sub-folder.
+In the resulting file save dialog, rename the result file to **SyncDirPas.html** and save it to the **src** sub-folder.
 
 #### Creating a release ZIP file
 
@@ -804,6 +858,12 @@ In the resulting file save dialog, rename the result file to **SyncDirPas.html**
 
 <a name="ReleaseNotes"></a>
 ## Release Notes
+
+### Version 4.0.3
+
+Compiled on Ubuntu Linux version 20.04.4 LTS and included resulting **SyncDirPas** executable file in the **bin** sub-folder, along with a default **SyncDir.ini** initialization file.
+
+Show the Product Version on the main form title bar.
 
 ### Version 4.0.2
 

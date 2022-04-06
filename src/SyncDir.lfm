@@ -1,7 +1,7 @@
 object SyncDirForm: TSyncDirForm
-  Left = 30
+  Left = 123
   Height = 432
-  Top = 37
+  Top = 164
   Width = 780
   Caption = 'Synchronize Directories'
   ClientHeight = 432
@@ -112,10 +112,10 @@ object SyncDirForm: TSyncDirForm
     FFFF
   }
   OnCreate = FormCreate
-  LCLVersion = '2.0.10.0'
+  LCLVersion = '2.0.6.0'
   object DirectoryEditSource: TDirectoryEdit
     Left = 24
-    Height = 28
+    Height = 33
     Top = 40
     Width = 350
     DialogTitle = 'Select Source Folder'
@@ -127,7 +127,7 @@ object SyncDirForm: TSyncDirForm
   end
   object DirectoryEditTarget: TDirectoryEdit
     Left = 408
-    Height = 28
+    Height = 33
     Top = 40
     Width = 350
     DialogTitle = 'Select Target Folder'
@@ -139,9 +139,9 @@ object SyncDirForm: TSyncDirForm
   end
   object LabelSourceDirectory: TLabel
     Left = 24
-    Height = 20
+    Height = 16
     Top = 16
-    Width = 121
+    Width = 145
     Caption = ' Source Directory'
     Font.CharSet = ANSI_CHARSET
     Font.Color = clBlack
@@ -155,9 +155,9 @@ object SyncDirForm: TSyncDirForm
   end
   object LabelTargetDirectory: TLabel
     Left = 408
-    Height = 20
+    Height = 16
     Top = 16
-    Width = 119
+    Width = 140
     Caption = ' Target Directory'
     Font.CharSet = ANSI_CHARSET
     Font.Color = clBlack
@@ -171,9 +171,9 @@ object SyncDirForm: TSyncDirForm
   end
   object LabelIgnoreFileTypes: TLabel
     Left = 24
-    Height = 20
+    Height = 16
     Top = 88
-    Width = 122
+    Width = 149
     Caption = 'Ignore File Types:'
     Font.CharSet = ANSI_CHARSET
     Font.Color = clBlack
@@ -187,9 +187,9 @@ object SyncDirForm: TSyncDirForm
   end
   object LabelOnlyProcessFileTypes: TLabel
     Left = 24
-    Height = 20
+    Height = 16
     Top = 120
-    Width = 165
+    Width = 203
     Caption = 'Only Process File Types:'
     Font.CharSet = ANSI_CHARSET
     Font.Color = clBlack
@@ -202,17 +202,17 @@ object SyncDirForm: TSyncDirForm
     ParentFont = False
   end
   object EditIgnoreFileTypes: TEdit
-    Left = 200
-    Height = 28
+    Left = 232
+    Height = 33
     Top = 88
-    Width = 560
+    Width = 528
     TabOrder = 2
   end
   object EditOnlyProcessFileTypes: TEdit
-    Left = 200
-    Height = 28
+    Left = 232
+    Height = 34
     Top = 120
-    Width = 560
+    Width = 528
     Font.CharSet = ANSI_CHARSET
     Font.Color = clBlack
     Font.Height = -15
@@ -224,9 +224,9 @@ object SyncDirForm: TSyncDirForm
   end
   object CheckBoxCopyOlderFiles: TCheckBox
     Left = 27
-    Height = 24
+    Height = 23
     Top = 168
-    Width = 132
+    Width = 156
     Caption = 'Copy older files'
     Font.CharSet = ANSI_CHARSET
     Font.Color = clBlack
@@ -240,9 +240,9 @@ object SyncDirForm: TSyncDirForm
   end
   object CheckBoxProcessHiddenFiles: TCheckBox
     Left = 27
-    Height = 24
+    Height = 23
     Top = 200
-    Width = 282
+    Width = 341
     Caption = 'Process hidden files (and directories)'
     Font.CharSet = ANSI_CHARSET
     Font.Color = clBlack
@@ -257,9 +257,9 @@ object SyncDirForm: TSyncDirForm
   end
   object CheckBoxSynchronizeBothWays: TCheckBox
     Left = 27
-    Height = 24
+    Height = 23
     Top = 232
-    Width = 184
+    Width = 222
     Caption = 'Synchronize both ways'
     Font.CharSet = ANSI_CHARSET
     Font.Color = clBlack
@@ -273,9 +273,9 @@ object SyncDirForm: TSyncDirForm
   end
   object CheckBoxShowErrorMessages: TCheckBox
     Left = 27
-    Height = 24
+    Height = 23
     Top = 264
-    Width = 173
+    Width = 207
     Caption = 'Show error messages'
     Checked = True
     Font.CharSet = ANSI_CHARSET
@@ -291,9 +291,9 @@ object SyncDirForm: TSyncDirForm
   end
   object CheckBoxMinimizeLogMessages: TCheckBox
     Left = 27
-    Height = 24
+    Height = 23
     Top = 296
-    Width = 186
+    Width = 222
     Caption = 'Minimize log messages'
     Checked = True
     Font.CharSet = ANSI_CHARSET
@@ -309,9 +309,9 @@ object SyncDirForm: TSyncDirForm
   end
   object LabelInitializationSection: TLabel
     Left = 40
-    Height = 20
+    Height = 16
     Top = 360
-    Width = 149
+    Width = 183
     Caption = ' Initialization section:'
     Font.CharSet = ANSI_CHARSET
     Font.Color = clBlack
@@ -324,18 +324,21 @@ object SyncDirForm: TSyncDirForm
     ParentFont = False
   end
   object LabelInitializationSectionValue: TLabel
-    Left = 192
-    Height = 20
+    Left = 232
+    Height = 15
     Top = 360
-    Width = 80
+    Width = 79
     Caption = '(initSection)'
+    Font.Height = -13
+    Font.Name = 'Sans'
     ParentColor = False
+    ParentFont = False
   end
   object CheckBoxIncludeSubdirectories: TCheckBox
     Left = 408
-    Height = 24
+    Height = 23
     Top = 168
-    Width = 178
+    Width = 215
     Caption = 'Include subdirectories'
     Font.CharSet = ANSI_CHARSET
     Font.Color = clBlack
@@ -349,9 +352,9 @@ object SyncDirForm: TSyncDirForm
   end
   object CheckBoxSkipMissingDirectories: TCheckBox
     Left = 408
-    Height = 24
+    Height = 23
     Top = 200
-    Width = 189
+    Width = 229
     Caption = 'Skip missing directories'
     Font.CharSet = ANSI_CHARSET
     Font.Color = clBlack
@@ -365,9 +368,9 @@ object SyncDirForm: TSyncDirForm
   end
   object CheckBoxDeleteExtraDirectories: TCheckBox
     Left = 408
-    Height = 24
+    Height = 23
     Top = 232
-    Width = 187
+    Width = 224
     Caption = 'Delete extra directories'
     Font.CharSet = ANSI_CHARSET
     Font.Color = clBlack
@@ -381,9 +384,9 @@ object SyncDirForm: TSyncDirForm
   end
   object CheckBoxDeleteExtraFiles: TCheckBox
     Left = 408
-    Height = 24
+    Height = 23
     Top = 264
-    Width = 142
+    Width = 169
     Caption = 'Delete extra files'
     Font.CharSet = ANSI_CHARSET
     Font.Color = clBlack
@@ -397,9 +400,9 @@ object SyncDirForm: TSyncDirForm
   end
   object CheckBoxSkipReadOnlyTargetFiles: TCheckBox
     Left = 408
-    Height = 24
+    Height = 23
     Top = 296
-    Width = 204
+    Width = 245
     Caption = 'Skip read-only target files'
     Font.CharSet = ANSI_CHARSET
     Font.Color = clBlack
@@ -464,9 +467,9 @@ object SyncDirForm: TSyncDirForm
   end
   object LabelInitializationFile: TLabel
     Left = 40
-    Height = 20
+    Height = 16
     Top = 328
-    Width = 121
+    Width = 148
     Caption = ' Initialization file:'
     Font.CharSet = ANSI_CHARSET
     Font.Color = clBlack
@@ -479,18 +482,18 @@ object SyncDirForm: TSyncDirForm
     ParentFont = False
   end
   object LabelInitializationFileValue: TLabel
-    Left = 168
-    Height = 20
-    Top = 328
-    Width = 94
+    Left = 200
+    Height = 15
+    Top = 329
+    Width = 96
     Caption = '(initFileName)'
     ParentColor = False
   end
   object LabelNextSection: TLabel
     Left = 424
-    Height = 20
+    Height = 16
     Top = 360
-    Width = 92
+    Width = 112
     Caption = 'Next section:'
     Font.CharSet = ANSI_CHARSET
     Font.Color = clBlack
@@ -503,11 +506,11 @@ object SyncDirForm: TSyncDirForm
     ParentFont = False
   end
   object LabelNextSectionValue: TLabel
-    Left = 520
-    Height = 20
+    Left = 544
+    Height = 15
     Top = 360
-    Width = 162
-    Caption = '(LabelNextSectionValue)'
+    Width = 126
+    Caption = '(nextSectionValue)'
     ParentColor = False
   end
   object ButtonHelp: TButton
