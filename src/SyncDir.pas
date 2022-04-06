@@ -1185,6 +1185,7 @@ begin
   DirectoryEditTarget.ShowHidden := CheckBoxProcessHiddenFiles.Checked;
 end;
 
+{$IFDEF WINDOWS}
 procedure PositionTEditAfterLabel(var theControl: TEdit; const theLabel: TLabel);
 const
   CONTROL_GAP = 10;
@@ -1208,6 +1209,7 @@ begin
   labelRight := theLabel.Left + theLabel.Width;
   theControl.Left := labelRight + CONTROL_GAP;
 end;
+{$ENDIF}
 
 procedure TSyncDirForm.FormCreate(Sender: TObject);
 var
@@ -1218,12 +1220,14 @@ var
 begin
   Caption := Caption + '  (Version ' + PRODUCT_VERSION + ')';
 
+  {$IFDEF WINDOWS}
   // Compensate for different font metrics on Windows vs. Linux.
   PositionTEditAfterLabel(EditOnlyProcessFileTypes, LabelIgnoreFileTypes);
   PositionTEditAfterLabel(EditOnlyProcessFileTypes, LabelOnlyProcessFileTypes);
   PositionTLabelAfterLabel(LabelInitializationFileValue, LabelInitializationFile);
   PositionTLabelAfterLabel(LabelInitializationSectionValue, LabelInitializationSection);
   PositionTLabelAfterLabel(LabelNextSectionValue, LabelNextSection);
+  {$ENDIF}
 
   LabelInitializationFileValue.Caption := gIniFileName;
 
