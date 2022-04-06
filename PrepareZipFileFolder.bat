@@ -8,7 +8,7 @@ pause
 mkdir .\SyncDirPas
 copy .\MIT-License.html .\SyncDirPas
 copy .\src\SyncDirPas.exe .\SyncDirPas
-copy .\bin\SyncDirPas.html .\SyncDirPas
+copy .\src\SyncDirPas.html .\SyncDirPas
 copy .\src\SyncDir.ini .\SyncDirPas
 robocopy .\img .\SyncDirPas\img
 
