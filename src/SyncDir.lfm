@@ -202,17 +202,17 @@ object SyncDirForm: TSyncDirForm
     ParentFont = False
   end
   object EditIgnoreFileTypes: TEdit
-    Left = 200
+    Left = 232
     Height = 33
     Top = 88
-    Width = 560
+    Width = 528
     TabOrder = 2
   end
   object EditOnlyProcessFileTypes: TEdit
-    Left = 200
+    Left = 232
     Height = 34
     Top = 120
-    Width = 560
+    Width = 528
     Font.CharSet = ANSI_CHARSET
     Font.Color = clBlack
     Font.Height = -15
@@ -324,12 +324,15 @@ object SyncDirForm: TSyncDirForm
     ParentFont = False
   end
   object LabelInitializationSectionValue: TLabel
-    Left = 192
+    Left = 232
     Height = 15
-    Top = 360
-    Width = 82
+    Top = 361
+    Width = 79
     Caption = '(initSection)'
+    Font.Height = -13
+    Font.Name = 'Sans'
     ParentColor = False
+    ParentFont = False
   end
   object CheckBoxIncludeSubdirectories: TCheckBox
     Left = 408
@@ -479,9 +482,9 @@ object SyncDirForm: TSyncDirForm
     ParentFont = False
   end
   object LabelInitializationFileValue: TLabel
-    Left = 168
+    Left = 192
     Height = 15
-    Top = 328
+    Top = 329
     Width = 96
     Caption = '(initFileName)'
     ParentColor = False
@@ -503,7 +506,7 @@ object SyncDirForm: TSyncDirForm
     ParentFont = False
   end
   object LabelNextSectionValue: TLabel
-    Left = 520
+    Left = 544
     Height = 15
     Top = 360
     Width = 166

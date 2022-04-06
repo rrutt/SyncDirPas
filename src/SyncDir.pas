@@ -14,6 +14,9 @@ uses
   Process,
   SyncDirLog;
 
+const
+  PRODUCT_VERSION = '4.0.3+20220406';
+
 type
 
   TOptions = record
@@ -1185,6 +1188,8 @@ var
   iniSectionExists: Boolean;
   iniFileExists: Boolean;
 begin
+  Caption := Caption + '  (Version ' + PRODUCT_VERSION + ')';
+
   LabelInitializationFileValue.Caption := gIniFileName;
 
   iniSection := paramStr(2);
