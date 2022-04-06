@@ -1065,7 +1065,11 @@ procedure TSyncDirForm.ButtonHelpClick(Sender: TObject);
 var
   helpFileURL: string;
 begin
+  {$IFDEF WINDOWS}
   helpFileURL := ExtractFilePath(Application.ExeName) + 'SyncDirPas.html';
+  {$ELSE}
+  helpFileURL := 'https://github.com/rrutt/SyncDirPas#readme';
+  {$ENDIF}
   //ShowMessage('Help File URL = ' + helpFileURL);
   OpenURL(helpFileURL);
 end;
@@ -1181,6 +1185,30 @@ begin
   DirectoryEditTarget.ShowHidden := CheckBoxProcessHiddenFiles.Checked;
 end;
 
+procedure PositionTEditAfterLabel(var theControl: TEdit; const theLabel: TLabel);
+const
+  CONTROL_GAP = 10;
+var
+  labelRight: Integer;
+  controlRight: Integer;
+begin
+  labelRight := theLabel.Left + theLabel.Width;
+  controlRight := theControl.Left + theControl.Width;
+
+  theControl.Left := labelRight + CONTROL_GAP;
+  theControl.Width := controlRight - theControl.Left;
+end;
+
+procedure PositionTLabelAfterLabel(var theControl: TLabel; const theLabel: TLabel);
+const
+  CONTROL_GAP = 10;
+var
+  labelRight: Integer;
+begin
+  labelRight := theLabel.Left + theLabel.Width;
+  theControl.Left := labelRight + CONTROL_GAP;
+end;
+
 procedure TSyncDirForm.FormCreate(Sender: TObject);
 var
   errorMessage: String;
@@ -1189,6 +1217,13 @@ var
   iniFileExists: Boolean;
 begin
   Caption := Caption + '  (Version ' + PRODUCT_VERSION + ')';
+
+  // Compensate for different font metrics on Windows vs. Linux.
+  PositionTEditAfterLabel(EditOnlyProcessFileTypes, LabelIgnoreFileTypes);
+  PositionTEditAfterLabel(EditOnlyProcessFileTypes, LabelOnlyProcessFileTypes);
+  PositionTLabelAfterLabel(LabelInitializationFileValue, LabelInitializationFile);
+  PositionTLabelAfterLabel(LabelInitializationSectionValue, LabelInitializationSection);
+  PositionTLabelAfterLabel(LabelNextSectionValue, LabelNextSection);
 
   LabelInitializationFileValue.Caption := gIniFileName;
 

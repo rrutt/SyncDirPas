@@ -292,8 +292,8 @@ img {
 </head>
 <body>
 <h1>Directory Synchronization Utility</h1>
-<p><em>Version 4.0.2+20211121  (<a href="#ReleaseNotes">Version Release Notes</a>)</em> </p>
-<p>The <em>Directory Synchronization Utility</em>, <strong>SyncDirPas</strong>, synchronizes the file contents of directories on a personal computer running Microsoft Windows.</p>
+<p><em>Version 4.0.3+20220406  (<a href="#ReleaseNotes">Version Release Notes</a>)</em> </p>
+<p>The <em>Directory Synchronization Utility</em>, <strong>SyncDirPas</strong>, synchronizes the file contents of directories on a personal computer running Microsoft Windows or Ubuntu Linux (and presumably other Linux distributions).</p>
 <p>This program is free open source software licensed under the <a href="./MIT-License.html">MIT License</a>, Copyright © 2021 Rick Rutt.</p>
 <p>The program compares file names and modification dates for a <a href="#SourceDirectory">source directory</a> and a <a href="#TargetDirectory">target directory</a> (and optionally any <a href="#IncludeSubdirectories">subdirectories</a>).</p>
 <ul>
@@ -332,6 +332,7 @@ img {
 <p>Information about the development history and source code compilation of the <strong>SyncDirPas</strong> program appear at the end of this document in the <a href="#DeveloperInformation">Developer Information</a> section.</p>
 <p><a name="DownloadingAndInstalling"></a></p>
 <h2>Downloading and Installing the Program</h2>
+<h3>Microsoft Windows</h3>
 <ol>
 <li>Download the <strong>SyncDirPas-<em>version</em>.zip</strong> file from the root folder of the GitHub.com repository <strong><a href="https://github.com/rrutt/SyncDirPas">https://github.com/rrutt/SyncDirPas</a></strong> (where <em><strong>version</strong></em> represents the current release version).</li>
 <li>Open the ZIP file.  In Windows 10, simply double-click on the ZIP file to open it in the file explorer.</li>
@@ -340,9 +341,28 @@ img {
 <li>Double-click the <strong>SyncDirPas.exe</strong> file to run the program.</li>
 </ol>
 <p>To uninstall the program, simply delete your local <strong>SyncDirPas</strong> folder.</p>
+<h3>Ubuntu Linux</h3>
+<ol>
+<li>
+<p>Download these 2 files from the <strong>bin</strong> sub-folder of the GitHub.com repository <strong><a href="https://github.com/rrutt/SyncDirPas/tree/main/bin">https://github.com/rrutt/SyncDirPas/tree/main/bin</a></strong> to a folder on your hard disk:</p>
+<ul>
+<li><strong>SyncDirPas</strong></li>
+<li><strong>SyncDir.ini</strong></li>
+</ul>
+</li>
+<li>
+<p>Ensure the <strong>SyncDirPas</strong> file has the executable permission.  From a Files window, right-click the file, select Properties, and use the Permissions tab to enable the Execute permission.  To do this in a Terminal window, use the following command:</p>
+<p>chmod +x SyncDirPas</p>
+</li>
+<li>
+<p>To uninstall the program, simply delete the above 2 files.</p>
+</li>
+</ol>
+<h3>Running the Program</h3>
+<p>Double-click the downloaded copy of <strong>SyncDirPas.exe</strong> (on Windows) or <strong>SyncDirPas</strong> (on Linux) to start the simulation.</p>
 <p><a name="SynchronizationDialog"></a></p>
 <h2>Synchronization Dialog</h2>
-<p>The following dialog box appears when the program is started, and the Automatic option is disabled:</p>
+<p>The following dialog box appears when the program is started, and the <strong><a href="#Automatic">Automatic</a></strong> option is disabled:</p>
 <p><img src="./img/SynchronizationDialog.png" alt="Synchronization Dialog" /></p>
 <p>The <strong><a href="#SourceDirectory">Source Directory:</a></strong> and <strong><a href="#TargetDirectory">Target Directory:</a></strong> text entry fields default to the settings from the <a href="#InitializationFile">initialization file</a>.</p>
 <ul>
@@ -500,6 +520,23 @@ In this case, the only <a href="#LogWindow">log messages</a> written are for fil
 <p>Set this option in the initialization file.</p>
 <p>If <strong>ProcessHiddenFiles</strong> is <a href="#Disabled">disabled</a>, then files with the <em>System</em> attribute or the <em>Hidden</em> attribute are ignored during copy or delete operations.</p>
 <p>If <strong>ProcessHiddenFiles</strong> is <a href="#Enabled">enabled</a>, then files with the <em>System</em> attribute or the <em>Hidden</em> attribute are processed in the same manner as other files.</p>
+<p>This option <a href="#DefaultValues">defaults</a> to being disabled.</p>
+<p><a name="IncludeSubdirectories"></a></p>
+<h3>IncludeSubdirectories option</h3>
+<p>Set this option in the initialization file.</p>
+<p>When the <strong>IncludeSubdirectories</strong> option is <a href="#Disabled">disabled</a>, the program only synchronizes the specified source directory with the specified target directory.</p>
+<p>When the <strong>IncludeSubdirectories</strong> option is <a href="#Enabled">enabled</a>, the program also synchronizes all subdirectories of the source directory with corresponding subdirectories of the target directory.</p>
+<p>During the analysis pass, the program creates any missing target subdirectories that are needed to correspond to source subdirectories (provided the <strong><a href="#SkipMissingDirectories">SkipMissingDirectories</a></strong> option is disabled). These created target subdirectories will remain as empty directories, even if the user cancels the actual synchronization.</p>
+<p>The program simply ignores any subdirectories of the target directory that do not have corresponding subdirectories of the source directory. (Note that the role of source directory and target directory are swapped when the <strong><a href="#SynchronizeBothWays">SynchronizeBothWays</a></strong> option is enabled. In such a case, the extra subdirectories of the original target directory will be processed as source subdirectories during the reverse synchronization.)</p>
+<p>The <strong><a href="#DeleteExtraFiles">DeleteExtraFiles</a></strong> option does not cause any subdirectories to be deleted, unless the <strong><a href="#DeleteExtraDirectories">DeleteExtraDirectories</a></strong> option is also enabled.</p>
+<p>This option <a href="#DefaultValues">defaults</a> to being disabled.</p>
+<p><a name="SkipMissingDirectories"></a></p>
+<h3>SkipMissingDirectories option</h3>
+<p>Set this option in the initialization file.</p>
+<p>(This option is only relevant if the <strong><a href="#IncludeSubdirectories">Include subdirectories</a></strong> option is enabled.)</p>
+<p>When the <strong>SkipMissingDirectories</strong> option is <a href="#Disabled">disabled</a>, the program skips any subdirectories of the specified source directory which do not have corresponding subdirectories already existing in specified target directory.</p>
+<p>When the <strong>SkipMissingDirectories</strong> option is <a href="#Enabled">enabled</a>, the program creates any missing target subdirectories that are needed to correspond to source subdirectories.</p>
+<p>The <strong><a href="#DeleteExtraFiles">DeleteExtraFiles</a></strong> option does not cause any subdirectories to be deleted. The <strong><a href="#DeleteExtraDirectories">DeleteExtraDirectories</a></strong> option must be enabled for extra target subdirectories to be deleted.</p>
 <p>This option <a href="#DefaultValues">defaults</a> to being disabled.</p>
 <p><a name="DeleteExtraDirectories"></a></p>
 <h3>DeleteExtraDirectories option</h3>
@@ -696,7 +733,7 @@ NextSection=
 <p><a name="Enabled"></a></p>
 <h3>enabled</h3>
 <p>An option is <em>enabled</em> by setting it to <strong>true</strong>, <strong>t</strong>, <strong>yes</strong>, <strong>y</strong>, or <strong>1</strong>.</p>
-<p>Lowercase should be used.</p>
+<p>Lowercase, uppercase, or mixed case can be used.</p>
 <p>For example:</p>
 <pre><code>ThisOption=yes
 AnotherOption=true
@@ -708,7 +745,7 @@ YourOption=y
 <p><a name="Disabled"></a></p>
 <h3>disabled</h3>
 <p>An option is <em>disabled</em> by setting it to <strong>false</strong>, <strong>f</strong>, <strong>no</strong>, <strong>n</strong>, or <strong>0</strong>.</p>
-<p>Lowercase should be used.</p>
+<p>Lowercase, uppercase, or mixed case can be used.</p>
 <p>For example:</p>
 <pre><code>ThisOption=no
 AnotherOption=false
@@ -824,7 +861,7 @@ Then rebuild the executable using the <strong>Run | Build</strong> menu item (or
 <li><strong><a href="http://markdownpad.com/">http://markdownpad.com/</a></strong></li>
 </ul>
 <p>After making any changes to the <strong>README.md</strong> file, select the menu item <strong>File | Export | Export HTML</strong>.</p>
-<p>In the resulting file save dialog, rename the result file to <strong>SyncDirPas.html</strong> and save it to the *<em>src</em> sub-folder.</p>
+<p>In the resulting file save dialog, rename the result file to <strong>SyncDirPas.html</strong> and save it to the <strong>src</strong> sub-folder.</p>
 <h4>Creating a release ZIP file</h4>
 <ol>
 <li>Set the desired release version by selecting the menu item <strong>Project | Project Options ...</strong> and navigating to the <strong>Project Options | Version Info</strong> tab in the resulting dialog window.  Click the <strong>OK</strong> button after making any changes.</li>
@@ -837,6 +874,9 @@ Then rebuild the executable using the <strong>Run | Build</strong> menu item (or
 </ol>
 <p><a name="ReleaseNotes"></a></p>
 <h2>Release Notes</h2>
+<h3>Version 4.0.3</h3>
+<p>Compiled on Ubuntu Linux version 20.04.4 LTS and included resulting <strong>SyncDirPas</strong> executable file in the <strong>bin</strong> sub-folder, along with a default <strong>SyncDir.ini</strong> initialization file.</p>
+<p>Show the Product Version on the main form title bar.</p>
 <h3>Version 4.0.2</h3>
 <p>Minor refinement:</p>
 <ul>
