@@ -15,7 +15,8 @@ uses
   SyncDirLog;
 
 const
-  PRODUCT_VERSION = '4.0.3+20220406';
+  PRODUCT_VERSION = '4.0.4+20220406';
+  CONTROL_GAP = 10;
 
 type
 
@@ -1187,27 +1188,44 @@ end;
 
 {$IFDEF WINDOWS}
 procedure PositionTEditAfterLabel(var theControl: TEdit; const theLabel: TLabel);
-const
-  CONTROL_GAP = 10;
 var
+  labelLeft: Integer;
+  labelWidth: Integer;
   labelRight: Integer;
+  controlLeft: Integer;
+  controlWidth: Integer;
   controlRight: Integer;
 begin
-  labelRight := theLabel.Left + theLabel.Width;
-  controlRight := theControl.Left + theControl.Width;
+  with theLabel do begin
+    labelLeft := Left;
+    labelWidth := Width;
+    labelRight := labelLeft + labelWidth;
+  end;
 
-  theControl.Left := labelRight + CONTROL_GAP;
-  theControl.Width := controlRight - theControl.Left;
+  with theControl do begin
+    controlLeft := theControl.Left;
+    controlWidth := theControl.Width;
+    controlRight := controlLeft + controlWidth;
+    Left := labelRight + CONTROL_GAP;
+    Width := controlRight - Left;
+  end;
 end;
 
 procedure PositionTLabelAfterLabel(var theControl: TLabel; const theLabel: TLabel);
-const
-  CONTROL_GAP = 10;
 var
+  labelLeft: Integer;
+  labelWidth: Integer;
   labelRight: Integer;
 begin
-  labelRight := theLabel.Left + theLabel.Width;
-  theControl.Left := labelRight + CONTROL_GAP;
+  with theLabel do begin
+    labelLeft := Left;
+    labelWidth := Width;
+    labelRight := labelLeft + labelWidth;
+  end;
+
+  with theControl do begin
+    Left := labelRight + CONTROL_GAP;
+  end;
 end;
 {$ENDIF}
 
@@ -1222,7 +1240,7 @@ begin
 
   {$IFDEF WINDOWS}
   // Compensate for different font metrics on Windows vs. Linux.
-  PositionTEditAfterLabel(EditOnlyProcessFileTypes, LabelIgnoreFileTypes);
+  PositionTEditAfterLabel(EditIgnoreFileTypes, LabelOnlyProcessFileTypes);
   PositionTEditAfterLabel(EditOnlyProcessFileTypes, LabelOnlyProcessFileTypes);
   PositionTLabelAfterLabel(LabelInitializationFileValue, LabelInitializationFile);
   PositionTLabelAfterLabel(LabelInitializationSectionValue, LabelInitializationSection);
