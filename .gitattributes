@@ -3,3 +3,7 @@
 *.frm linguist-detectable=false
 *.frx linguist-detectable=false
 *.vbp linguist-detectable=false
+*.html linguist-detectable=false
+*.chm linguist-detectable=false
+*.pdm linguist-detectable=false
+*.ini linguist-detectable=false
