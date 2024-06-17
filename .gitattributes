@@ -1,0 +1,5 @@
+*.pas linguist-detectable=true
+*.bas linguist-detectable=false
+*.frm linguist-detectable=false
+*.frx linguist-detectable=false
+*.vbp linguist-detectable=false
